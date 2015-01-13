@@ -13,3 +13,5 @@ hs_err_pid*
 
 /net
 Start.java
+
+!/net/minecraft/item/Item.java
