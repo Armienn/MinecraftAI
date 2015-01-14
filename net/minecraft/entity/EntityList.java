@@ -374,6 +374,7 @@ public class EntityList
         addMapping(EntityRabbit.class, "Rabbit", 101, 10051392, 7555121);
         addMapping(EntityVillager.class, "Villager", 120, 5651507, 12422002);
         addMapping(EntityEnderCrystal.class, "EnderCrystal", 200);
+        addMapping(nea.minecraft.EntityTestMob.class, "TestMob", 102, 15373203, 5009705);
     }
 
     public static class EntityEggInfo
