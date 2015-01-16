@@ -23,23 +23,50 @@ import net.minecraft.world.World;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class EntityTestMob extends EntityLiving {
+public class EntityTestMob extends EntityLiving implements net.minecraft.entity.passive.IAnimals {
 	
 	Logger logger = LogManager.getLogger();
+	EntityTestMobAI aithread;
 
 	public EntityTestMob(World worldIn) {
 		super(worldIn);
 		logger.info("constructor of testmob.");
-		// TODO Auto-generated constructor stub
+		if (!this.worldObj.isRemote){
+			aithread = new EntityTestMobAI();
+			aithread.start();
+		}
 	}
 	
 	public void onUpdate(){
-		logger.info("onUpdate of testmob.");
 		super.onUpdate();
+		if (!this.worldObj.isRemote){ // if this is server
+			logger.info("onUpdate of testmob.");
+			updateSenses();
+			updateBehaviour();
+		}
 	}
 	
-	public void onLivingUpdate(){
-		logger.info("onLivingUpdate of testmob.");
-		super.onLivingUpdate();
+	private void updateSenses(){
+		if(aithread != null && aithread.isAlive()){
+			synchronized(aithread.senses){
+				aithread.senses.lastupdate = System.currentTimeMillis();
+			}
+		}
+		else {
+			logger.info("Cannot update senses.");
+		}
+	}
+	
+	private void updateBehaviour(){
+		if(aithread != null && aithread.isAlive()){
+			synchronized(aithread.behaviour){
+				//this.rotationYaw = 30.0F;
+				this.motionX = this.rand.nextDouble()*0.2 - 0.1;
+				this.motionZ = this.rand.nextDouble()*0.2 - 0.1;
+			}
+		}
+		else {
+			logger.info("Cannot update senses.");
+		}
 	}
 }
