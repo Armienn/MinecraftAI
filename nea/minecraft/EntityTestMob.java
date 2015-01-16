@@ -60,9 +60,13 @@ public class EntityTestMob extends EntityLiving implements net.minecraft.entity.
 	private void updateBehaviour(){
 		if(aithread != null && aithread.isAlive()){
 			synchronized(aithread.behaviour){
-				//this.rotationYaw = 30.0F;
-				this.motionX = this.rand.nextDouble()*0.2 - 0.1;
-				this.motionZ = this.rand.nextDouble()*0.2 - 0.1;
+				this.rotationYaw = 30.0F;
+				this.motionX = aithread.behaviour.motionX;//this.rand.nextDouble()*0.2 - 0.1;
+				this.motionZ = aithread.behaviour.motionZ;//this.rand.nextDouble()*0.2 - 0.1;
+				if(aithread.behaviour.motionY > 0 && this.onGround){
+					this.motionY = aithread.behaviour.motionY;
+					aithread.behaviour.motionY = 0;
+				}
 			}
 		}
 		else {

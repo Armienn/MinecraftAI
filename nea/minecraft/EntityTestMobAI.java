@@ -1,6 +1,7 @@
 package nea.minecraft;
 
 import java.sql.Time;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -19,7 +20,8 @@ public class EntityTestMobAI extends Thread {
 		while(timeSinceLastUpdate() < 1000){
 			logger.info("Custom AI update");
 			try {
-				Thread.sleep(500);
+				walkAndJump();
+				Thread.sleep(2000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -33,5 +35,29 @@ public class EntityTestMobAI extends Thread {
 			result = System.currentTimeMillis() - senses.lastupdate;
 		}
 		return result;
+	}
+	
+	private void walkAndJump(){
+		synchronized(behaviour){
+			behaviour.motionZ = 0.1;
+		}
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		synchronized(behaviour){
+			behaviour.motionY = 0.45; //jumps one block
+		}
+
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		synchronized(behaviour){
+			behaviour.motionZ = 0.0;
+		}
+		
 	}
 }
