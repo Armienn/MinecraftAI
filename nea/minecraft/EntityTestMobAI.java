@@ -2,6 +2,9 @@ package nea.minecraft;
 
 import java.sql.Time;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.util.ChatComponentText;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -11,6 +14,7 @@ public class EntityTestMobAI extends Thread {
 	public BehaveTestMob behaviour;
 	
 	public EntityTestMobAI(){
+		Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("Constructor!"));
 		behaviour = new BehaveTestMob();
 		senses = new SensesTestMob();
 		senses.lastupdate = System.currentTimeMillis();
