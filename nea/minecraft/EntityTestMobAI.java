@@ -43,6 +43,7 @@ public class EntityTestMobAI extends Thread {
 	
 	private void walkAndJump(){
 		synchronized(behaviour){
+			behaviour.fly = false;
 			behaviour.motionZ = 0.1;
 		}
 		try {
@@ -53,7 +54,7 @@ public class EntityTestMobAI extends Thread {
 		synchronized(behaviour){
 			behaviour.motionY = 0.45; //jumps one block
 		}
-
+		
 		try {
 			Thread.sleep(500);
 		} catch (InterruptedException e) {
@@ -61,6 +62,16 @@ public class EntityTestMobAI extends Thread {
 		}
 		synchronized(behaviour){
 			behaviour.motionZ = 0.0;
+		}
+		
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		synchronized(behaviour){
+			behaviour.fly = true;
+			behaviour.motionY = 0.3;
 		}
 		
 	}
