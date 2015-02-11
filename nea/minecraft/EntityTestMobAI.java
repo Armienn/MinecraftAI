@@ -1,6 +1,7 @@
 package nea.minecraft;
 
 import java.sql.Time;
+import java.util.UUID;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ChatComponentText;
@@ -11,11 +12,13 @@ import org.apache.logging.log4j.Logger;
 
 public class EntityTestMobAI extends Thread {
 	Logger logger = LogManager.getLogger();
+	int id;
 	public SensesTestMob senses;
 	public BehaveTestMob behaviour;
 	
-	public EntityTestMobAI(World worldIn){
-		Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("Constructor!"));
+	public EntityTestMobAI(World worldIn, int id){
+		this.id = id;
+		say("Constructor!");
 		behaviour = new BehaveTestMob();
 		senses = new SensesTestMob(worldIn);
 		senses.lastupdate = System.currentTimeMillis();
@@ -24,12 +27,9 @@ public class EntityTestMobAI extends Thread {
 	public void run(){
 		while(timeSinceLastUpdate() < 1000){
 			logger.info("Custom AI update");
-			//try {
-				walkInSquares();
-			//	Thread.sleep(2000);
-			//} catch (InterruptedException e) {
-			//	e.printStackTrace();
-			//}
+			//walkInSquares();
+			tellOfBlocksHere();
+			trySleep(3000);
 		}
 		logger.info("Ending custom AI thread");
 	}
@@ -42,46 +42,42 @@ public class EntityTestMobAI extends Thread {
 		return result;
 	}
 	
+	private void tellOfBlocksHere(){
+		synchronized(senses){
+			say("At -2: " + senses.GetBlockAtRelativePosition(0, -2, 0).getUnlocalizedName());
+			say("At -1: " + senses.GetBlockAtRelativePosition(0, -1, 0).getUnlocalizedName());
+			say("At 0: " + senses.GetBlockAtRelativePosition(0, 0, 0).getUnlocalizedName());
+			say("At 1: " + senses.GetBlockAtRelativePosition(0, 1, 0).getUnlocalizedName());
+			say("At 2: " + senses.GetBlockAtRelativePosition(0, 2, 0).getUnlocalizedName());
+			say("At 3: " + senses.GetBlockAtRelativePosition(0, 3, 0).getUnlocalizedName());
+		}
+	}
+	
 	private void walkInSquares(){
 		synchronized(behaviour){
 			behaviour.fly = false;
 			behaviour.motionZ = 0.1;
 			behaviour.motionX = 0.0;
 		}
-		try {
-			Thread.sleep(3000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		
+		trySleep(3000);
 		synchronized(behaviour){
 			behaviour.motionZ = 0.0;
 			behaviour.motionX = 0.1;
 		}
-		try {
-			Thread.sleep(3000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		
+		trySleep(3000);
 		synchronized(behaviour){
 			behaviour.motionZ = -0.1;
 			behaviour.motionX = 0.0;
 		}
-		try {
-			Thread.sleep(3000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		
+		trySleep(3000);
 		synchronized(behaviour){
 			behaviour.motionZ = 0.0;
 			behaviour.motionX = -0.1;
 		}
-		try {
-			Thread.sleep(3000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+		trySleep(3000);
+		synchronized(behaviour){
+			behaviour.motionZ = 0.0;
+			behaviour.motionX = 0.0;
 		}
 	}
 	
@@ -90,33 +86,35 @@ public class EntityTestMobAI extends Thread {
 			behaviour.fly = false;
 			behaviour.motionZ = 0.1;
 		}
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		trySleep(5000);
 		synchronized(behaviour){
 			behaviour.motionY = 0.45; //jumps one block
 		}
-		
-		try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+
+		trySleep(500);
 		synchronized(behaviour){
 			behaviour.motionZ = 0.0;
 		}
 		
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		trySleep(2000);
 		synchronized(behaviour){
 			behaviour.fly = true;
 			behaviour.motionY = 0.3;
 		}
 		
+	}
+	
+	private void say(String text){
+		Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("TestMob-" + id + ": " + text));
+	}
+	
+	private boolean trySleep(long milliseconds){
+		try {
+			Thread.sleep(milliseconds);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 }

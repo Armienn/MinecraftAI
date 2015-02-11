@@ -39,7 +39,7 @@ public class EntityTestMob extends EntityLiving implements net.minecraft.entity.
 		super(worldIn);
 		logger.info("constructor of testmob.");
 		if (!this.worldObj.isRemote){
-			aithread = new EntityTestMobAI(worldIn);
+			aithread = new EntityTestMobAI(worldIn, ((Entity)this).getEntityId());
 			aithread.start();
 		}
 	}
@@ -47,7 +47,7 @@ public class EntityTestMob extends EntityLiving implements net.minecraft.entity.
 	public void onUpdate(){
 		super.onUpdate();
 		if (!this.worldObj.isRemote){ // if this is server
-			logger.info("onUpdate of testmob.");
+			//logger.info("onUpdate of testmob.");
 			updateSenses();
 			updateBehaviour();
 		}
@@ -70,9 +70,9 @@ public class EntityTestMob extends EntityLiving implements net.minecraft.entity.
 	            while (var2.hasNext()) {
 	                //EntityItem var3 = (EntityItem)var2.next();
 	                Entity var3 = (Entity)var2.next();
-	                if(var3.getDistanceSqToEntity(this) < 100) {
-		    			logger.info("Entity nearby: " + var3.toString());
-	                }
+	                //if(var3.getDistanceSqToEntity(this) < 100) {
+		    		//	logger.info("Entity nearby: " + var3.toString());
+	                //}
 
 	                /*if (!var3.isDead && var3.getEntityItem() != null && !var3.func_174874_s())
 	                {
