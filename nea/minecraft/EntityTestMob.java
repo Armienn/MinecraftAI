@@ -17,8 +17,13 @@ public class EntityTestMobCreature extends EntityCreature {
 
 package nea.minecraft;
 
+import java.util.Iterator;
+import java.util.List;
+
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 
@@ -34,7 +39,7 @@ public class EntityTestMob extends EntityLiving implements net.minecraft.entity.
 		super(worldIn);
 		logger.info("constructor of testmob.");
 		if (!this.worldObj.isRemote){
-			aithread = new EntityTestMobAI();
+			aithread = new EntityTestMobAI(worldIn);
 			aithread.start();
 		}
 	}
@@ -52,6 +57,29 @@ public class EntityTestMob extends EntityLiving implements net.minecraft.entity.
 		if(aithread != null && aithread.isAlive()){
 			synchronized(aithread.senses){
 				aithread.senses.lastupdate = System.currentTimeMillis();
+				
+				///// Update senses with current position
+				aithread.senses.posX = this.posX;
+				aithread.senses.posY = this.posY;
+				aithread.senses.posZ = this.posZ;
+				
+				///// Find entities nearby
+				List var1 = this.worldObj.loadedEntityList;
+				Iterator var2 = var1.iterator();
+
+	            while (var2.hasNext()) {
+	                //EntityItem var3 = (EntityItem)var2.next();
+	                Entity var3 = (Entity)var2.next();
+	                if(var3.getDistanceSqToEntity(this) < 100) {
+		    			logger.info("Entity nearby: " + var3.toString());
+	                }
+
+	                /*if (!var3.isDead && var3.getEntityItem() != null && !var3.func_174874_s())
+	                {
+	                    this.func_175445_a(var3);
+	                }*/
+	            }
+				/*///*/
 			}
 		}
 		else {
@@ -69,27 +97,15 @@ public class EntityTestMob extends EntityLiving implements net.minecraft.entity.
 					this.motionZ = aithread.behaviour.motionZ;
 				}
 				else if (this.onGround) {
-					//if(java.lang.Math.abs(aithread.behaviour.motionX) > 0.01)
 					this.motionX = aithread.behaviour.motionX;
-					//if(java.lang.Math.abs(aithread.behaviour.motionY) > 0.01)
 					this.motionY = aithread.behaviour.motionY;
-					//if(java.lang.Math.abs(aithread.behaviour.motionZ) > 0.01)
 					this.motionZ = aithread.behaviour.motionZ;
 					aithread.behaviour.motionY = 0;
 				}
-				//this.rand.nextDouble()*0.2 - 0.1;
-				/*this.motionZ = aithread.behaviour.motionZ;//this.rand.nextDouble()*0.2 - 0.1;
-				if(aithread.behaviour.motionY > 0 && this.onGround){
-					this.motionY = aithread.behaviour.motionY;
-					aithread.behaviour.motionY = 0;
-				}
-				else {
-					this.motionY = aithread.behaviour.motionY;
-				}*/
 			}
 		}
 		else {
-			logger.info("Cannot update senses.");
+			logger.info("Cannot update behaviour.");
 		}
 	}
 }
