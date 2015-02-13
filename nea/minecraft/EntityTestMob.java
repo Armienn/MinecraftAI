@@ -20,11 +20,9 @@ package nea.minecraft;
 import java.util.Iterator;
 import java.util.List;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
 import org.apache.logging.log4j.LogManager;
@@ -107,5 +105,13 @@ public class EntityTestMob extends EntityLiving implements net.minecraft.entity.
 		else {
 			logger.info("Cannot update behaviour.");
 		}
+	}
+	
+	public void readEntityFromNBT(NBTTagCompound tagCompund){
+		super.readEntityFromNBT(tagCompund);
+	}
+	
+	public void writeEntityToNBT(NBTTagCompound tagCompound){
+		super.writeEntityToNBT(tagCompound);
 	}
 }

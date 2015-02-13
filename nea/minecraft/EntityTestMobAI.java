@@ -105,7 +105,12 @@ public class EntityTestMobAI extends Thread {
 	}
 	
 	private void say(String text){
-		Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("TestMob-" + id + ": " + text));
+		try{
+			Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("TestMob-" + id + ": " + text));
+		}
+		catch(Exception e){
+			
+		}
 	}
 	
 	private boolean trySleep(long milliseconds){
