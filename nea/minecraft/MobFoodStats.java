@@ -77,7 +77,7 @@ public class MobFoodStats
             {
                 if (p_75118_1_.getHealth() > 10.0F || var2 == EnumDifficulty.HARD || p_75118_1_.getHealth() > 1.0F && var2 == EnumDifficulty.NORMAL)
                 {
-                    p_75118_1_.attackEntityFrom(DamageSource.starve, 1.0F);
+                    p_75118_1_.attackEntityFrom(net.minecraft.util.DamageSource.starve, 1.0F);
                 }
 
                 this.foodTimer = 0;

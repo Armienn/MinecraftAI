@@ -39,6 +39,12 @@ public class EntityTestMob extends EntityLiving implements net.minecraft.entity.
 		if (!this.worldObj.isRemote){
 			aithread = new EntityTestMobAI(worldIn, ((Entity)this).getEntityId());
 			aithread.start();
+			
+			//analysisthread = new Analysis(worldIn, ((Entity)this).getEntityId());
+			//analysisthread.start();
+			
+			//learningthread = new Learning(worldIn, ((Entity)this).getEntityId());
+			//learningthread.start();
 		}
 	}
 	
@@ -47,6 +53,8 @@ public class EntityTestMob extends EntityLiving implements net.minecraft.entity.
 		if (!this.worldObj.isRemote){ // if this is server
 			//logger.info("onUpdate of testmob.");
 			updateSenses();
+			//updateSensoryMemory();
+			//updateRewards();
 			updateBehaviour();
 		}
 	}
