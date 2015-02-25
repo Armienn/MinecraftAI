@@ -7,8 +7,8 @@ import net.minecraft.world.World;
 public class TexBrain {
 	public World worldObj;
 	public int id;
-	public Actions actions = new Actions();
-	public Senses senses = new Senses();
+	public Actions actions = new Actions(this);
+	public Senses senses = new Senses(this);
 	
 	private long lastupdate = 0;
 	

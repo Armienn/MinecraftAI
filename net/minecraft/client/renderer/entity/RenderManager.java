@@ -198,6 +198,7 @@ public class RenderManager
         this.entityRenderMap.put(EntityHorse.class, new RenderHorse(this, new ModelHorse(), 0.75F));
         this.entityRenderMap.put(EntityLightningBolt.class, new RenderLightningBolt(this));
         this.entityRenderMap.put(nea.minecraft.EntityTestMob.class, new nea.minecraft.client.renderer.entity.RenderTestMob(this));
+        this.entityRenderMap.put(nea.minecraft.tex.EntityTex.class, new nea.minecraft.client.renderer.entity.RenderTex(this));
         this.field_178637_m = new RenderPlayer(this);
         this.field_178636_l.put("default", this.field_178637_m);
         this.field_178636_l.put("slim", new RenderPlayer(this, true));
