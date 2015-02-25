@@ -15,13 +15,14 @@ public class TexBrain {
 	public TexBrain(World worldin, int id){
 		worldObj = worldin;
 		this.id = id;
+		lastupdate = System.currentTimeMillis();
 	}
 	
 	public boolean KeepRunning(){
 		long currenttime = System.currentTimeMillis();
 		boolean keeprunning = false;
 		synchronized(this){
-			keeprunning = currenttime - lastupdate > 1000 ? true : false;
+			keeprunning = currenttime - lastupdate > 1000 ? false : true;
 		}
 		return keeprunning;
 	}
