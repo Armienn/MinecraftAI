@@ -5,6 +5,8 @@ import nea.minecraft.tex.interaction.Rewards;
 import nea.minecraft.tex.interaction.Senses;
 import nea.minecraft.tex.memory.SensoryMemory;
 import nea.minecraft.tex.memory.ShortTermMemory;
+import net.minecraft.client.Minecraft;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 
 public class TexBrain {
@@ -38,5 +40,12 @@ public class TexBrain {
 		synchronized(this){
 			lastupdate = System.currentTimeMillis();
 		}
+	}
+	
+	public void Say(String text){
+		try{
+			Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("Tex #" + id + ": " + text));
+		}
+		catch(Exception e){ }
 	}
 }
