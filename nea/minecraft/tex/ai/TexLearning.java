@@ -14,9 +14,11 @@ public class TexLearning extends Thread {
 	}
 	
 	public void run(){
+		logger.info("Starting Learning thread of Tex #" + brain.id);
 		while(brain.KeepRunning()){
 			
 		}
+		logger.info("Ending Learning thread of Tex #" + brain.id);
 	}
 
 }

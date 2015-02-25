@@ -14,9 +14,11 @@ public class TexMainAI extends Thread {
 	}
 	
 	public void run(){
+		logger.info("Starting Main AI thread of Tex #" + brain.id);
 		while(brain.KeepRunning()){
 			
 		}
+		logger.info("Ending Main AI thread of Tex #" + brain.id);
 	}
 
 }

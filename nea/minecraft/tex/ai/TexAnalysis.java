@@ -14,9 +14,11 @@ public class TexAnalysis extends Thread {
 	}
 	
 	public void run(){
+		logger.info("Starting Analysis thread of Tex #" + brain.id);
 		while(brain.KeepRunning()){
 			
 		}
+		logger.info("Ending Analysis thread of Tex #" + brain.id);
 	}
 
 }

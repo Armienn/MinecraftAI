@@ -20,7 +20,7 @@ public class EntityTex extends EntityLiving implements net.minecraft.entity.pass
 	
 	public EntityTex(World worldIn){
 		super(worldIn);
-		logger.info("Constructor of Tex.");
+		logger.info("Constructor of Tex #" + ((Entity)this).getEntityId());
 		if (!this.worldObj.isRemote){ // if this is server
 			brain = new TexBrain(worldObj, ((Entity)this).getEntityId());
 			aithread = new TexMainAI(brain);
