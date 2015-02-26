@@ -36,15 +36,14 @@ public class EntityTex extends EntityLiving implements net.minecraft.entity.pass
 		super.onUpdate();
 		if (!this.worldObj.isRemote){ // if this is server
 			//update input to ai
-			synchronized(brain.senses){
-				brain.senses.Update(this); }
-			synchronized(brain.rewards){
-				brain.rewards.Update(this); }
-			synchronized(brain.sensememory){
-				brain.sensememory.Update(); }
+			synchronized(brain){
+				brain.senses.Update(this);
+				brain.rewards.Update(this);
+				brain.sensememory.Update();
+			}
 			
 			//update output to world
-			synchronized(brain.actions){
+			synchronized(brain){
 				brain.actions.Update(this); }
 			
 			//tell brain that it's been updated

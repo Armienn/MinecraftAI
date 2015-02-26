@@ -16,7 +16,7 @@ public class TexAnalysis extends Thread {
 	public void run(){
 		logger.info("Tex #" + brain.id + ": Starting Analysis thread");
 		while(brain.KeepRunning()){
-			trySleep(100);
+			trySleep(200);
 		}
 		logger.info("Tex #" + brain.id + ": Ending Analysis thread");
 	}
