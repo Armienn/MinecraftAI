@@ -7,7 +7,7 @@ import nea.minecraft.tex.interaction.Senses;
 
 public class SensoryMemory {
 	TexBrain brain;
-	ArrayList<Senses> memory = new ArrayList<Senses>();
+	public ArrayList<Senses> memory = new ArrayList<Senses>();
 	
 	public SensoryMemory(TexBrain brain){
 		this.brain = brain;
