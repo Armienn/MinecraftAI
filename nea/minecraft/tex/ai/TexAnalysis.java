@@ -22,12 +22,13 @@ public class TexAnalysis extends Thread {
 					/// items : ///
 					brain.shortmemory.MarkItemsForUpdate();
 					for(ItemInfo item : brain.sensememory.memory.get(0).nearbyitems){
-						if(brain.shortmemory.CurrentlyExists(item)){
+						brain.shortmemory.Update(item);
+						/*if(brain.shortmemory.CurrentlyExists(item)){
 							brain.shortmemory.Update(item);
 						}
 						else{
 							brain.shortmemory.Add(item);
-						}
+						}*/
 					}
 					brain.shortmemory.RemoveUnupdatedItems();
 					
