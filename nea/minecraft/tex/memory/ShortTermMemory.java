@@ -1,10 +1,14 @@
 package nea.minecraft.tex.memory;
 
+import java.util.ArrayList;
+
 import nea.minecraft.tex.TexBrain;
+import nea.minecraft.tex.memory.utility.ItemMemory;
 import nea.minecraft.utility.ItemInfo;
 
 public class ShortTermMemory {
 	TexBrain brain;
+	ArrayList<ItemMemory> itemmemories = new ArrayList<ItemMemory>();
 	
 	public ShortTermMemory(TexBrain brain){
 		this.brain = brain;
@@ -20,11 +24,19 @@ public class ShortTermMemory {
 	}
 	
 	public void Update(ItemInfo item){
-		// TODO
+		if(CurrentlyExists(item)){
+			//Update
+		}
+		else{
+			itemmemories.add(new ItemMemory(item));
+		}
 	}
 
 	public void MarkItemsForUpdate() {
-		// TODO
+		for(ItemMemory item : itemmemories){
+			//if not away already
+				item.awaitingUpdate = true;
+		}
 	}
 
 	public void RemoveUnupdatedItems() {
