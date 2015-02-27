@@ -2,9 +2,9 @@ package nea.minecraft.client.renderer.entity;
 
 import nea.minecraft.tex.EntityTex;
 import nea.minecraft.client.model.ModelTestMob;
-import nea.minecraft.client.model.baby_Creature;
-import nea.minecraft.client.model.teen_Creature;
-import nea.minecraft.client.model.adult_Creature;
+import nea.minecraft.client.model.ModelTexBaby;
+import nea.minecraft.client.model.ModelTexTeen;
+import nea.minecraft.client.model.ModelTexAdult;
 import net.minecraft.client.renderer.entity.RenderBiped;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -19,21 +19,21 @@ import net.minecraft.world.World;
 
 public class RenderTex extends RenderLiving
 {
-    private static final ResourceLocation field_177120_j = new ResourceLocation("textures/entity/baby_tex/baby_tex.png"); //baby tex
+    //private static final ResourceLocation field_177120_j = new ResourceLocation("textures/entity/baby_tex/baby_tex.png"); //baby tex
     //private static final ResourceLocation field_177120_j = new ResourceLocation("textures/entity/teen_tex/teen_tex.png"); //teen tex
-    //private static final ResourceLocation field_177120_j = new ResourceLocation("textures/entity/adult_tex/adult_tex.png"); //adult tex
+    private static final ResourceLocation field_177120_j = new ResourceLocation("textures/entity/adult_tex/adult_tex.png"); //adult tex
     
     public RenderTex(RenderManager p_i46148_1_)
     {
-        super(p_i46148_1_, new baby_Creature(), 0.5F);
+        super(p_i46148_1_, new ModelTexAdult(), 0.5F);
         this.addLayer(new LayerHeldItem(this));
         
         this.addLayer(new LayerBipedArmor(this)
         {
             protected void func_177177_a()
             {
-                this.field_177189_c = new baby_Creature();
-                this.field_177186_d = new baby_Creature();
+                this.field_177189_c = new ModelTexAdult();
+                this.field_177186_d = new ModelTexAdult();
             }
         });  
     }

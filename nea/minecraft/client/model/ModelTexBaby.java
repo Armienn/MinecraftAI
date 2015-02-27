@@ -12,7 +12,7 @@ import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.util.MathHelper;
 
-public class baby_Creature extends ModelBase
+public class ModelTexBaby extends ModelBase
 {
   //fields
     ModelRenderer Leg1;
@@ -31,7 +31,7 @@ public class baby_Creature extends ModelBase
     ModelRenderer RightarmBL;
     ModelRenderer RightarmBR;
   
-  public baby_Creature()
+  public ModelTexBaby()
   {
     textureWidth = 32;
     textureHeight = 36;
@@ -159,6 +159,20 @@ public class baby_Creature extends ModelBase
   public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5)
   {
     super.setRotationAngles(f, f1, f2, f3, f4, f5, null);
+  }
+
+  /**
+   * Sets the model's various rotation angles. For bipeds, par1 and par2 are used for animating the movement of arms
+   * and legs, where par1 represents the time(so that arms and legs swing back and forth) and par2 represents how
+   * "far" arms and legs can swing at most.
+   */
+  public void setRotationAngles(float p_78087_1_, float p_78087_2_, float p_78087_3_, float p_78087_4_, float p_78087_5_, float p_78087_6_, Entity p_78087_7_)
+  {
+      this.Body.rotateAngleX = ((float)Math.PI / 2F);
+      this.Leg1.rotateAngleX = MathHelper.cos(p_78087_1_ * 0.6662F) * 1.4F * p_78087_2_;
+      this.Leg2.rotateAngleX = MathHelper.cos(p_78087_1_ * 0.6662F + (float)Math.PI) * 1.4F * p_78087_2_;
+      this.Leg3.rotateAngleX = MathHelper.cos(p_78087_1_ * 0.6662F + (float)Math.PI) * 1.4F * p_78087_2_;
+      this.Leg4.rotateAngleX = MathHelper.cos(p_78087_1_ * 0.6662F) * 1.4F * p_78087_2_;
   }
 
 }
