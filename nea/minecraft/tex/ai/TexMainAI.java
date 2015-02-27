@@ -18,6 +18,9 @@ public class TexMainAI extends Thread {
 		brain.Say("Good morning, world!");
 		while(brain.KeepRunning()){
 			trySleep(100);
+			while(brain.Pause()){
+				trySleep(100);
+			}
 		}
 		logger.info("Tex #" + brain.id + ": Ending Main AI thread");
 	}

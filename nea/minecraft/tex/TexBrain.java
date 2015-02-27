@@ -8,6 +8,7 @@ import nea.minecraft.tex.memory.ShortTermMemory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 
 public class TexBrain {
 	public World worldObj;
@@ -20,6 +21,7 @@ public class TexBrain {
 	public ShortTermMemory shortmemory = new ShortTermMemory(this);
 	
 	private long lastupdate = 0;
+	private boolean alive = true;
 	
 	public TexBrain(World worldin, int id){
 		worldObj = worldin;
@@ -27,13 +29,31 @@ public class TexBrain {
 		lastupdate = System.currentTimeMillis();
 	}
 	
+	public void OnDeath(){
+		alive = false;
+	}
+	
 	public boolean KeepRunning(){
-		long currenttime = System.currentTimeMillis();
-		boolean keeprunning = false;
-		synchronized(this){
-			keeprunning = currenttime - lastupdate > 1000 ? false : true;
+		if(!alive){
+			return false;
 		}
-		return keeprunning;
+		boolean serverisrunning = ((WorldServer)worldObj).func_73046_m().isServerRunning();
+		if(!serverisrunning){
+			return false;
+		}
+		return true;
+	}
+	
+	public boolean Pause(){
+		if(!KeepRunning()){
+			return false; 
+		}
+		long currenttime = System.currentTimeMillis();
+		boolean pause = false;
+		synchronized(this){
+			pause = currenttime - lastupdate > 200 ? true : false;
+		}
+		return pause;
 	}
 	
 	public void Updated(){

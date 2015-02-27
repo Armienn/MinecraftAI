@@ -32,7 +32,10 @@ public class TexAnalysis extends Thread {
 					brain.sensememory.memory.remove(0);
 				}
 			}
-			trySleep(200);
+			trySleep(100);
+			while(brain.Pause()){
+				trySleep(100);
+			}
 		}
 		logger.info("Tex #" + brain.id + ": Ending Analysis thread");
 	}

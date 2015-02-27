@@ -6,6 +6,7 @@ import nea.minecraft.tex.ai.TexMainAI;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
 import org.apache.logging.log4j.LogManager;
@@ -49,6 +50,10 @@ public class EntityTex extends EntityLiving implements net.minecraft.entity.pass
 			//tell brain that it's been updated
 			brain.Updated();
 		}
+	}
+	
+	public void onDeath(DamageSource cause){
+		brain.OnDeath();
 	}
 	
 	public void readEntityFromNBT(NBTTagCompound tagCompund){

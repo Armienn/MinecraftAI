@@ -17,6 +17,9 @@ public class TexLearning extends Thread {
 		logger.info("Tex #" + brain.id + ": Starting Learning thread");
 		while(brain.KeepRunning()){
 			trySleep(100);
+			while(brain.Pause()){
+				trySleep(100);
+			}
 		}
 		logger.info("Tex #" + brain.id + ": Ending Learning thread");
 	}
