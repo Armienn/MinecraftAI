@@ -1,6 +1,7 @@
 package nea.minecraft.tex.ai;
 
 import nea.minecraft.tex.TexBrain;
+import nea.minecraft.tex.interaction.Senses;
 import nea.minecraft.utility.ItemInfo;
 
 import org.apache.logging.log4j.LogManager;
@@ -19,20 +20,15 @@ public class TexAnalysis extends Thread {
 		while(brain.KeepRunning()){
 			synchronized(brain){
 				while( brain.sensememory.memory.size() > 0){
+					Senses nextsenses = brain.sensememory.memory.get(0);
+					brain.shortmemory.StartUpdate(nextsenses.time);
 					/// items : ///
-					brain.shortmemory.MarkItemsForUpdate();
-					for(ItemInfo item : brain.sensememory.memory.get(0).nearbyitems){
+					for(ItemInfo item : nextsenses.nearbyitems){
 						brain.shortmemory.Update(item);
-						/*if(brain.shortmemory.CurrentlyExists(item)){
-							brain.shortmemory.Update(item);
-						}
-						else{
-							brain.shortmemory.Add(item);
-						}*/
 					}
 					brain.shortmemory.RemoveUnupdatedItems();
 					
-					
+					/// end : remove the processed memory ///
 					brain.sensememory.memory.remove(0);
 				}
 			}

@@ -9,37 +9,40 @@ import nea.minecraft.utility.ItemInfo;
 public class ShortTermMemory {
 	TexBrain brain;
 	ArrayList<ItemMemory> itemmemories = new ArrayList<ItemMemory>();
+	long lastUpdate;
 	
 	public ShortTermMemory(TexBrain brain){
 		this.brain = brain;
 	}
 	
-	public boolean CurrentlyExists(ItemInfo item){
-		// TODO
-		return false;
-	}
-	
-	public void Add(ItemInfo item){
-		// TODO
+	public ItemMemory GetMemoryOfItem(ItemInfo item){
+		for(ItemMemory t : itemmemories){
+			if(t.id == item.id && t.disappearTime == 0)
+				return t;
+		}
+		return null;
 	}
 	
 	public void Update(ItemInfo item){
-		if(CurrentlyExists(item)){
-			//Update
+		ItemMemory t = GetMemoryOfItem(item);
+		if(t != null){
+			t.Update(item, lastUpdate);
 		}
 		else{
-			itemmemories.add(new ItemMemory(item));
+			itemmemories.add(new ItemMemory(item, lastUpdate));
 		}
 	}
 
-	public void MarkItemsForUpdate() {
-		for(ItemMemory item : itemmemories){
-			//if not away already
-				item.awaitingUpdate = true;
-		}
+	public void StartUpdate(long time) {
+		lastUpdate = time;
 	}
 
 	public void RemoveUnupdatedItems() {
-		// TODO
+		for(ItemMemory item : itemmemories){
+			if( item.disappearTime == 0  //if not away already
+					&& item.lastUpdate < lastUpdate){ //if not updated in the current iteration
+				item.disappearTime = item.lastUpdate;
+			}
+		}
 	}
 }

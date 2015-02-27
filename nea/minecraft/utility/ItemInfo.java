@@ -4,7 +4,7 @@ import net.minecraft.entity.item.EntityItem;
 
 public class ItemInfo {
 	public int id;
-	public String itemtype;
+	public String itemType;
 	public double posX;
 	public double posY;
 	public double posZ;
@@ -14,6 +14,6 @@ public class ItemInfo {
 		posX = item.posX;
 		posY = item.posY;
 		posZ = item.posZ;
-		itemtype = item.getName();
+		itemType = item.getName();
 	}
 }
