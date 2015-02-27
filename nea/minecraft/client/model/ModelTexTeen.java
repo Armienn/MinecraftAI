@@ -7,12 +7,13 @@
 package nea.minecraft.client.model;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.util.MathHelper;
 
-public class teen_Creature extends ModelBase
+public class ModelTexTeen extends ModelBase
 {
   //fields
     ModelRenderer Body;
@@ -42,7 +43,7 @@ public class teen_Creature extends ModelBase
     ModelRenderer Spiketail2;
     ModelRenderer Spikehead;
   
-  public teen_Creature()
+  public ModelTexTeen()
   {
     textureWidth = 61;
     textureHeight = 53;
@@ -248,5 +249,34 @@ public class teen_Creature extends ModelBase
   {
     super.setRotationAngles(f, f1, f2, f3, f4, f5, null);
   }
-
+  
+  /**
+   * Sets the model's various rotation angles. For bipeds, par1 and par2 are used for animating the movement of arms
+   * and legs, where par1 represents the time(so that arms and legs swing back and forth) and par2 represents how
+   * "far" arms and legs can swing at most.
+   */
+  public void setRotationAngles(float p_78087_1_, float p_78087_2_, float p_78087_3_, float p_78087_4_, float p_78087_5_, float p_78087_6_, Entity p_78087_7_)
+  {     
+      //this.Body.rotateAngleX = ((float)Math.PI / 2F);
+      this.RightlegB.rotateAngleX = MathHelper.cos(p_78087_1_ * 0.6662F) * 1.4F * p_78087_2_;
+      this.LeftlegF.rotateAngleX = MathHelper.cos(p_78087_1_ * 0.6662F + (float)Math.PI) * 1.4F * p_78087_2_;
+      this.LeftlegB.rotateAngleX = MathHelper.cos(p_78087_1_ * 0.6662F + (float)Math.PI) * 1.4F * p_78087_2_;
+      this.RightlegF.rotateAngleX = MathHelper.cos(p_78087_1_ * 0.6662F) * 1.4F * p_78087_2_;
+      this.Neck.rotateAngleX = MathHelper.cos(p_78087_1_ * 0.6662F) * 1.4F * p_78087_2_;
+      this.Head.rotateAngleX = this.Neck.rotateAngleX;
+      this.Head.rotateAngleY = this.Neck.rotateAngleY;
+      this.Nose.rotateAngleY = this.Head.rotateAngleY;
+      this.Nose.rotateAngleX = this.Head.rotateAngleX;
+      this.Spikehead.rotateAngleY = this.Head.rotateAngleY;
+      this.Spikehead.rotateAngleX = this.Head.rotateAngleX;
+      this.tail.rotateAngleX = this.Body.rotateAngleX;
+      this.SpikeTail.rotateAngleY = this.tail.rotateAngleY;
+      this.SpikeTail.rotateAngleX = this.tail.rotateAngleX;
+      this.tail2.rotateAngleY = MathHelper.cos(p_78087_1_ * 0.6662F) * 1.4F * p_78087_2_; 
+      this.SpikeTail1.rotateAngleY = this.tail2.rotateAngleY;
+      this.SpikeTail1.rotateAngleX = this.tail2.rotateAngleX;
+      this.Taillast.rotateAngleY = MathHelper.cos(p_78087_1_ * 0.6662F) * 1.4F * p_78087_2_;
+      this.Spiketail2.rotateAngleY = this.Taillast.rotateAngleY;
+      this.Spiketail2.rotateAngleX = this.Taillast.rotateAngleX;
+  }
 }
