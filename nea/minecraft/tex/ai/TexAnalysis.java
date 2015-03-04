@@ -4,11 +4,7 @@ import nea.minecraft.tex.TexBrain;
 import nea.minecraft.tex.interaction.Senses;
 import nea.minecraft.utility.ItemInfo;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 public class TexAnalysis extends Thread {
-	Logger logger = LogManager.getLogger();
 	TexBrain brain;
 	
 	public TexAnalysis(TexBrain brain){
@@ -16,11 +12,11 @@ public class TexAnalysis extends Thread {
 	}
 	
 	public void run(){
-		logger.info("Tex #" + brain.id + ": Starting Analysis thread");
+		brain.logger.info("Tex #" + brain.id + ": Starting Analysis thread");
 		while(brain.KeepRunning()){
 			synchronized(brain){
-				while( brain.sensememory.memory.size() > 0){
-					Senses nextsenses = brain.sensememory.memory.get(0);
+				while( brain.sensememory.memorysenses.size() > 0){
+					Senses nextsenses = brain.sensememory.memorysenses.get(0);
 					brain.shortmemory.StartUpdate(nextsenses.time);
 					/// items : ///
 					for(ItemInfo item : nextsenses.nearbyitems){
@@ -29,7 +25,7 @@ public class TexAnalysis extends Thread {
 					brain.shortmemory.RemoveUnupdatedItems();
 					
 					/// end : remove the processed memory ///
-					brain.sensememory.memory.remove(0);
+					brain.sensememory.memorysenses.remove(0);
 				}
 			}
 			trySleep(100);
@@ -37,7 +33,7 @@ public class TexAnalysis extends Thread {
 				trySleep(100);
 			}
 		}
-		logger.info("Tex #" + brain.id + ": Ending Analysis thread");
+		brain.logger.info("Tex #" + brain.id + ": Ending Analysis thread");
 	}
 	
 	static boolean trySleep(long milliseconds){

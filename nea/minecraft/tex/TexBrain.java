@@ -1,5 +1,8 @@
 package nea.minecraft.tex;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import nea.minecraft.tex.interaction.Actions;
 import nea.minecraft.tex.interaction.Rewards;
 import nea.minecraft.tex.interaction.Senses;
@@ -11,6 +14,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
 public class TexBrain {
+	public Logger logger = LogManager.getLogger();
 	public World worldObj;
 	public int id;
 	public Actions actions = new Actions(this);

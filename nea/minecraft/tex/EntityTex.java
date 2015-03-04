@@ -40,12 +40,14 @@ public class EntityTex extends EntityLiving implements net.minecraft.entity.pass
 			synchronized(brain){
 				brain.senses.Update(this);
 				brain.rewards.Update(this);
-				brain.sensememory.Update();
+				brain.sensememory.UpdateExternal();
 			}
 			
 			//update output to world
 			synchronized(brain){
-				brain.actions.Update(this); }
+				brain.actions.Update(this);
+				brain.sensememory.UpdateInternal();
+			}
 			
 			//tell brain that it's been updated
 			brain.Updated();

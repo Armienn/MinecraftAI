@@ -2,11 +2,7 @@ package nea.minecraft.tex.ai;
 
 import nea.minecraft.tex.TexBrain;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 public class TexMainAI extends Thread {
-	Logger logger = LogManager.getLogger();
 	TexBrain brain;
 	
 	public TexMainAI(TexBrain brain){
@@ -14,7 +10,7 @@ public class TexMainAI extends Thread {
 	}
 	
 	public void run(){
-		logger.info("Tex #" + brain.id + ": Starting Main AI thread");
+		brain.logger.info("Tex #" + brain.id + ": Starting Main AI thread");
 		brain.Say("Good morning, world!");
 		while(brain.KeepRunning()){
 			trySleep(100);
@@ -22,7 +18,7 @@ public class TexMainAI extends Thread {
 				trySleep(100);
 			}
 		}
-		logger.info("Tex #" + brain.id + ": Ending Main AI thread");
+		brain.logger.info("Tex #" + brain.id + ": Ending Main AI thread");
 	}
 	
 	static boolean trySleep(long milliseconds){

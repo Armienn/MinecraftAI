@@ -8,8 +8,14 @@ import nea.minecraft.utility.ItemInfo;
 
 public class ShortTermMemory {
 	TexBrain brain;
-	ArrayList<ItemMemory> itemmemories = new ArrayList<ItemMemory>();
 	long lastUpdate;
+	/// Actual memory : ///
+	// memory of nearby items:
+	ArrayList<ItemMemory> itemmemories = new ArrayList<ItemMemory>();
+	// memory of own position:
+	// memory of own actions:
+	// memory of inventory:
+	/// Memory end ///
 	
 	public ShortTermMemory(TexBrain brain){
 		this.brain = brain;
