@@ -2,7 +2,7 @@ package nea.minecraft.tex.ai;
 
 import nea.minecraft.tex.TexBrain;
 import nea.minecraft.tex.interaction.Senses;
-import nea.minecraft.utility.ItemInfo;
+import nea.minecraft.tex.memory.utility.EntityMemory;
 
 public class TexAnalysis extends Thread {
 	TexBrain brain;
@@ -19,10 +19,10 @@ public class TexAnalysis extends Thread {
 					Senses nextsenses = brain.sensememory.memorysenses.get(0);
 					brain.shortmemory.StartUpdate(nextsenses.time);
 					/// items : ///
-					for(ItemInfo item : nextsenses.nearbyitems){
-						brain.shortmemory.Update(item);
+					for(EntityMemory mem : nextsenses.entityinfo){
+						brain.shortmemory.Update(mem);
 					}
-					brain.shortmemory.RemoveUnupdatedItems();
+					brain.shortmemory.UpdateUnupdatedMemories();
 					
 					/// end : remove the processed memory ///
 					brain.sensememory.memorysenses.remove(0);

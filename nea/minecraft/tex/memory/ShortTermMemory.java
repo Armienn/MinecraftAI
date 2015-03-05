@@ -3,39 +3,42 @@ package nea.minecraft.tex.memory;
 import java.util.ArrayList;
 
 import nea.minecraft.tex.TexBrain;
-import nea.minecraft.tex.memory.utility.ItemMemory;
-import nea.minecraft.utility.ItemInfo;
+import nea.minecraft.tex.memory.utility.EntityMemory;
 
 public class ShortTermMemory {
 	TexBrain brain;
 	long lastUpdate;
 	/// Actual memory : ///
+	ArrayList<EntityMemory> entitymemories = new ArrayList<EntityMemory>();
 	// memory of nearby items:
-	ArrayList<ItemMemory> itemmemories = new ArrayList<ItemMemory>();
+	//ArrayList<ItemMemory> itemmemories = new ArrayList<ItemMemory>();
 	// memory of own position:
 	// memory of own actions:
 	// memory of inventory:
+	// memory of other entities (including positions and actions):
+	// memory of surrounding blocks:
+	// memory of time of day:
 	/// Memory end ///
 	
 	public ShortTermMemory(TexBrain brain){
 		this.brain = brain;
 	}
 	
-	public ItemMemory GetMemoryOfItem(ItemInfo item){
-		for(ItemMemory t : itemmemories){
-			if(t.id == item.id && t.disappearTime == 0)
+	private EntityMemory GetMemoryOf(int id){
+		for(EntityMemory t : entitymemories){
+			if(t.id == id && t.disappearTime == 0)
 				return t;
 		}
 		return null;
 	}
 	
-	public void Update(ItemInfo item){
-		ItemMemory t = GetMemoryOfItem(item);
-		if(t != null){
-			t.Update(item, lastUpdate);
+	public void Update(EntityMemory memory){
+		EntityMemory m = GetMemoryOf(memory.id);
+		if(m != null){
+			m.Update(memory, lastUpdate);
 		}
 		else{
-			itemmemories.add(new ItemMemory(item, lastUpdate));
+			entitymemories.add(memory);
 		}
 	}
 
@@ -43,11 +46,11 @@ public class ShortTermMemory {
 		lastUpdate = time;
 	}
 
-	public void RemoveUnupdatedItems() {
-		for(ItemMemory item : itemmemories){
-			if( item.disappearTime == 0  //if not away already
-					&& item.lastUpdate < lastUpdate){ //if not updated in the current iteration
-				item.disappearTime = item.lastUpdate;
+	public void UpdateUnupdatedMemories() {
+		for(EntityMemory memory : entitymemories){
+			if( memory.disappearTime == 0  //if not away already
+					&& memory.lastUpdate < lastUpdate){ //if not updated in the current iteration
+				memory.disappearTime = memory.lastUpdate;
 			}
 		}
 	}

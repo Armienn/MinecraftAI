@@ -1,10 +1,7 @@
 package nea.minecraft.tex.memory.utility;
 
-import java.util.ArrayList;
 
-import nea.minecraft.utility.ItemInfo;
-
-public class ItemMemory {
+/*public class ItemMemory {
 	public int id;
 	public String itemType;
 	public long appearTime;
@@ -78,4 +75,4 @@ public class ItemMemory {
 			return appearPosZ;
 		}
 	}
-}
+}*/

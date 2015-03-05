@@ -2,7 +2,7 @@ package nea.minecraft.utility;
 
 import net.minecraft.entity.item.EntityItem;
 
-public class ItemInfo {
+/*public class ItemInfo {
 	public int id;
 	public String itemType;
 	public double posX;
@@ -15,5 +15,6 @@ public class ItemInfo {
 		posY = item.posY;
 		posZ = item.posZ;
 		itemType = item.getName();
-	}
+	} 
 }
+*/
