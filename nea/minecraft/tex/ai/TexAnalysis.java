@@ -18,13 +18,11 @@ public class TexAnalysis extends Thread {
 				while( brain.sensememory.memorysenses.size() > 0){
 					Senses nextsenses = brain.sensememory.memorysenses.get(0);
 					brain.shortmemory.StartUpdate(nextsenses.time);
-					/// items : ///
 					for(EntityMemory mem : nextsenses.entityinfo){
 						brain.shortmemory.Update(mem);
 					}
 					brain.shortmemory.UpdateUnupdatedMemories();
 					
-					/// end : remove the processed memory ///
 					brain.sensememory.memorysenses.remove(0);
 				}
 			}

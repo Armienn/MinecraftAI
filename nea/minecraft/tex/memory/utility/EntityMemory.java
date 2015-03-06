@@ -48,33 +48,11 @@ public class EntityMemory {
 	}
 	
 	public void Update(EntityMemory memory, long time){
-		//TODO: figure out where to move this
-		/*
-		public void Update(ItemInfo item, long time){
-			double deltaX = item.posX - CurrentPosX();
-			double deltaY = item.posY - CurrentPosY();
-			double deltaZ = item.posZ - CurrentPosZ();
-			
-			double delta = Math.abs(deltaX) + Math.abs(deltaY) + Math.abs(deltaZ);
-			if(delta > 0.0001){
-				if(movements.size() > 0){
-					Movement prevmove = movements.get(movements.size()-1);
-					if( prevmove.endTime < lastUpdate ){ // if last movement ended before last update
-						movements.add(new Movement(lastUpdate,CurrentPosX(),CurrentPosY(),CurrentPosZ(),time,item.posX,item.posY,item.posZ));
-					}
-					else { // if last movement was still ongoing last update
-						prevmove.endTime = time;
-						prevmove.endPosX = item.posX;
-						prevmove.endPosY = item.posY;
-						prevmove.endPosZ = item.posZ;
-					}
-				}
-				else {
-					movements.add(new Movement(lastUpdate,CurrentPosX(),CurrentPosY(),CurrentPosZ(),time,item.posX,item.posY,item.posZ));
-				}
-			}
-			lastUpdate = time;
+		for(EntityMemoryParameter parameter : parameters){
+			EntityMemoryParameter param = memory.GetParameter(parameter.GetType());
+			if(param != null)
+				parameter.UpdateValue(param.GetParameter(), lastUpdate, time);
 		}
-		 */
+		lastUpdate = time;
 	}
 }

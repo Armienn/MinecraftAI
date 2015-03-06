@@ -7,6 +7,7 @@ import java.util.List;
 import nea.minecraft.tex.EntityTex;
 import nea.minecraft.tex.TexBrain;
 import nea.minecraft.tex.memory.utility.EntityMemory;
+import nea.minecraft.tex.memory.utility.EntityMemoryParameter;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 
@@ -40,7 +41,10 @@ public class Senses {
 	}
 	
 	private void AddItem(EntityItem item){
-		EntityMemory info = new EntityMemory(item.getEntityId(),"item",time); 
+		EntityMemory info = new EntityMemory(item.getEntityId(),item.getName(),time);
+		info.AddParameter(new EntityMemoryParameter("PositionX", item.posX));
+		info.AddParameter(new EntityMemoryParameter("PositionY", item.posY));
+		info.AddParameter(new EntityMemoryParameter("PositionZ", item.posZ));
 		entityinfo.add(info);
 	}
 	
