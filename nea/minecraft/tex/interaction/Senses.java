@@ -15,6 +15,7 @@ public class Senses {
 	TexBrain brain;
 	public long time; 
 	public ArrayList<EntityMemory> entityinfo = new ArrayList<EntityMemory>();
+	public EntityMemory self;
 	
 	public Senses(TexBrain brain){
 		this.brain = brain;
@@ -22,6 +23,18 @@ public class Senses {
 	
 	public void Update(EntityTex entity){
 		time = brain.worldObj.getTotalWorldTime();
+		SenseSelf(entity);
+		SenseEntities(entity);
+	}
+	
+	private void SenseSelf(EntityTex entity){
+		self = new EntityMemory(brain.id, "Tex", time);
+		self.AddParameter(new EntityMemoryParameter("PositionX", entity.posX));
+		self.AddParameter(new EntityMemoryParameter("PositionY", entity.posY));
+		self.AddParameter(new EntityMemoryParameter("PositionZ", entity.posZ));
+	}
+	
+	private void SenseEntities(EntityTex entity){
 		///// Find entities nearby
 		entityinfo.clear();
 		List var1 = brain.worldObj.loadedEntityList;
@@ -37,7 +50,6 @@ public class Senses {
     			//logger.info("Entity nearby: " + var3.toString());
             }
         }
-		/*///*/
 	}
 	
 	private void AddItem(EntityItem item){
@@ -52,6 +64,7 @@ public class Senses {
 		Senses sense = new Senses(brain);
 		sense.time = time;
 		sense.entityinfo.addAll(entityinfo);
+		sense.self = self;
 		return sense;
 	}
 }

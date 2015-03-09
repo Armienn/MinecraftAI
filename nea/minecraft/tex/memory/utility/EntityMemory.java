@@ -2,13 +2,16 @@ package nea.minecraft.tex.memory.utility;
 
 import java.util.ArrayList;
 
+import nea.minecraft.tex.interaction.Actions;
+
 public class EntityMemory {
 	public int id;
 	public long appearTime;
 	public long disappearTime;
 	private String type;
-	ArrayList<EntityMemoryParameter> parameters = new ArrayList<EntityMemoryParameter>();
 	ArrayList<String> properties = new ArrayList<String>();
+	ArrayList<EntityMemoryParameter> parameters = new ArrayList<EntityMemoryParameter>();
+	ArrayList<EntityAction> actions = new ArrayList<EntityAction>();
 	
 	public long lastUpdate;
 	

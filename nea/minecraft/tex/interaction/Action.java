@@ -1,12 +1,10 @@
 package nea.minecraft.tex.interaction;
 
-import java.util.ArrayList;
-
 public class Action {
-	ActionType type;
+	Type type;
 	float[] parameters;
 	
-	public Action(ActionType type){
+	public Action(Type type){
 		this.type = type;
 		int dof = DegreesOfFreedom(); 
 		if( dof > 0){
@@ -38,11 +36,11 @@ public class Action {
 		}
 	}
 	
-	public ActionType GetType(){
+	public Type GetType(){
 		return type;
 	}
 	
-	public static int DegreesOfFreedom(ActionType type){
+	public static int DegreesOfFreedom(Type type){
 		switch(type){
 		case Move:
 			return 2; // direction and speed
@@ -54,6 +52,8 @@ public class Action {
 			return 0;
 		}
 	}
+	
+	public enum Type{
+		Move, Jump, Use
+	}
 }
-
-enum ActionType {Move, Jump, Use}

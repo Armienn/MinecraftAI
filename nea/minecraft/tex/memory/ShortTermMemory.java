@@ -3,6 +3,7 @@ package nea.minecraft.tex.memory;
 import java.util.ArrayList;
 
 import nea.minecraft.tex.TexBrain;
+import nea.minecraft.tex.interaction.Action;
 import nea.minecraft.tex.memory.utility.EntityMemory;
 
 public class ShortTermMemory {
@@ -53,5 +54,10 @@ public class ShortTermMemory {
 				memory.disappearTime = memory.lastUpdate;
 			}
 		}
+	}
+
+	public void Update(Action action, long time) {
+		// TODO Auto-generated method stub
+		
 	}
 }

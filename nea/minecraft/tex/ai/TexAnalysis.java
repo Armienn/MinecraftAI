@@ -1,6 +1,8 @@
 package nea.minecraft.tex.ai;
 
 import nea.minecraft.tex.TexBrain;
+import nea.minecraft.tex.interaction.Action;
+import nea.minecraft.tex.interaction.Actions;
 import nea.minecraft.tex.interaction.Senses;
 import nea.minecraft.tex.memory.utility.EntityMemory;
 
@@ -24,6 +26,13 @@ public class TexAnalysis extends Thread {
 					brain.shortmemory.UpdateUnupdatedMemories();
 					
 					brain.sensememory.memorysenses.remove(0);
+				}
+				while( brain.sensememory.memoryactions.size() > 0){
+					Actions nextactions = brain.sensememory.memoryactions.get(0);
+					for(Action action : nextactions.actions){
+						brain.shortmemory.Update(action, nextactions.time);
+					}
+					brain.sensememory.memoryactions.remove(0);
 				}
 			}
 			trySleep(100);
