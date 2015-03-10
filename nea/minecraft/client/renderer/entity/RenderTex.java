@@ -19,21 +19,21 @@ import net.minecraft.world.World;
 
 public class RenderTex extends RenderLiving
 {
-    //private static final ResourceLocation field_177120_j = new ResourceLocation("textures/entity/baby_tex/baby_tex.png"); //baby tex
+    private static final ResourceLocation field_177120_j = new ResourceLocation("textures/entity/baby_tex/baby_tex.png"); //baby tex
     //private static final ResourceLocation field_177120_j = new ResourceLocation("textures/entity/teen_tex/teen_tex.png"); //teen tex
-    private static final ResourceLocation field_177120_j = new ResourceLocation("textures/entity/adult_tex/adult_tex.png"); //adult tex
+    //private static final ResourceLocation field_177120_j = new ResourceLocation("textures/entity/adult_tex/adult_tex.png"); //adult tex
     
     public RenderTex(RenderManager p_i46148_1_)
     {
-        super(p_i46148_1_, new ModelTexAdult(), 0.5F);
+        super(p_i46148_1_, new ModelTexBaby(), 0.5F);
         this.addLayer(new LayerHeldItem(this));
         
         this.addLayer(new LayerBipedArmor(this)
         {
             protected void func_177177_a()
             {
-                this.field_177189_c = new ModelTexAdult();
-                this.field_177186_d = new ModelTexAdult();
+                this.field_177189_c = new ModelTexBaby();
+                this.field_177186_d = new ModelTexBaby();
             }
         });  
     }
