@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import nea.minecraft.tex.EntityTex;
 import nea.minecraft.tex.TexBrain;
+import net.minecraft.entity.item.EntityItem;
 
 public class Actions {
 	TexBrain brain;
@@ -41,6 +42,15 @@ public class Actions {
 				}
 				break;
 			case PickUp:
+				EntityItem item = (EntityItem)brain.worldObj.findNearestEntityWithinAABB(EntityItem.class, entity.getEntityBoundingBox().expand(1.0D, 0.0D, 1.0D), entity);
+				if(item != null && entity.inventory[0] == null){
+					entity.inventory[0] = item.getEntityItem();
+					entity.onItemPickup(item, 1);
+					item.setDead();
+					brain.Say("Picked up a " + item.getName());
+				}
+				break;
+			case Drop:
 				
 				break;
 			case Use:

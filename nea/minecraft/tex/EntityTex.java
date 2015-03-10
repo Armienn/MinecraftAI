@@ -20,11 +20,10 @@ public class EntityTex extends EntityLiving implements net.minecraft.entity.pass
 	TexLearning learningthread;
 	TexAnalysis analysisthread;
 	
-	ItemStack[] inventory = new ItemStack[8]; 
+	public ItemStack[] inventory = new ItemStack[8]; 
 	
 	public EntityTex(World worldIn){
 		super(worldIn);
-		this.setCanPickUpLoot(true);
 		logger.info("Tex #" + ((Entity)this).getEntityId() + ": Constructor");
 		if (!this.worldObj.isRemote){ // if this is server
 			brain = new TexBrain(worldObj, ((Entity)this).getEntityId());
