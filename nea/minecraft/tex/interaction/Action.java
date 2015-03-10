@@ -56,6 +56,8 @@ public class Action {
 			return 2; // direction and speed
 		case Jump:
 			return 0;
+		case PickUp:
+			return 0; // Pick up closest item
 		case Use:
 			return 0;
 		default:
@@ -64,6 +66,6 @@ public class Action {
 	}
 	
 	public enum Type{
-		Move, Jump, Use
+		Move, Jump, PickUp, Use
 	}
 }

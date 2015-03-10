@@ -40,6 +40,9 @@ public class Actions {
 					entity.motionY = 0.45;
 				}
 				break;
+			case PickUp:
+				
+				break;
 			case Use:
 				
 				break;
