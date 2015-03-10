@@ -20,8 +20,6 @@ public class EntityTex extends EntityLiving implements net.minecraft.entity.pass
 	TexLearning learningthread;
 	TexAnalysis analysisthread;
 	
-	EntityTex entity;
-	
 	public ItemStack[] inventory = new ItemStack[8]; 
 	
 	public EntityTex(World worldIn){
@@ -60,10 +58,14 @@ public class EntityTex extends EntityLiving implements net.minecraft.entity.pass
 	}
 	
 	public void onDeath(DamageSource cause){
-		/*for(int i = 0; i<inventory.length; i++){
-			this.entityDropItem(inventory[i], 0);
-			inventory[i] = null;
-		}*/
+		for(int i = 0; i<inventory.length; i++){
+			if(inventory[i] != null){
+				this.entityDropItem(inventory[i], 1);
+				inventory[i] = null;
+			}
+		}
+		brain.logger.info("Tex #" + brain.id  + " has been killed. All items dropped!");
+		brain.Say("Tex #" + brain.id + " Goodbye World!");
 		brain.OnDeath();
 	}
 	
