@@ -5,6 +5,7 @@ import nea.minecraft.tex.ai.TexLearning;
 import nea.minecraft.tex.ai.TexMainAI;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
@@ -19,8 +20,11 @@ public class EntityTex extends EntityLiving implements net.minecraft.entity.pass
 	TexLearning learningthread;
 	TexAnalysis analysisthread;
 	
+	ItemStack[] inventory = new ItemStack[8]; 
+	
 	public EntityTex(World worldIn){
 		super(worldIn);
+		this.setCanPickUpLoot(true);
 		logger.info("Tex #" + ((Entity)this).getEntityId() + ": Constructor");
 		if (!this.worldObj.isRemote){ // if this is server
 			brain = new TexBrain(worldObj, ((Entity)this).getEntityId());
