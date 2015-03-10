@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import nea.minecraft.tex.EntityTex;
 import nea.minecraft.tex.TexBrain;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 
 public class Actions {
 	TexBrain brain;
@@ -51,7 +53,11 @@ public class Actions {
 				}
 				break;
 			case Drop:
-				
+				int slot = (int)(action.GetParameter(0)*8);
+				ItemStack inventoryItem = entity.inventory[slot];
+				if(entity.inventory[slot] != null)
+					entity.entityDropItem(inventoryItem, 0);
+				entity.inventory[slot] = null;
 				break;
 			case Use:
 				
