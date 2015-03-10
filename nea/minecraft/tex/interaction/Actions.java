@@ -25,6 +25,7 @@ public class Actions {
 	public void Update(EntityTex entity) {
 		time = brain.worldObj.getTotalWorldTime();
 		for(Action action : actions){
+			int slot = 0;
 			switch(action.GetType()){
 			case Move:
 				if (entity.onGround) {
@@ -43,7 +44,7 @@ public class Actions {
 				}
 				break;
 			case PickUp:
-				int slot = (int)(action.GetParameter(0)*8);
+				slot = (int)(action.GetParameter(0)*8);
 				EntityItem item = (EntityItem)brain.worldObj.findNearestEntityWithinAABB(EntityItem.class, entity.getEntityBoundingBox().expand(1.0D, 0.0D, 1.0D), entity);
 				if(item != null && entity.inventory[slot] == null){
 					entity.inventory[slot] = item.getEntityItem();
@@ -54,7 +55,7 @@ public class Actions {
 				}
 				break;
 			case Drop:
-				int slot = (int)(action.GetParameter(0)*8);
+				slot = (int)(action.GetParameter(0)*8);
 				ItemStack inventoryItem = entity.inventory[slot];
 				if(entity.inventory[slot] != null)
 					entity.entityDropItem(inventoryItem, 0);
