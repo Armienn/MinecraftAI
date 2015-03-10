@@ -26,6 +26,7 @@ public class Actions {
 		time = brain.worldObj.getTotalWorldTime();
 		for(Action action : actions){
 			int slot = 0;
+			EntityItem item = null;
 			switch(action.GetType()){
 			case Move:
 				if (entity.onGround) {
@@ -45,8 +46,9 @@ public class Actions {
 				break;
 			case PickUp:
 				slot = (int)(action.GetParameter(0)*8);
-				EntityItem item = (EntityItem)brain.worldObj.findNearestEntityWithinAABB(EntityItem.class, entity.getEntityBoundingBox().expand(1.0D, 0.0D, 1.0D), entity);
-				if(item != null && entity.inventory[slot] == null){
+				if(entity.inventory[slot] == null)
+					item = (EntityItem)brain.worldObj.findNearestEntityWithinAABB(EntityItem.class, entity.getEntityBoundingBox().expand(1.0D, 0.0D, 1.0D), entity);
+				if(item != null){
 					entity.inventory[slot] = item.getEntityItem();
 					entity.onItemPickup(item, 1);
 					item.setDead();
@@ -57,9 +59,11 @@ public class Actions {
 			case Drop:
 				slot = (int)(action.GetParameter(0)*8);
 				ItemStack inventoryItem = entity.inventory[slot];
-				if(entity.inventory[slot] != null)
+				if(entity.inventory[slot] != null){
 					entity.entityDropItem(inventoryItem, 0);
-				entity.inventory[slot] = null;
+					brain.logger.info("Dropping " + entity.inventory[slot].stackSize + " " + entity.inventory[slot].getDisplayName());
+					entity.inventory[slot] = null;
+				}
 				break;
 			case Use:
 				
