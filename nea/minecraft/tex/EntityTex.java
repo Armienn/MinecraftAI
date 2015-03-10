@@ -60,10 +60,10 @@ public class EntityTex extends EntityLiving implements net.minecraft.entity.pass
 	}
 	
 	public void onDeath(DamageSource cause){
-		for(int i = 0; i<entity.inventory.length; i++){
-			entity.entityDropItem(entity.inventory[i], 0);
-			entity.inventory[i] = null;
-		}
+		/*for(int i = 0; i<inventory.length; i++){
+			this.entityDropItem(inventory[i], 0);
+			inventory[i] = null;
+		}*/
 		brain.OnDeath();
 	}
 	
