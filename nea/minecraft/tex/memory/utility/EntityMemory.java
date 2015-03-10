@@ -30,6 +30,10 @@ public class EntityMemory {
 		parameters.add(parameter);
 	}
 	
+	public void AddAction(EntityAction action){
+		actions.add(action);
+	}
+	
 	public EntityMemoryParameter GetParameter(String type){
 		for(EntityMemoryParameter param : parameters){
 			if(param.GetType() == type)

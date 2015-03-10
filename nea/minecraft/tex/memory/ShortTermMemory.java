@@ -4,19 +4,20 @@ import java.util.ArrayList;
 
 import nea.minecraft.tex.TexBrain;
 import nea.minecraft.tex.interaction.Action;
+import nea.minecraft.tex.memory.utility.EntityAction;
 import nea.minecraft.tex.memory.utility.EntityMemory;
 
 public class ShortTermMemory {
 	TexBrain brain;
 	long lastUpdate;
 	/// Actual memory : ///
-	ArrayList<EntityMemory> entitymemories = new ArrayList<EntityMemory>();
-	// memory of nearby items:
-	//ArrayList<ItemMemory> itemmemories = new ArrayList<ItemMemory>();
 	// memory of own position:
 	// memory of own actions:
 	// memory of inventory:
+	EntityMemory selfMemory;
+	// memory of nearby items:
 	// memory of other entities (including positions and actions):
+	ArrayList<EntityMemory> entityMemories = new ArrayList<EntityMemory>();
 	// memory of surrounding blocks:
 	// memory of time of day:
 	/// Memory end ///
@@ -26,7 +27,7 @@ public class ShortTermMemory {
 	}
 	
 	private EntityMemory GetMemoryOf(int id){
-		for(EntityMemory t : entitymemories){
+		for(EntityMemory t : entityMemories){
 			if(t.id == id && t.disappearTime == 0)
 				return t;
 		}
@@ -39,7 +40,7 @@ public class ShortTermMemory {
 			m.Update(memory, lastUpdate);
 		}
 		else{
-			entitymemories.add(memory);
+			entityMemories.add(memory);
 		}
 	}
 
@@ -48,16 +49,24 @@ public class ShortTermMemory {
 	}
 
 	public void UpdateUnupdatedMemories() {
-		for(EntityMemory memory : entitymemories){
+		for(EntityMemory memory : entityMemories){
 			if( memory.disappearTime == 0  //if not away already
 					&& memory.lastUpdate < lastUpdate){ //if not updated in the current iteration
 				memory.disappearTime = memory.lastUpdate;
 			}
 		}
 	}
+	
+	public void UpdateSelf(EntityMemory memory){
+		if(selfMemory != null){
+			selfMemory.Update(memory, lastUpdate);
+		}
+		else{
+			selfMemory = memory;
+		}
+	}
 
 	public void Update(Action action, long time) {
-		// TODO Auto-generated method stub
-		
+		selfMemory.AddAction(new EntityAction(action, time));
 	}
 }

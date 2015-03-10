@@ -36,6 +36,10 @@ public class Action {
 		}
 	}
 	
+	public float[] GetParameters(){
+		return parameters.clone();
+	}
+	
 	public Type GetType(){
 		return type;
 	}
