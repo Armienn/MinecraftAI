@@ -16,32 +16,38 @@ public class Action {
 		return DegreesOfFreedom(type);
 	}
 	
-	public void SetParameter(int index, float value) throws Exception{
+	public void SetParameter(int index, float value) {
 		if( index < DegreesOfFreedom() 
 				&& value >= 0 
 				&& value <= 1 ){
 			parameters[index] = value;
 		}
 		else{
-			throw new Exception("Trying to set parameter that shouldn't exist");
+			throw new RuntimeException("Trying to set parameter that shouldn't exist");
 		}
 	}
 	
-	public float GetParameter(int index) throws Exception{
+	public float GetParameter(int index) {
 		if( index < DegreesOfFreedom() ){
 			return parameters[index];
 		}
 		else{
-			throw new Exception("Trying to get parameter that shouldn't exist");
+			throw new RuntimeException("Trying to get parameter that shouldn't exist");
 		}
 	}
 	
 	public float[] GetParameters(){
+		if(parameters == null)
+			return null;
 		return parameters.clone();
 	}
 	
 	public Type GetType(){
 		return type;
+	}
+	
+	public static Type[] GetTypes(){
+		return Type.values();
 	}
 	
 	public static int DegreesOfFreedom(Type type){

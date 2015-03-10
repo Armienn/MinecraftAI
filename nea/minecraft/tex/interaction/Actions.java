@@ -11,6 +11,10 @@ public class Actions {
 	/// Takeable actions : ///
 	public ArrayList<Action> actions = new ArrayList<Action>();
 	
+	// Utility :
+	double dx = 0;
+	double dz = 0;
+	
 	public Actions(TexBrain brain){
 		this.brain = brain;
 	}
@@ -24,8 +28,8 @@ public class Actions {
 					try{
 						float angle = action.GetParameter(0);
 						float speed = action.GetParameter(1);
-						entity.motionX = speed*Math.cos(angle*Math.PI);
-						entity.motionZ = speed*Math.sin(angle*Math.PI);
+						dx = speed*Math.cos(angle*Math.PI);
+						dz = speed*Math.sin(angle*Math.PI);
 						entity.rotationYaw = angle*360;
 					}
 					catch(Exception e) { }
@@ -42,6 +46,8 @@ public class Actions {
 			default:
 				break;
 			}
+			entity.motionX = dx;
+			entity.motionZ = dz;
 		}
 	}
 	
