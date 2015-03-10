@@ -28,27 +28,28 @@ public class Actions {
 			switch(action.GetType()){
 			case Move:
 				if (entity.onGround) {
-					try{
-						float angle = action.GetParameter(0);
-						float speed = action.GetParameter(1);
-						dx = speed*Math.cos(angle*Math.PI);
-						dz = speed*Math.sin(angle*Math.PI);
-						entity.rotationYaw = angle*360;
-					}
-					catch(Exception e) { }
+					float angle = action.GetParameter(0);
+					float speed = action.GetParameter(1);
+					dx = speed*Math.cos(angle*Math.PI);
+					dz = speed*Math.sin(angle*Math.PI);
+					entity.rotationYaw = angle*360;
+					brain.logger.info("Walking with speed " + speed + " and direction " + (int)(angle*360));
 				}
 				break;
 			case Jump:
 				if (entity.onGround) {
 					entity.motionY = 0.45;
+					brain.logger.info("Jumping");
 				}
 				break;
 			case PickUp:
+				int slot = (int)(action.GetParameter(0)*8);
 				EntityItem item = (EntityItem)brain.worldObj.findNearestEntityWithinAABB(EntityItem.class, entity.getEntityBoundingBox().expand(1.0D, 0.0D, 1.0D), entity);
-				if(item != null && entity.inventory[0] == null){
-					entity.inventory[0] = item.getEntityItem();
+				if(item != null && entity.inventory[slot] == null){
+					entity.inventory[slot] = item.getEntityItem();
 					entity.onItemPickup(item, 1);
 					item.setDead();
+					brain.logger.info("Picking up " + item.getEntityItem().stackSize + " " + item.getName());
 					brain.Say("Picked up a " + item.getName());
 				}
 				break;
