@@ -14,7 +14,10 @@ import net.minecraft.util.MathHelper;
 
 public class ModelTexBaby extends ModelBase
 {
-  //fields
+	public int heldItemLeft;
+	public int heldItemRight;
+	
+	//fields
     ModelRenderer Leg1;
     ModelRenderer Body;
     ModelRenderer Leg2;
@@ -160,6 +163,18 @@ public class ModelTexBaby extends ModelBase
   {
     super.setRotationAngles(f, f1, f2, f3, f4, f5, null);
   }
+  
+  public void setModelAttributes(ModelBase tex)
+  {
+      super.setModelAttributes(tex);
+
+      if (tex instanceof ModelTexBaby)
+      {
+    	  ModelTexBaby var2 = (ModelTexBaby)tex;
+          this.heldItemLeft = var2.heldItemLeft;
+          this.heldItemRight = var2.heldItemRight;
+      }
+  }
 
   /**
    * Sets the model's various rotation angles. For bipeds, par1 and par2 are used for animating the movement of arms
@@ -173,6 +188,31 @@ public class ModelTexBaby extends ModelBase
       this.Leg2.rotateAngleX = MathHelper.cos(p_78087_1_ * 0.6662F + (float)Math.PI) * 1.4F * p_78087_2_;
       this.Leg3.rotateAngleX = MathHelper.cos(p_78087_1_ * 0.6662F + (float)Math.PI) * 1.4F * p_78087_2_;
       this.Leg4.rotateAngleX = MathHelper.cos(p_78087_1_ * 0.6662F) * 1.4F * p_78087_2_;
+      
+      if (this.heldItemLeft != 0)
+	  {
+	      this.LeftarmTL.rotateAngleX = this.LeftarmTL.rotateAngleX * 0.5F - ((float)Math.PI / 10F) * (float)this.heldItemLeft;
+	  }
+	
+	  this.RightarmTL.rotateAngleY = 0.0F;
+	  this.RightarmTL.rotateAngleZ = 0.0F;
+	
+	  switch (this.heldItemRight)
+	  {
+	      case 0:
+	      case 2:
+	      default:
+	          break;
+	
+	      case 1:
+	          this.RightarmTL.rotateAngleX = this.RightarmTL.rotateAngleX * 0.5F - ((float)Math.PI / 10F) * (float)this.heldItemRight;
+	          break;
+	
+	      case 3:
+	          this.RightarmTL.rotateAngleX = this.RightarmTL.rotateAngleX * 0.5F - ((float)Math.PI / 10F) * (float)this.heldItemRight;
+	          this.RightarmTL.rotateAngleY = -0.5235988F;
+	  }
+	
+	  this.LeftarmTL.rotateAngleY = 0.0F;
   }
-
 }
