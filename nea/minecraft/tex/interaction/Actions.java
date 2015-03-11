@@ -25,6 +25,7 @@ public class Actions {
 	
 	public void Update(EntityTex entity) {
 		time = brain.worldObj.getTotalWorldTime();
+		ArrayList<Action> succeeded = new ArrayList<Action>();
 		for(Action action : actions){
 			int slot = 0;
 			EntityItem entityitem = null;
@@ -39,12 +40,14 @@ public class Actions {
 					dz = speed*Math.sin(angle*Math.PI);
 					entity.rotationYaw = angle*360;
 					brain.logger.info("Walking with speed " + speed + " and direction " + (int)(angle*360));
+					succeeded.add(action);
 				}
 				break;
 			case Jump:
 				if (entity.onGround) {
 					entity.motionY = 0.45;
 					brain.logger.info("Jumping");
+					succeeded.add(action);
 				}
 				break;
 			case PickUp:
@@ -56,7 +59,8 @@ public class Actions {
 					entity.onItemPickup(entityitem, 1);
 					entityitem.setDead();
 					brain.logger.info("Picking up " + entityitem.getEntityItem().stackSize + " " + entityitem.getName());
-					brain.Say("Picked up a " + entityitem.getDisplayName());
+					brain.Say("Picked up a " + entityitem.getEntityItem().getDisplayName());
+					succeeded.add(action);
 				}
 				break;
 			case Drop:
@@ -66,6 +70,7 @@ public class Actions {
 					entity.entityDropItem(itemstack, 0);
 					brain.logger.info("Dropping " + entity.inventory[slot].stackSize + " " + entity.inventory[slot].getDisplayName());
 					entity.inventory[slot] = null;
+					succeeded.add(action);
 				}
 				break;
 			case Use:
@@ -81,20 +86,22 @@ public class Actions {
 						itemstack.stackSize--;
 						if(itemstack.stackSize <= 0)
 							entity.inventory[slot] = null;
+						succeeded.add(action);
 					}
 				}
 				break;
 			default:
 				break;
 			}
-			entity.motionX = dx;
-			entity.motionZ = dz;
-			if(dz+dx > 0.1){
-				entity.hunger += 0.01;
-			}
-			else{
-				entity.hunger += 0.001;
-			}
+		}
+		actions = succeeded;
+		entity.motionX = dx;
+		entity.motionZ = dz;
+		if(dz+dx > 0.1){
+			entity.hunger += 0.01;
+		}
+		else{
+			entity.hunger += 0.001;
 		}
 	}
 	

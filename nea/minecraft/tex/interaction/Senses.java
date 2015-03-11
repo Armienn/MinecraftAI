@@ -10,6 +10,7 @@ import nea.minecraft.tex.memory.utility.EntityMemory;
 import nea.minecraft.tex.memory.utility.EntityMemoryParameter;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.item.ItemStack;
 
 public class Senses {
 	TexBrain brain;
@@ -32,6 +33,13 @@ public class Senses {
 		self.AddParameter(new EntityMemoryParameter("PositionX", entity.posX));
 		self.AddParameter(new EntityMemoryParameter("PositionY", entity.posY));
 		self.AddParameter(new EntityMemoryParameter("PositionZ", entity.posZ));
+		self.AddParameter(new EntityMemoryParameter("Hunger", entity.hunger));
+		self.SetInventorySpaces(8);
+		for(int i=0;i<8;i++){
+			ItemStack item = entity.inventory[i];
+			if(item != null)
+				self.AddInventory(new EntityMemory(0,item.getDisplayName(),time), i);
+		}
 	}
 	
 	private void SenseEntities(EntityTex entity){
