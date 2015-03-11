@@ -14,7 +14,7 @@ public class TexAnalysis extends Thread {
 	}
 	
 	public void run(){
-		brain.logger.info("Tex #" + brain.id + ": Starting Analysis thread");
+		brain.Log("Starting Analysis thread");
 		while(brain.KeepRunning()){
 			synchronized(brain){
 				while( brain.sensememory.memorysenses.size() > 0){
@@ -41,7 +41,7 @@ public class TexAnalysis extends Thread {
 				trySleep(100);
 			}
 		}
-		brain.logger.info("Tex #" + brain.id + ": Ending Analysis thread");
+		brain.Log("Ending Analysis thread");
 	}
 	
 	static boolean trySleep(long milliseconds){

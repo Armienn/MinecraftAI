@@ -11,7 +11,7 @@ public class EntityMemory {
 	private String type;
 	ArrayList<String> properties = new ArrayList<String>();
 	ArrayList<EntityMemoryParameter> parameters = new ArrayList<EntityMemoryParameter>();
-	EntityMemory[] inventory = new EntityMemory[0];
+	InventorySlotMemory[] inventory = new InventorySlotMemory[0];
 	ArrayList<EntityAction> actions = new ArrayList<EntityAction>();
 	
 	public long lastUpdate;
@@ -32,11 +32,14 @@ public class EntityMemory {
 	}
 	
 	public void SetInventorySpaces(int size){
-		inventory = new EntityMemory[size];
+		inventory = new InventorySlotMemory[size];
+		for(int i=0;i<size;i++){
+			inventory[i] = new InventorySlotMemory();
+		}
 	}
 	
-	public void AddInventory(EntityMemory entity, int index){
-		inventory[index] = entity;
+	public InventorySlotMemory GetInventorySlot(int index){
+		return inventory[index];
 	}
 	
 	public void AddAction(EntityAction action){
@@ -63,21 +66,12 @@ public class EntityMemory {
 		return (String[]) properties.toArray();
 	}
 	
-	private EntityMemory GetInInventory(EntityMemory ent){
-		if(ent == null) return null;
-		for(EntityMemory t : inventory){
-			if(t != null && t.id == ent.id && t.disappearTime == 0)
-				return t;
-		}
-		return null;
-	}
-	
 	public int GetInventorySize(){
 		return inventory.length;
 	}
 	
-	public EntityMemory GetInventory(int index){
-		return inventory[index];
+	public EntityMemory GetInventoryContent(int index){
+		return inventory[index].GetCurrentItem();
 	}
 	
 	public void Update(EntityMemory memory, long time){
@@ -87,14 +81,8 @@ public class EntityMemory {
 				parameter.UpdateValue(param.GetParameter(), lastUpdate, time);
 		}
 		for(int i=0;i<memory.GetInventorySize(); i++){
-			EntityMemory currentnew = memory.GetInventory(i);
-			EntityMemory currentold = GetInInventory(currentnew);
-			if(currentold != null){
-				currentold.Update(currentnew, lastUpdate);
-			}
-			else{
-				inventory[i] = currentnew;
-			}
+			EntityMemory currentnew = memory.GetInventoryContent(i);
+			inventory[i].Update(currentnew, time);
 		}
 		
 		lastUpdate = time;
