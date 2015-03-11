@@ -56,7 +56,7 @@ public class Actions {
 					entity.onItemPickup(entityitem, 1);
 					entityitem.setDead();
 					brain.logger.info("Picking up " + entityitem.getEntityItem().stackSize + " " + entityitem.getName());
-					brain.Say("Picked up a " + entityitem.getName());
+					brain.Say("Picked up a " + entityitem.getDisplayName());
 				}
 				break;
 			case Drop:

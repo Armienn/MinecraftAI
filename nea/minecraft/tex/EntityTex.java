@@ -66,7 +66,7 @@ public class EntityTex extends EntityLiving implements net.minecraft.entity.pass
 			}
 		}
 		brain.logger.info("Tex #" + brain.id  + " has been killed. All items dropped!");
-		brain.Say("Goodbye cruel World!");
+		brain.Say("Goodbye cruel world!");
 		brain.OnDeath();
 	}
 	
