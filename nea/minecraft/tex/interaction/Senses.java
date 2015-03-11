@@ -38,7 +38,7 @@ public class Senses {
 		for(int i=0;i<8;i++){
 			ItemStack item = entity.inventory[i];
 			if(item != null)
-				self.AddInventory(new EntityMemory(0,item.getDisplayName(),time), i);
+				self.GetInventorySlot(i).Add(new EntityMemory(0,item.getDisplayName(),time));
 		}
 	}
 	
