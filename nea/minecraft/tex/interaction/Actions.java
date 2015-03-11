@@ -6,6 +6,7 @@ import nea.minecraft.tex.EntityTex;
 import nea.minecraft.tex.TexBrain;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 
 public class Actions {
@@ -26,7 +27,9 @@ public class Actions {
 		time = brain.worldObj.getTotalWorldTime();
 		for(Action action : actions){
 			int slot = 0;
-			EntityItem item = null;
+			EntityItem entityitem = null;
+			ItemStack itemstack = null;
+			Item item = null;
 			switch(action.GetType()){
 			case Move:
 				if (entity.onGround) {
@@ -47,32 +50,51 @@ public class Actions {
 			case PickUp:
 				slot = (int)(action.GetParameter(0)*8);
 				if(entity.inventory[slot] == null)
-					item = (EntityItem)brain.worldObj.findNearestEntityWithinAABB(EntityItem.class, entity.getEntityBoundingBox().expand(1.0D, 0.0D, 1.0D), entity);
-				if(item != null){
-					entity.inventory[slot] = item.getEntityItem();
-					entity.onItemPickup(item, 1);
-					item.setDead();
-					brain.logger.info("Picking up " + item.getEntityItem().stackSize + " " + item.getName());
-					brain.Say("Picked up a " + item.getName());
+					entityitem = (EntityItem)brain.worldObj.findNearestEntityWithinAABB(EntityItem.class, entity.getEntityBoundingBox().expand(1.0D, 0.0D, 1.0D), entity);
+				if(entityitem != null){
+					entity.inventory[slot] = entityitem.getEntityItem();
+					entity.onItemPickup(entityitem, 1);
+					entityitem.setDead();
+					brain.logger.info("Picking up " + entityitem.getEntityItem().stackSize + " " + entityitem.getName());
+					brain.Say("Picked up a " + entityitem.getName());
 				}
 				break;
 			case Drop:
 				slot = (int)(action.GetParameter(0)*8);
-				ItemStack inventoryItem = entity.inventory[slot];
+				itemstack = entity.inventory[slot];
 				if(entity.inventory[slot] != null){
-					entity.entityDropItem(inventoryItem, 0);
+					entity.entityDropItem(itemstack, 0);
 					brain.logger.info("Dropping " + entity.inventory[slot].stackSize + " " + entity.inventory[slot].getDisplayName());
 					entity.inventory[slot] = null;
 				}
 				break;
 			case Use:
-				
+				slot = (int)(action.GetParameter(0)*8);
+				itemstack = entity.inventory[slot];
+				if(itemstack != null){
+					item = itemstack.getItem();
+					if(item instanceof ItemFood){
+						entity.hunger -= 1;
+						if(entity.hunger < 0)
+							entity.hunger = 0;
+						brain.Say("Omnomnom!");
+						itemstack.stackSize--;
+						if(itemstack.stackSize <= 0)
+							entity.inventory[slot] = null;
+					}
+				}
 				break;
 			default:
 				break;
 			}
 			entity.motionX = dx;
 			entity.motionZ = dz;
+			if(dz+dx > 0.1){
+				entity.hunger += 0.01;
+			}
+			else{
+				entity.hunger += 0.001;
+			}
 		}
 	}
 	

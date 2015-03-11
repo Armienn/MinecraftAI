@@ -20,7 +20,8 @@ public class EntityTex extends EntityLiving implements net.minecraft.entity.pass
 	TexLearning learningthread;
 	TexAnalysis analysisthread;
 	
-	public ItemStack[] inventory = new ItemStack[8]; 
+	public ItemStack[] inventory = new ItemStack[8];
+	public double hunger = 0;
 	
 	public EntityTex(World worldIn){
 		super(worldIn);
@@ -65,7 +66,7 @@ public class EntityTex extends EntityLiving implements net.minecraft.entity.pass
 			}
 		}
 		brain.logger.info("Tex #" + brain.id  + " has been killed. All items dropped!");
-		brain.Say("Tex #" + brain.id + " Goodbye World!");
+		brain.Say("Goodbye cruel World!");
 		brain.OnDeath();
 	}
 	
