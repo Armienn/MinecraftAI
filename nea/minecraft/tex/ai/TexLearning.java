@@ -10,14 +10,14 @@ public class TexLearning extends Thread {
 	}
 	
 	public void run(){
-		brain.logger.info("Tex #" + brain.id + ": Starting Learning thread");
+		brain.Log("Starting Learning thread");
 		while(brain.KeepRunning()){
 			trySleep(100);
 			while(brain.Pause()){
 				trySleep(100);
 			}
 		}
-		brain.logger.info("Tex #" + brain.id + ": Ending Learning thread");
+		brain.Log("Ending Learning thread");
 	}
 	
 	static boolean trySleep(long milliseconds){

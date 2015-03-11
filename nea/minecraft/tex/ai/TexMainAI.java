@@ -11,7 +11,7 @@ public class TexMainAI extends Thread {
 	}
 	
 	public void run(){
-		brain.logger.info("Tex #" + brain.id + ": Starting Main AI thread");
+		brain.Log("Starting Main AI thread");
 		brain.Say("Good morning, world!");
 		while(brain.KeepRunning()){
 			ChooseRandomAction();
@@ -20,7 +20,7 @@ public class TexMainAI extends Thread {
 				trySleep(100);
 			}
 		}
-		brain.logger.info("Tex #" + brain.id + ": Ending Main AI thread");
+		brain.Log("Ending Main AI thread");
 	}
 	
 	void ChooseRandomAction(){

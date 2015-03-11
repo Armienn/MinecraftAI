@@ -39,14 +39,14 @@ public class Actions {
 					dx = speed*Math.cos(angle*Math.PI);
 					dz = speed*Math.sin(angle*Math.PI);
 					entity.rotationYaw = angle*360;
-					brain.logger.info("Walking with speed " + speed + " and direction " + (int)(angle*360));
+					brain.Log("Walking with speed " + speed + " and direction " + (int)(angle*360));
 					succeeded.add(action);
 				}
 				break;
 			case Jump:
 				if (entity.onGround) {
 					entity.motionY = 0.45;
-					brain.logger.info("Jumping");
+					brain.Log("Jumping");
 					succeeded.add(action);
 				}
 				break;
@@ -58,7 +58,7 @@ public class Actions {
 					entity.inventory[slot] = entityitem.getEntityItem();
 					entity.onItemPickup(entityitem, 1);
 					entityitem.setDead();
-					brain.logger.info("Picking up " + entityitem.getEntityItem().stackSize + " " + entityitem.getName());
+					brain.Log("Picking up " + entityitem.getEntityItem().stackSize + " " + entityitem.getName());
 					brain.Say("Picked up a " + entityitem.getEntityItem().getDisplayName());
 					succeeded.add(action);
 				}
@@ -68,7 +68,7 @@ public class Actions {
 				itemstack = entity.inventory[slot];
 				if(entity.inventory[slot] != null){
 					entity.entityDropItem(itemstack, 0);
-					brain.logger.info("Dropping " + entity.inventory[slot].stackSize + " " + entity.inventory[slot].getDisplayName());
+					brain.Log("Dropping " + entity.inventory[slot].stackSize + " " + entity.inventory[slot].getDisplayName());
 					entity.inventory[slot] = null;
 					succeeded.add(action);
 				}

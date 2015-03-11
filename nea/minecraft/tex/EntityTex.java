@@ -65,7 +65,7 @@ public class EntityTex extends EntityLiving implements net.minecraft.entity.pass
 				inventory[i] = null;
 			}
 		}
-		brain.logger.info("Tex #" + brain.id  + " has been killed. All items dropped!");
+		brain.Log("Tex has been killed. All items dropped!");
 		brain.Say("Goodbye cruel world!");
 		brain.OnDeath();
 	}

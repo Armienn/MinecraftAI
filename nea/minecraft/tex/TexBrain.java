@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
 public class TexBrain {
-	public Logger logger = LogManager.getLogger();
+	private Logger logger = LogManager.getLogger();
 	public World worldObj;
 	public int id;
 	public Actions actions = new Actions(this);
@@ -71,5 +71,9 @@ public class TexBrain {
 			Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("Tex #" + id + ": " + text));
 		}
 		catch(Exception e){ }
+	}
+	
+	public void Log(String text){
+		logger.info("Tex #" + id + ": " + text);
 	}
 }
