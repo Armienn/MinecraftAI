@@ -36,8 +36,8 @@ public class Actions {
 				if (entity.onGround) {
 					float angle = action.GetParameter(0);
 					float speed = action.GetParameter(1);
-					dx = speed*0.5*Math.cos(angle*Math.PI*2);
-					dz = speed*0.5*Math.sin(angle*Math.PI*2);
+					dx = speed*0.3*Math.cos(angle*Math.PI*2);
+					dz = speed*0.3*Math.sin(angle*Math.PI*2);
 					entity.rotationYaw = angle*360;
 					brain.Log("Walking with speed " + speed + " and direction " + (int)(angle*360));
 					succeeded.add(action);
