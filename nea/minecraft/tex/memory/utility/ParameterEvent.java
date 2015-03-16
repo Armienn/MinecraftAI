@@ -12,4 +12,8 @@ public class ParameterEvent {
 		startTime = starttime;
 		endTime = endtime;
 	}
+	
+	public double GetVelocity(){
+		return (endValue-startValue)/(double)(endTime-startTime);
+	}
 }
