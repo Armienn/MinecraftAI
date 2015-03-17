@@ -36,8 +36,8 @@ public class Actions {
 				if (entity.onGround) {
 					float angle = action.GetParameter(0);
 					float speed = action.GetParameter(1);
-					dx = speed*Math.cos(angle*Math.PI);
-					dz = speed*Math.sin(angle*Math.PI);
+					dx = speed*0.3*Math.cos(angle*Math.PI*2);
+					dz = speed*0.3*Math.sin(angle*Math.PI*2);
 					entity.rotationYaw = angle*360;
 					brain.Log("Walking with speed " + speed + " and direction " + (int)(angle*360));
 					succeeded.add(action);
@@ -97,7 +97,7 @@ public class Actions {
 		actions = succeeded;
 		entity.motionX = dx;
 		entity.motionZ = dz;
-		if(dz+dx > 0.1){
+		if(Math.abs(dz)+Math.abs(dx) > 0.1){
 			entity.hunger += 0.01;
 		}
 		else{

@@ -37,11 +37,18 @@ public class EntityMemoryParameter {
 			else{
 				ParameterEvent event = events.get(events.size()-1);
 				if(event.endTime < lastupdate){
-					events.add(new ParameterEvent(initialValue, lastupdate, value, currenttime));
+					events.add(new ParameterEvent(event.endValue, lastupdate, value, currenttime));
 				}
 				else{
-					event.endTime = currenttime;
-					event.endValue = value;
+					double oldvel = event.GetVelocity();
+					double newvel = delta/(double)(currenttime-lastupdate);
+					if(newvel < oldvel*2 && newvel > oldvel*0.5){
+						event.endTime = currenttime;
+						event.endValue = value;
+					}
+					else{
+						events.add(new ParameterEvent(event.endValue, lastupdate, value, currenttime));
+					}
 				}
 			}
 		}
