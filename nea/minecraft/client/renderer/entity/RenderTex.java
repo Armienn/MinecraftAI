@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.entity.RenderBiped;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.layers.LayerBipedArmor;
-import net.minecraft.client.renderer.entity.layers.LayerHeldItem;
+import nea.minecraft.client.renderer.entity.layers.LayerHeldItems;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityLiving;
@@ -26,8 +26,7 @@ public class RenderTex extends RenderLiving
     public RenderTex(RenderManager p_i46148_1_)
     {
         super(p_i46148_1_, new ModelTexBaby(), 0.5F);
-        this.addLayer(new LayerHeldItem(this));
-        
+        this.addLayer(new LayerHeldItems(this));    
         this.addLayer(new LayerBipedArmor(this)
         {
             protected void func_177177_a()

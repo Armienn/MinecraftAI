@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import nea.minecraft.tex.EntityTex;
 import nea.minecraft.tex.TexBrain;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
@@ -61,6 +62,10 @@ public class Actions {
 					brain.Log("Picking up " + entityitem.getEntityItem().stackSize + " " + entityitem.getName());
 					brain.Say("Picked up a " + entityitem.getEntityItem().getDisplayName());
 					succeeded.add(action);
+					ItemStack helditem = entity.inventory[slot];
+					if(helditem != null){
+						((EntityLiving)entity).setCurrentItemOrArmor(0, helditem);;
+					}
 				}
 				break;
 			case Drop:
