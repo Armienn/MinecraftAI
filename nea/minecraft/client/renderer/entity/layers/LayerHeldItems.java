@@ -45,29 +45,30 @@ public class LayerHeldItems implements LayerRenderer
 	            //((ModelBiped)this.field_177206_a.getMainModel()).postRenderHiddenArm(0.0625F);
 	            float scale = 0.5F;
 	            GlStateManager.scale(scale, scale, scale);
+	            //GlStateManager.translate(0F, -0.125F, 0F);
 	            if(i == 0){
-	            	GlStateManager.translate(-0.225F, 0.8375F, 0.225F);
+	            	GlStateManager.translate(-0.525F, 0.1375F, 0.425F);
 	            }
 	            else if(i == 1){
-	            	GlStateManager.translate(-0.625F, 0.8375F, 0.225F);
+	            	GlStateManager.translate(-0.525F, 0.1375F, -0.425F);
 	            	}
 	            else if(i == 2){
-	            	GlStateManager.translate(0.225F, 0.8375F, -0.225F);
+	            	GlStateManager.translate(0.525F, 0.1375F, 0.425F);
 	            }
 	            else if(i == 3){
-	            	GlStateManager.translate(0.625F, 0.8375F, -0.225F);
+	            	GlStateManager.translate(0.525F, 0.1375F, -0.425F);
 	            }
 	            else if(i == 4){
-	            	GlStateManager.translate(-0.625F, 0.9375F, 0.225F);
+	            	GlStateManager.translate(-0.525F, 0.3375F, 0.425F);
 	            }
 	            else if(i == 5){
-	            	GlStateManager.translate(0.225F, 0.9375F, -0.225F);
+	            	GlStateManager.translate(-0.525F, 0.3375F, -0.425F);
 	            }
 	            else if(i == 6){
-	            	GlStateManager.translate(0.625F, 0.9375F, -0.225F);
+	            	GlStateManager.translate(0.525F, 0.3375F, 0.425F);
 	            }
 	            else if(i == 7){
-	            	GlStateManager.translate(-0.225F, 0.9375F, 0.225F);
+	            	GlStateManager.translate(0.525F, 0.3375F, -0.425F);
 	            }
 	
 	            Item item = stack.getItem();
