@@ -43,7 +43,32 @@ public class LayerHeldItems implements LayerRenderer
 	            }*/
 	
 	            //((ModelBiped)this.field_177206_a.getMainModel()).postRenderHiddenArm(0.0625F);
-	            GlStateManager.translate(-0.0625F, 0.4375F, 0.0625F);
+	            float scale = 0.5F;
+	            GlStateManager.scale(scale, scale, scale);
+	            if(i == 0){
+	            	GlStateManager.translate(-0.225F, 0.8375F, 0.225F);
+	            }
+	            else if(i == 1){
+	            	GlStateManager.translate(-0.625F, 0.8375F, 0.225F);
+	            	}
+	            else if(i == 2){
+	            	GlStateManager.translate(0.225F, 0.8375F, -0.225F);
+	            }
+	            else if(i == 3){
+	            	GlStateManager.translate(0.625F, 0.8375F, -0.225F);
+	            }
+	            else if(i == 4){
+	            	GlStateManager.translate(-0.625F, 0.9375F, 0.225F);
+	            }
+	            else if(i == 5){
+	            	GlStateManager.translate(0.225F, 0.9375F, -0.225F);
+	            }
+	            else if(i == 6){
+	            	GlStateManager.translate(0.625F, 0.9375F, -0.225F);
+	            }
+	            else if(i == 7){
+	            	GlStateManager.translate(-0.225F, 0.9375F, 0.225F);
+	            }
 	
 	            Item item = stack.getItem();
 	            Minecraft var11 = Minecraft.getMinecraft();
