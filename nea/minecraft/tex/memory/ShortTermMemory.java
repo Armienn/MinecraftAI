@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 import nea.minecraft.tex.TexBrain;
 import nea.minecraft.tex.interaction.Action;
-import nea.minecraft.tex.memory.utility.EntityAction;
-import nea.minecraft.tex.memory.utility.EntityMemory;
+import nea.minecraft.tex.memory.utility.MemAction;
+import nea.minecraft.tex.memory.utility.MemEntity;
 
 public class ShortTermMemory {
 	TexBrain brain;
@@ -14,10 +14,10 @@ public class ShortTermMemory {
 	// memory of own position:
 	// memory of own actions:
 	// memory of inventory:
-	EntityMemory selfMemory;
+	MemEntity selfMemory;
 	// memory of nearby items:
 	// memory of other entities (including positions and actions):
-	ArrayList<EntityMemory> entityMemories = new ArrayList<EntityMemory>();
+	ArrayList<MemEntity> entityMemories = new ArrayList<MemEntity>();
 	// memory of surrounding blocks:
 	// memory of time of day:
 	/// Memory end ///
@@ -26,16 +26,16 @@ public class ShortTermMemory {
 		this.brain = brain;
 	}
 	
-	private EntityMemory GetMemoryOf(int id){
-		for(EntityMemory t : entityMemories){
+	private MemEntity GetMemoryOf(int id){
+		for(MemEntity t : entityMemories){
 			if(t.id == id && t.disappearTime == 0)
 				return t;
 		}
 		return null;
 	}
 	
-	public void Update(EntityMemory memory){
-		EntityMemory m = GetMemoryOf(memory.id);
+	public void Update(MemEntity memory){
+		MemEntity m = GetMemoryOf(memory.id);
 		if(m != null){
 			m.Update(memory, lastUpdate);
 		}
@@ -49,7 +49,7 @@ public class ShortTermMemory {
 	}
 
 	public void UpdateUnupdatedMemories() {
-		for(EntityMemory memory : entityMemories){
+		for(MemEntity memory : entityMemories){
 			if( memory.disappearTime == 0  //if not away already
 					&& memory.lastUpdate < lastUpdate){ //if not updated in the current iteration
 				memory.disappearTime = memory.lastUpdate;
@@ -57,7 +57,7 @@ public class ShortTermMemory {
 		}
 	}
 	
-	public void UpdateSelf(EntityMemory memory){
+	public void UpdateSelf(MemEntity memory){
 		if(selfMemory != null){
 			selfMemory.Update(memory, lastUpdate);
 		}
@@ -67,6 +67,6 @@ public class ShortTermMemory {
 	}
 
 	public void Update(Action action, long time) {
-		selfMemory.AddAction(new EntityAction(action, time));
+		selfMemory.AddAction(new MemAction(action, time));
 	}
 }

@@ -6,8 +6,9 @@ import java.util.List;
 
 import nea.minecraft.tex.EntityTex;
 import nea.minecraft.tex.TexBrain;
-import nea.minecraft.tex.memory.utility.EntityMemory;
-import nea.minecraft.tex.memory.utility.EntityMemoryParameter;
+import nea.minecraft.tex.memory.utility.MemEntity;
+import nea.minecraft.tex.memory.utility.MemParameter;
+import nea.minecraft.tex.memory.utility.ParameterValue;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
@@ -15,8 +16,8 @@ import net.minecraft.item.ItemStack;
 public class Senses {
 	TexBrain brain;
 	public long time; 
-	public ArrayList<EntityMemory> entityinfo = new ArrayList<EntityMemory>();
-	public EntityMemory self;
+	public ArrayList<MemEntity> entityinfo = new ArrayList<MemEntity>();
+	public MemEntity self;
 	
 	public Senses(TexBrain brain){
 		this.brain = brain;
@@ -24,27 +25,34 @@ public class Senses {
 	
 	public void Update(EntityTex entity){
 		time = brain.worldObj.getTotalWorldTime();
+		entityinfo.clear();
 		SenseSelf(entity);
 		SenseEntities(entity);
 	}
 	
 	private void SenseSelf(EntityTex entity){
-		self = new EntityMemory(brain.id, "Tex", time);
-		self.AddParameter(new EntityMemoryParameter("PositionX", entity.posX));
-		self.AddParameter(new EntityMemoryParameter("PositionY", entity.posY));
-		self.AddParameter(new EntityMemoryParameter("PositionZ", entity.posZ));
-		self.AddParameter(new EntityMemoryParameter("Hunger", entity.hunger));
-		self.SetInventorySpaces(8);
+		self = new MemEntity(brain.id, "Tex", time);
+		self.AddParameter(new MemParameter("PositionX", new ParameterValue(entity.posX)));
+		self.AddParameter(new MemParameter("PositionY", new ParameterValue(entity.posY)));
+		self.AddParameter(new MemParameter("PositionZ", new ParameterValue(entity.posZ)));
+		self.AddParameter(new MemParameter("Hunger", new ParameterValue(entity.hunger)));
+		//self.SetInventorySpaces(8);
 		for(int i=0;i<8;i++){
 			ItemStack item = entity.inventory[i];
-			if(item != null)
-				self.GetInventorySlot(i).Add(new EntityMemory(0,item.getDisplayName(),time));
+			if(item != null){
+				MemEntity ent = new MemEntity(-i,item.getUnlocalizedName(),time);
+				ent.AddProperty("Item");
+				//ent.AddParameter(new MemParameter("PositionX", new ParameterValue(entity.posX)));
+				//ent.AddParameter(new MemParameter("PositionY", new ParameterValue(entity.posY)));
+				//ent.AddParameter(new MemParameter("PositionZ", new ParameterValue(entity.posZ)));
+				ent.AddParameter(new MemParameter("PositionInventory", new ParameterValue((((double)i)/8)+(1.0/16.0))));
+				entityinfo.add(ent);
+			}
 		}
 	}
 	
 	private void SenseEntities(EntityTex entity){
 		///// Find entities nearby
-		entityinfo.clear();
 		List var1 = brain.worldObj.loadedEntityList;
 		Iterator var2 = var1.iterator();
 
@@ -61,10 +69,11 @@ public class Senses {
 	}
 	
 	private void AddItem(EntityItem item){
-		EntityMemory info = new EntityMemory(item.getEntityId(),item.getName(),time);
-		info.AddParameter(new EntityMemoryParameter("PositionX", item.posX));
-		info.AddParameter(new EntityMemoryParameter("PositionY", item.posY));
-		info.AddParameter(new EntityMemoryParameter("PositionZ", item.posZ));
+		MemEntity info = new MemEntity(item.getEntityId(),item.getEntityItem().getUnlocalizedName(),time);
+		info.AddProperty("Item");
+		info.AddParameter(new MemParameter("PositionX", new ParameterValue(item.posX)));
+		info.AddParameter(new MemParameter("PositionY", new ParameterValue(item.posY)));
+		info.AddParameter(new MemParameter("PositionZ", new ParameterValue(item.posZ)));
 		entityinfo.add(info);
 	}
 	
