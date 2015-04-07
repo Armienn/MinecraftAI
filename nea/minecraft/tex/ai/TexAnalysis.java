@@ -4,7 +4,7 @@ import nea.minecraft.tex.TexBrain;
 import nea.minecraft.tex.interaction.Action;
 import nea.minecraft.tex.interaction.Actions;
 import nea.minecraft.tex.interaction.Senses;
-import nea.minecraft.tex.memory.utility.EntityMemory;
+import nea.minecraft.tex.memory.utility.MemEntity;
 
 public class TexAnalysis extends Thread {
 	TexBrain brain;
@@ -20,7 +20,7 @@ public class TexAnalysis extends Thread {
 				while( brain.sensememory.memorysenses.size() > 0){
 					Senses nextsenses = brain.sensememory.memorysenses.get(0);
 					brain.shortmemory.StartUpdate(nextsenses.time);
-					for(EntityMemory mem : nextsenses.entityinfo){
+					for(MemEntity mem : nextsenses.entityinfo){
 						brain.shortmemory.Update(mem);
 					}
 					brain.shortmemory.UpdateSelf(nextsenses.self);
