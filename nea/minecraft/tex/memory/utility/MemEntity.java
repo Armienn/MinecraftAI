@@ -6,20 +6,20 @@ import nea.minecraft.tex.interaction.Actions;
 
 public class MemEntity {
 	public int id;
-	public long appearTime;
-	public long disappearTime;
+	public Interval apperanceInterval; 
 	private String type;
 	ArrayList<String> properties = new ArrayList<String>();
 	ArrayList<MemParameter> parameters = new ArrayList<MemParameter>();
 	ArrayList<MemAction> actions = new ArrayList<MemAction>();
 	
-	public long lastUpdate;
+	public long previousTime;
+	public long currentTime;
 	
 	public MemEntity(int id, String type, long appeartime){
 		this.id = id;
 		this.type = type;
-		this.appearTime = appeartime;
-		lastUpdate = appeartime;
+		apperanceInterval = new Interval(appeartime, appeartime);
+		currentTime = previousTime = appeartime;
 	}
 	
 	public void AddProperty(String property){
@@ -29,17 +29,6 @@ public class MemEntity {
 	public void AddParameter(MemParameter parameter){
 		parameters.add(parameter);
 	}
-	
-	/*public void SetInventorySpaces(int size){
-		inventory = new InventorySlotMemory[size];
-		for(int i=0;i<size;i++){
-			inventory[i] = new InventorySlotMemory();
-		}
-	}
-	
-	public InventorySlotMemory GetInventorySlot(int index){
-		return inventory[index];
-	}*/
 	
 	public void AddAction(MemAction action){
 		actions.add(action);
@@ -65,25 +54,15 @@ public class MemEntity {
 		return (String[]) properties.toArray();
 	}
 	
-	/*public int GetInventorySize(){
-		return inventory.length;
-	}
-	
-	public MemEntity GetInventoryContent(int index){
-		return inventory[index].GetCurrentItem();
-	}*/
-	
 	public void Update(MemEntity memory, long time){
+		previousTime = currentTime;
+		currentTime = time;
+		apperanceInterval.endTime = currentTime;
+		
 		for(MemParameter parameter : parameters){
 			MemParameter param = memory.GetParameter(parameter.GetType());
 			if(param != null)
-				parameter.UpdateValue(param.GetParameter(), lastUpdate, time);
+				parameter.UpdateValue(param.GetParameter(), previousTime, currentTime);
 		}
-		/*for(int i=0;i<memory.GetInventorySize(); i++){
-			MemEntity currentnew = memory.GetInventoryContent(i);
-			inventory[i].Update(currentnew, time);
-		}*/
-		
-		lastUpdate = time;
 	}
 }

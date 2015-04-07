@@ -9,7 +9,8 @@ import nea.minecraft.tex.memory.utility.MemEntity;
 
 public class ShortTermMemory {
 	TexBrain brain;
-	long lastUpdate;
+	long previousTime;
+	long currentTime;
 	/// Actual memory : ///
 	// memory of own position:
 	// memory of own actions:
@@ -28,7 +29,7 @@ public class ShortTermMemory {
 	
 	private MemEntity GetMemoryOf(int id){
 		for(MemEntity t : entityMemories){
-			if(t.id == id && t.disappearTime == 0)
+			if(t.id == id && t.apperanceInterval.endTime >= previousTime)
 				return t;
 		}
 		return null;
@@ -37,7 +38,7 @@ public class ShortTermMemory {
 	public void Update(MemEntity memory){
 		MemEntity m = GetMemoryOf(memory.id);
 		if(m != null){
-			m.Update(memory, lastUpdate);
+			m.Update(memory, currentTime);
 		}
 		else{
 			entityMemories.add(memory);
@@ -45,21 +46,22 @@ public class ShortTermMemory {
 	}
 
 	public void StartUpdate(long time) {
-		lastUpdate = time;
+		previousTime = currentTime;
+		currentTime = time;
 	}
 
-	public void UpdateUnupdatedMemories() {
+	/*public void UpdateUnupdatedMemories() {
 		for(MemEntity memory : entityMemories){
-			if( memory.disappearTime == 0  //if not away already
-					&& memory.lastUpdate < lastUpdate){ //if not updated in the current iteration
-				memory.disappearTime = memory.lastUpdate;
+			if( memory.apperanceInterval.endTime < previousTime  //if not away already
+					&& memory.previousTime < currentTime){ //if not updated in the current iteration
+				memory.disappearTime = memory.previousTime;
 			}
 		}
-	}
+	}*/
 	
 	public void UpdateSelf(MemEntity memory){
 		if(selfMemory != null){
-			selfMemory.Update(memory, lastUpdate);
+			selfMemory.Update(memory, currentTime);
 		}
 		else{
 			selfMemory = memory;

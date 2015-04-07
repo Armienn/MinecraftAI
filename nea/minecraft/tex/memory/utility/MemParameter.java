@@ -25,7 +25,7 @@ public class MemParameter {
 		return type;
 	}
 	
-	public void UpdateValue(ParameterValue value, long lastupdate, long currenttime){
+	public void UpdateValue(ParameterValue value, long previoustime, long currenttime){
 		if(value.IsUndefined() && GetParameter().IsUndefined()){
 			//no change
 		}
@@ -33,7 +33,7 @@ public class MemParameter {
 			//going from undefined to defined or vice versa
 			if(events == null)
 				events = new ArrayList<MemEvent>();
-			events.add(new MemEvent(initialValue, lastupdate, value, currenttime));
+			events.add(new MemEvent(initialValue, previoustime, value, currenttime));
 		}
 		else{
 			//possibly going from one value to another
@@ -43,22 +43,22 @@ public class MemParameter {
 					events = new ArrayList<MemEvent>();
 				
 				if(events.size() == 0){
-					events.add(new MemEvent(initialValue, lastupdate, value, currenttime));
+					events.add(new MemEvent(initialValue, previoustime, value, currenttime));
 				}
 				else{
 					MemEvent event = events.get(events.size()-1);
-					if(event.endTime < lastupdate){
-						events.add(new MemEvent(event.endValue, lastupdate, value, currenttime));
+					if(event.interval.endTime < previoustime){
+						events.add(new MemEvent(event.endValue, previoustime, value, currenttime));
 					}
 					else{
 						double oldvel = event.GetVelocity();
-						double newvel = delta/(double)(currenttime-lastupdate);
-						if(newvel < oldvel*2 && newvel > oldvel*0.5){
-							event.endTime = currenttime;
+						double newvel = delta/(double)(currenttime-previoustime);
+						if(Math.signum(newvel) == Math.signum(oldvel) && Math.abs(newvel) < Math.abs(oldvel)*2 && Math.abs(newvel) > Math.abs(oldvel)*0.5){
+							event.interval.endTime = currenttime;
 							event.endValue = value;
 						}
 						else{
-							events.add(new MemEvent(event.endValue, lastupdate, value, currenttime));
+							events.add(new MemEvent(event.endValue, previoustime, value, currenttime));
 						}
 					}
 				}

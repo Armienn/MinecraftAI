@@ -24,7 +24,7 @@ public class TexAnalysis extends Thread {
 						brain.shortmemory.Update(mem);
 					}
 					brain.shortmemory.UpdateSelf(nextsenses.self);
-					brain.shortmemory.UpdateUnupdatedMemories();
+					//brain.shortmemory.UpdateUnupdatedMemories();
 					
 					brain.sensememory.memorysenses.remove(0);
 				}
