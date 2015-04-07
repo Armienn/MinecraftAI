@@ -12,12 +12,7 @@ public class ShortTermMemory {
 	long previousTime;
 	long currentTime;
 	/// Actual memory : ///
-	// memory of own position:
-	// memory of own actions:
-	// memory of inventory:
 	MemEntity selfMemory;
-	// memory of nearby items:
-	// memory of other entities (including positions and actions):
 	ArrayList<MemEntity> entityMemories = new ArrayList<MemEntity>();
 	// memory of surrounding blocks:
 	// memory of time of day:
@@ -49,15 +44,6 @@ public class ShortTermMemory {
 		previousTime = currentTime;
 		currentTime = time;
 	}
-
-	/*public void UpdateUnupdatedMemories() {
-		for(MemEntity memory : entityMemories){
-			if( memory.apperanceInterval.endTime < previousTime  //if not away already
-					&& memory.previousTime < currentTime){ //if not updated in the current iteration
-				memory.disappearTime = memory.previousTime;
-			}
-		}
-	}*/
 	
 	public void UpdateSelf(MemEntity memory){
 		if(selfMemory != null){
