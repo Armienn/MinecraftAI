@@ -29,11 +29,8 @@ public class TexAnalysis extends Thread {
 				}
 				while( brain.sensememory.memoryactions.size() > 0){
 					Actions nextactions = brain.sensememory.memoryactions.get(0);
-					for(Action action : nextactions.succeededactions){
-						brain.shortmemory.Update(action, true, nextactions.time);
-					}
-					for(Action action : nextactions.failedactions){
-						brain.shortmemory.Update(action, false, nextactions.time);
+					for(Action action : nextactions.actions){
+						brain.shortmemory.Update(action, nextactions.time);
 					}
 					brain.sensememory.memoryactions.remove(0);
 				}
