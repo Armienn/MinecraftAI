@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import nea.minecraft.tex.interaction.Actions;
 
 public class MemEntity {
+	int detteerenteset = 0;
+	
 	public int id;
 	public Interval apperanceInterval; 
 	private String type;
