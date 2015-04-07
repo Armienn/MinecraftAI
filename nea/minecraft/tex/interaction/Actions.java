@@ -14,6 +14,8 @@ public class Actions {
 	public long time; 
 	/// Takeable actions : ///
 	public ArrayList<Action> actions = new ArrayList<Action>();
+	public ArrayList<Action> succeededactions = new ArrayList<Action>();
+	public ArrayList<Action> failedactions = new ArrayList<Action>();
 	
 	// Utility :
 	double dx = 0;
@@ -25,7 +27,8 @@ public class Actions {
 	
 	public void Update(EntityTex entity) {
 		time = brain.worldObj.getTotalWorldTime();
-		ArrayList<Action> succeeded = new ArrayList<Action>();
+		succeededactions = new ArrayList<Action>();
+		failedactions = new ArrayList<Action>();
 		for(Action action : actions){
 			int slot = 0;
 			EntityItem entityitem = null;
@@ -40,14 +43,20 @@ public class Actions {
 					dz = speed*0.3*Math.sin(angle*Math.PI*2);
 					entity.rotationYaw = angle*360;
 					brain.Log("Walking with speed " + speed + " and direction " + (int)(angle*360));
-					succeeded.add(action);
+					succeededactions.add(action);
+				}
+				else{
+					failedactions.add(action);
 				}
 				break;
 			case Jump:
 				if (entity.onGround) {
 					entity.motionY = 0.45;
 					brain.Log("Jumping");
-					succeeded.add(action);
+					succeededactions.add(action);
+				}
+				else{
+					failedactions.add(action);
 				}
 				break;
 			case PickUp:
@@ -60,7 +69,10 @@ public class Actions {
 					entityitem.setDead();
 					brain.Log("Picking up " + entityitem.getEntityItem().stackSize + " " + entityitem.getName());
 					brain.Say("Picked up a " + entityitem.getEntityItem().getDisplayName());
-					succeeded.add(action);
+					succeededactions.add(action);
+				}
+				else{
+					failedactions.add(action);
 				}
 				break;
 			case Drop:
@@ -70,7 +82,10 @@ public class Actions {
 					entity.entityDropItem(itemstack, 0);
 					brain.Log("Dropping " + entity.inventory[slot].stackSize + " " + entity.inventory[slot].getDisplayName());
 					entity.inventory[slot] = null;
-					succeeded.add(action);
+					succeededactions.add(action);
+				}
+				else{
+					failedactions.add(action);
 				}
 				break;
 			case Use:
@@ -86,15 +101,21 @@ public class Actions {
 						itemstack.stackSize--;
 						if(itemstack.stackSize <= 0)
 							entity.inventory[slot] = null;
-						succeeded.add(action);
+						succeededactions.add(action);
 					}
+					else{
+						failedactions.add(action);
+					}
+				}
+				else{
+					failedactions.add(action);
 				}
 				break;
 			default:
 				break;
 			}
 		}
-		actions = succeeded;
+		actions = new ArrayList<Action>();
 		entity.motionX = dx;
 		entity.motionZ = dz;
 		if(Math.abs(dz)+Math.abs(dx) > 0.1){
@@ -108,7 +129,10 @@ public class Actions {
 	public Actions Copy(){
 		Actions actions = new Actions(brain);
 		actions.time = time;
-		actions.actions.addAll(this.actions);
+		actions.succeededactions.addAll(this.succeededactions);
+		actions.failedactions.addAll(this.failedactions);
+		this.succeededactions.clear();
+		this.failedactions.clear();
 		this.actions.clear();
 		return actions;
 	}

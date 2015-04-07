@@ -68,7 +68,7 @@ public class ShortTermMemory {
 		}
 	}
 
-	public void Update(Action action, long time) {
-		selfMemory.AddAction(new MemAction(action, time));
+	public void Update(Action action, boolean success, long time) {
+		selfMemory.AddAction(new MemAction(action, time, success));
 	}
 }
