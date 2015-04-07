@@ -15,6 +15,11 @@ public class TexLearning extends Thread {
 	public void run(){
 		brain.Log("Starting Learning thread");
 		while(brain.KeepRunning()){
+			synchronized(brain){
+				long checkuntil = brain.shortmemory.currentTime - 20;
+				
+			}
+			//brain.shortmemory.currentTime
 			// find out if a reward has been received some time since lastCheck
 			// for each reward:
 			//   extract episode of fixed length from short term memory
