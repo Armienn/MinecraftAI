@@ -9,11 +9,11 @@ import nea.minecraft.tex.memory.utility.MemEntity;
 
 public class ShortTermMemory {
 	TexBrain brain;
-	long previousTime;
-	long currentTime;
+	public long previousTime;
+	public long currentTime;
 	/// Actual memory : ///
-	MemEntity selfMemory;
-	ArrayList<MemEntity> entityMemories = new ArrayList<MemEntity>();
+	public MemEntity selfMemory;
+	public ArrayList<MemEntity> entityMemories = new ArrayList<MemEntity>();
 	// memory of surrounding blocks:
 	// memory of time of day:
 	/// Memory end ///
