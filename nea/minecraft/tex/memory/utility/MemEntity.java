@@ -5,6 +5,10 @@ import java.util.ArrayList;
 import nea.minecraft.tex.interaction.Actions;
 
 public class MemEntity {
+<<<<<<< HEAD
+=======
+	int detteerenteset = 0;
+>>>>>>> branch 'master' of https://github.com/Armienn/MinecraftAI
 	
 	public int id;
 	public Interval apperanceInterval; 
