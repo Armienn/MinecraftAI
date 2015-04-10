@@ -21,7 +21,6 @@ public class TexLearning extends Thread {
 		brain.Log("Starting Learning thread");
 		while(brain.KeepRunning()){
 			synchronized(brain){
-<<<<<<< HEAD
 				ShortTermMemory memory = brain.shortmemory;
 				if(memory.selfMemory != null){
 					long currenttime = memory.currentTime;
@@ -57,10 +56,6 @@ public class TexLearning extends Thread {
 					///
 					lastCheck = currenttime;
 				}
-=======
-				long checkuntil = brain.shortmemory.currentTime - 20;
-				
->>>>>>> refs/remotes/origin/master
 			}
 			//brain.shortmemory.currentTime
 			// find out if a reward has been received some time since lastCheck
