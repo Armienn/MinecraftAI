@@ -15,7 +15,10 @@ public class ShortTermMemory {
 	/// Actual memory : ///
 	public MemEntity selfMemory;
 	public ArrayList<MemEntity> entityMemories = new ArrayList<MemEntity>();
+<<<<<<< HEAD
 	public ArrayList<MemReward> rewardMemories = new ArrayList<MemReward>();
+=======
+>>>>>>> refs/remotes/origin/master
 	// memory of surrounding blocks:
 	// memory of time of day:
 	/// Memory end ///
