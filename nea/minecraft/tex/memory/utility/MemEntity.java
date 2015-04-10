@@ -6,8 +6,8 @@ import nea.minecraft.tex.interaction.Actions;
 
 public class MemEntity {
 	public int id;
-	public Interval apperanceInterval; 
-	private String type;
+	public Interval appearanceInterval; 
+	//private String type;
 	ArrayList<String> properties = new ArrayList<String>();
 	ArrayList<MemParameter> parameters = new ArrayList<MemParameter>();
 	ArrayList<MemAction> actions = new ArrayList<MemAction>();
@@ -17,8 +17,8 @@ public class MemEntity {
 	
 	public MemEntity(int id, String type, long appeartime){
 		this.id = id;
-		this.type = type;
-		apperanceInterval = new Interval(appeartime, appeartime);
+		properties.add(type);
+		appearanceInterval = new Interval(appeartime, appeartime);
 		currentTime = previousTime = appeartime;
 	}
 	
@@ -57,7 +57,7 @@ public class MemEntity {
 	public void Update(MemEntity memory, long time){
 		previousTime = currentTime;
 		currentTime = time;
-		apperanceInterval.endTime = currentTime;
+		appearanceInterval.endTime = currentTime;
 		
 		for(MemParameter parameter : parameters){
 			MemParameter param = memory.GetParameter(parameter.GetType());
@@ -65,4 +65,26 @@ public class MemEntity {
 				parameter.UpdateValue(param.GetParameter(), previousTime, currentTime);
 		}
 	}
+	
+	public MemAction[] GetActionsInInterval(Interval interval){
+		ArrayList<MemAction> result = new ArrayList<MemAction>();
+		for(MemAction a : actions){
+			if(a.interval.Intersects(interval))
+				result.add(a);
+		}
+		return result.toArray(new MemAction[0]);
+	}
+	
+	public MemAction[] GetActionsInInterval(Interval interval, boolean success){
+		ArrayList<MemAction> result = new ArrayList<MemAction>();
+		for(MemAction a : actions){
+			if(a.interval.Intersects(interval) && a.success == success)
+				result.add(a);
+		}
+		return result.toArray(new MemAction[0]);
+	}
+	
+	/*public MemAction[] GetEventsInInterval(Interval interval){
+		
+	}*/
 }

@@ -76,4 +76,8 @@ public class TexBrain {
 	public void Log(String text){
 		logger.info("Tex #" + id + ": " + text);
 	}
+	
+	public enum RewardType {
+		EatingReward
+	}
 }

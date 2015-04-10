@@ -5,6 +5,7 @@ import nea.minecraft.tex.interaction.Action;
 import nea.minecraft.tex.interaction.Actions;
 import nea.minecraft.tex.interaction.Senses;
 import nea.minecraft.tex.memory.utility.MemEntity;
+import nea.minecraft.tex.memory.utility.MemReward;
 
 public class TexAnalysis extends Thread {
 	TexBrain brain;
@@ -22,6 +23,9 @@ public class TexAnalysis extends Thread {
 					brain.shortmemory.StartUpdate(nextsenses.time);
 					for(MemEntity mem : nextsenses.entityinfo){
 						brain.shortmemory.Update(mem);
+					}
+					for(MemReward reward : nextsenses.rewards){
+						brain.shortmemory.AddReward(reward);
 					}
 					brain.shortmemory.UpdateSelf(nextsenses.self);
 					

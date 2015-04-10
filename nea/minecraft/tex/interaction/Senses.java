@@ -8,6 +8,7 @@ import nea.minecraft.tex.EntityTex;
 import nea.minecraft.tex.TexBrain;
 import nea.minecraft.tex.memory.utility.MemEntity;
 import nea.minecraft.tex.memory.utility.MemParameter;
+import nea.minecraft.tex.memory.utility.MemReward;
 import nea.minecraft.tex.memory.utility.ParameterValue;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
@@ -16,6 +17,7 @@ import net.minecraft.item.ItemStack;
 public class Senses {
 	TexBrain brain;
 	public long time; 
+	public ArrayList<MemReward> rewards = new ArrayList<MemReward>();
 	public ArrayList<MemEntity> entityinfo = new ArrayList<MemEntity>();
 	public MemEntity self;
 	
@@ -25,9 +27,20 @@ public class Senses {
 	
 	public void Update(EntityTex entity){
 		time = brain.worldObj.getTotalWorldTime();
+		rewards.clear();
+		if(self != null)
+			FindRewards(entity);
 		entityinfo.clear();
 		SenseSelf(entity);
 		SenseEntities(entity);
+	}
+	
+	private void FindRewards(EntityTex entity){
+		double hungerdelta = entity.hunger - self.GetParameter("Hunger").GetParameter().value;
+		if(hungerdelta < 0){
+			rewards.add(new MemReward(TexBrain.RewardType.EatingReward, -hungerdelta, time));
+		}
+		//TODO
 	}
 	
 	private void SenseSelf(EntityTex entity){
@@ -36,7 +49,6 @@ public class Senses {
 		self.AddParameter(new MemParameter("PositionY", new ParameterValue(entity.posY)));
 		self.AddParameter(new MemParameter("PositionZ", new ParameterValue(entity.posZ)));
 		self.AddParameter(new MemParameter("Hunger", new ParameterValue(entity.hunger)));
-		//self.SetInventorySpaces(8);
 		for(int i=0;i<8;i++){
 			ItemStack item = entity.inventory[i];
 			if(item != null){
@@ -80,6 +92,7 @@ public class Senses {
 	public Senses Copy(){
 		Senses sense = new Senses(brain);
 		sense.time = time;
+		sense.rewards.addAll(rewards);
 		sense.entityinfo.addAll(entityinfo);
 		sense.self = self;
 		return sense;

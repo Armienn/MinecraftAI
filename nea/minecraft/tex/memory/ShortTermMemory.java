@@ -6,6 +6,7 @@ import nea.minecraft.tex.TexBrain;
 import nea.minecraft.tex.interaction.Action;
 import nea.minecraft.tex.memory.utility.MemAction;
 import nea.minecraft.tex.memory.utility.MemEntity;
+import nea.minecraft.tex.memory.utility.MemReward;
 
 public class ShortTermMemory {
 	TexBrain brain;
@@ -14,6 +15,7 @@ public class ShortTermMemory {
 	/// Actual memory : ///
 	public MemEntity selfMemory;
 	public ArrayList<MemEntity> entityMemories = new ArrayList<MemEntity>();
+	public ArrayList<MemReward> rewardMemories = new ArrayList<MemReward>();
 	// memory of surrounding blocks:
 	// memory of time of day:
 	/// Memory end ///
@@ -24,10 +26,14 @@ public class ShortTermMemory {
 	
 	private MemEntity GetMemoryOf(int id){
 		for(MemEntity t : entityMemories){
-			if(t.id == id && t.apperanceInterval.endTime >= previousTime)
+			if(t.id == id && t.appearanceInterval.endTime >= previousTime)
 				return t;
 		}
 		return null;
+	}
+	
+	public void AddReward(MemReward reward){
+		rewardMemories.add(reward);
 	}
 	
 	public void Update(MemEntity memory){

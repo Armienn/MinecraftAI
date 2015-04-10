@@ -2,11 +2,16 @@ package nea.minecraft.tex.ai;
 
 import nea.minecraft.tex.TexBrain;
 import nea.minecraft.tex.learning.LearningResult;
+import nea.minecraft.tex.memory.ShortTermMemory;
+import nea.minecraft.tex.memory.utility.Interval;
+import nea.minecraft.tex.memory.utility.MemAction;
 
 public class TexLearning extends Thread {
 	TexBrain brain;
 	LearningResult learningResult;
 	long lastCheck = 0;
+	
+	static final int consequencetime = 20;
 	
 	public TexLearning(TexBrain brain){
 		this.brain = brain;
@@ -16,8 +21,41 @@ public class TexLearning extends Thread {
 		brain.Log("Starting Learning thread");
 		while(brain.KeepRunning()){
 			synchronized(brain){
-				long checkuntil = brain.shortmemory.currentTime - 20;
-				
+				ShortTermMemory memory = brain.shortmemory;
+				if(memory.selfMemory != null){
+					long currenttime = memory.currentTime;
+					Interval newInterval = new Interval(lastCheck + 1, currenttime);
+					Interval leadingInterval = newInterval.Offset(- consequencetime);
+					Interval trailingInterval = new Interval(leadingInterval.endTime, currenttime);
+					
+					/// Examine results of actions:
+					MemAction[] actions = memory.selfMemory.GetActionsInInterval(leadingInterval, true);
+					for(MemAction a : actions){
+						//actionmemory = new actionmemory
+						//entity[] ents = blabla
+						//for each entity
+						//  for each property
+						//    Event[] events = get events in trailing interval
+						//    for each event
+						//      (if event begins after actions)
+						//      add possible connection to actionmemory
+						//    if entity appeared in trailing interval
+						//      add possible connection to actionmemory
+						//for each reward
+						//  add possible connection to actionmemory
+						//use actionmemory to update actionknowledge(?)
+					}
+					
+					
+					/// Examine failed actions:
+					// actions = memory.selfMemory.GetActionsInInterval(newInterval, false);
+					
+					/// Examine time before rewards:
+					// memory.selfMemory.GetRewardsInInterval(examineInterval);
+					
+					///
+					lastCheck = currenttime;
+				}
 			}
 			//brain.shortmemory.currentTime
 			// find out if a reward has been received some time since lastCheck
