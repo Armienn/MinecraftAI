@@ -12,6 +12,7 @@ public class TexAnalysis extends Thread {
 	
 	public TexAnalysis(TexBrain brain){
 		this.brain = brain;
+		this.setName("TexAnalysis");
 	}
 	
 	public void run(){

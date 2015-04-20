@@ -8,6 +8,7 @@ public class TexMainAI extends Thread {
 	
 	public TexMainAI(TexBrain brain){
 		this.brain = brain;
+		this.setName("TexMainAI");
 	}
 	
 	public void run(){

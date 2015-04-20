@@ -15,6 +15,7 @@ public class TexLearning extends Thread {
 	
 	public TexLearning(TexBrain brain){
 		this.brain = brain;
+		this.setName("TexLearning");
 	}
 	
 	public void run(){
