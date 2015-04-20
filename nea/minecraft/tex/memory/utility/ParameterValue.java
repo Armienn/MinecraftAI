@@ -16,6 +16,11 @@ public class ParameterValue {
 		defined = true;
 	}
 	
+	public ParameterValue(ParameterValue source){
+		value = source.value;
+		defined = source.defined;
+	}
+	
 	public boolean IsUndefined(){
 		return !defined;
 	}

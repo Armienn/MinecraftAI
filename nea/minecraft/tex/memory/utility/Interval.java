@@ -30,4 +30,8 @@ public class Interval {
 	public boolean Contains(long time){
 		return startTime <= time && time <= endTime;
 	}
+	
+	public boolean Contains(Interval interval){
+		return startTime <= interval.startTime && interval.endTime <= endTime;
+	}
 }

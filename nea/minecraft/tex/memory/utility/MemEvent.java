@@ -11,6 +11,12 @@ public class MemEvent {
 		interval = new Interval(starttime, endtime);
 	}
 	
+	public MemEvent(ParameterValue startvalue, ParameterValue endvalue, Interval interval){
+		startValue = startvalue;
+		endValue = endvalue;
+		this.interval = new Interval(interval.startTime, interval.endTime);
+	}
+	
 	public double GetVelocity(){
 		if(IsAppearanceOrDisapperance())
 			return 0;

@@ -23,6 +23,22 @@ public class MemEntity {
 		currentTime = previousTime = appeartime;
 	}
 	
+	public MemEntity(MemEntity source, Interval interval){
+		id = source.id;
+		properties.addAll(source.properties);
+		
+		if(interval.Contains(source.appearanceInterval)){
+			for(MemParameter param : source.parameters){
+				MemParameter parameter = param.Copy();
+			}
+		}
+		else{
+			for(MemParameter param : source.parameters){
+				MemParameter parameter = new MemParameter(param, interval);
+			}
+		}
+	}
+	
 	public void AddProperty(String property){
 		properties.add(property);
 	}
