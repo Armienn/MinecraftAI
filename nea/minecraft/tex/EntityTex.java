@@ -39,11 +39,18 @@ public class EntityTex extends EntityLiving implements net.minecraft.entity.pass
 		if (!this.worldObj.isRemote){ // if this is server
 			brain = new TexBrain(worldObj, ((Entity)this).getEntityId());
 			aithread = new TexMainAI(brain);
-			learningthread = new TexLearning(brain);
-			analysisthread = new TexAnalysis(brain);
+			boolean useNEAT = false;
+			if(useNEAT){
+				learningthread = new TexLearning(brain, false);
+				analysisthread = new TexAnalysis(brain);
+				learningthread.start();
+				analysisthread.start();
+			}
+			else{
+				learningthread = new TexLearning(brain, true);
+				learningthread.start();
+			}
 			aithread.start();
-			learningthread.start();
-			analysisthread.start();
 		}
 	}
 	

@@ -10,16 +10,24 @@ public class TexLearning extends Thread {
 	TexBrain brain;
 	LearningResult learningResult;
 	long lastCheck = 0;
+	boolean useNEAT = false;
 	
 	static final int consequencetime = 20;
 	
-	public TexLearning(TexBrain brain){
+	public TexLearning(TexBrain brain, boolean useneat){
 		this.brain = brain;
 		this.setName("TexLearning");
+		this.useNEAT = useneat;
 	}
 	
 	public void run(){
 		brain.Log("Starting Learning thread");
+		if(useNEAT) NEAT();
+		else Homebrew();
+		brain.Log("Ending Learning thread");
+	}
+	
+	private void Homebrew(){
 		while(brain.KeepRunning()){
 			synchronized(brain){
 				ShortTermMemory memory = brain.shortmemory;
@@ -58,21 +66,15 @@ public class TexLearning extends Thread {
 					lastCheck = currenttime;
 				}
 			}
-			//brain.shortmemory.currentTime
-			// find out if a reward has been received some time since lastCheck
-			// for each reward:
-			//   extract episode of fixed length from short term memory
-			//   for each function type:
-			//     (analyse episode: Function.Analyse(episode, learningResult))
-			//     for each valid input to the function type, among content of episode:
-			//       Add function observation to list of observations with this input type
-			//       Reevaluate observation list to produce function approximation
 			trySleep(100);
 			while(brain.Pause()){
 				trySleep(100);
 			}
 		}
-		brain.Log("Ending Learning thread");
+	}
+	
+	private void NEAT(){
+		
 	}
 	
 	static boolean trySleep(long milliseconds){
