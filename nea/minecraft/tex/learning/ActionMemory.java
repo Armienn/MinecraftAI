@@ -2,18 +2,24 @@ package nea.minecraft.tex.learning;
 
 import nea.minecraft.tex.interaction.Action;
 import nea.minecraft.tex.memory.Episode;
+import nea.minecraft.tex.memory.MemorySnapshot;
+import nea.minecraft.tex.memory.ShortTermMemory;
 import nea.minecraft.tex.memory.utility.Interval;
+import nea.minecraft.tex.memory.utility.MemAction;
 
 public class ActionMemory {
 	//ActionType
-	public Action.Type type;
-	public float[] parameters;
-	public Interval interval;
-	public boolean success;
+	MemAction action;
 	
 	//MemorySnapshot
 	MemorySnapshot snapshot;
 	
 	//TrailingEpisode
 	Episode trailingEpisode;
+	
+	public ActionMemory(MemAction action, ShortTermMemory shortmemory, long episodelength){
+		this.action = action.Copy();
+		trailingEpisode = new Episode(shortmemory, new Interval(action.interval.startTime, action.interval.startTime + episodelength));
+		snapshot = new MemorySnapshot(shortmemory, action.interval.startTime);
+	}
 }

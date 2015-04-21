@@ -10,7 +10,9 @@ public class SnapEntity {
 	ArrayList<SnapParameter> parameters = new ArrayList<SnapParameter>();
 	
 	public SnapEntity(MemEntity source, long time){
-		properties.addAll(Arrays.asList(source.GetProperties()));
+		for(String s : source.GetProperties()){
+			properties.add(s);
+		}
 		String[] params = source.GetParameters();
 		for(String param : params){
 			parameters.add(new SnapParameter(source.GetParameter(param), time));

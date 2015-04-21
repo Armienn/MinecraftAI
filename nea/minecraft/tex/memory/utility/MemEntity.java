@@ -68,7 +68,11 @@ public class MemEntity {
 	}
 	
 	public String[] GetProperties(){
-		return (String[]) properties.toArray();
+		String[] result = new String[properties.size()];
+		for(int i=0; i<properties.size(); i++){
+			result[i] = properties.get(i);
+		}
+		return result;
 	}
 	
 	public void Update(MemEntity memory, long time){

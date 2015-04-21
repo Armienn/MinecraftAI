@@ -14,4 +14,15 @@ public class MemAction {
 		parameters = action.GetParameters();
 		this.success = success;
 	}
+	
+	public MemAction(Action.Type action, float[] parameters, long starttime, long endtime, boolean success){
+		interval = new Interval(starttime, endtime);
+		type = action;
+		this.parameters = parameters;
+		this.success = success;
+	}
+	
+	public MemAction Copy(){
+		return new MemAction(type, parameters, interval.startTime, interval.endTime, success);
+	}
 }

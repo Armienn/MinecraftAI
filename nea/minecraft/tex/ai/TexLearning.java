@@ -1,6 +1,7 @@
 package nea.minecraft.tex.ai;
 
 import nea.minecraft.tex.TexBrain;
+import nea.minecraft.tex.learning.ActionMemory;
 import nea.minecraft.tex.learning.LearningResult;
 import nea.minecraft.tex.memory.ShortTermMemory;
 import nea.minecraft.tex.memory.utility.Interval;
@@ -35,12 +36,13 @@ public class TexLearning extends Thread {
 					long currenttime = memory.currentTime;
 					Interval newInterval = new Interval(lastCheck + 1, currenttime);
 					Interval leadingInterval = newInterval.Offset(- consequencetime);
-					Interval trailingInterval = new Interval(leadingInterval.endTime, currenttime);
+					//Interval trailingInterval = new Interval(leadingInterval.endTime, currenttime);
 					
 					/// Examine results of actions:
 					MemAction[] actions = memory.selfMemory.GetActionsInInterval(leadingInterval, true);
 					for(MemAction a : actions){
-						//actionmemory = new actionmemory
+						ActionMemory actionmemory = new ActionMemory(a, memory, consequencetime);
+						
 						//entity[] ents = blabla
 						//for each entity
 						//  for each property

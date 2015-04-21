@@ -1,8 +1,8 @@
-package nea.minecraft.tex.learning;
+package nea.minecraft.tex.memory;
 
 import java.util.ArrayList;
 
-import nea.minecraft.tex.memory.ShortTermMemory;
+import nea.minecraft.tex.learning.SnapEntity;
 import nea.minecraft.tex.memory.utility.MemEntity;
 
 public class MemorySnapshot {

@@ -41,14 +41,14 @@ public class EntityTex extends EntityLiving implements net.minecraft.entity.pass
 			aithread = new TexMainAI(brain);
 			boolean useNEAT = false;
 			if(useNEAT){
+				learningthread = new TexLearning(brain, true);
+				learningthread.start();
+			}
+			else{
 				learningthread = new TexLearning(brain, false);
 				analysisthread = new TexAnalysis(brain);
 				learningthread.start();
 				analysisthread.start();
-			}
-			else{
-				learningthread = new TexLearning(brain, true);
-				learningthread.start();
 			}
 			aithread.start();
 		}
