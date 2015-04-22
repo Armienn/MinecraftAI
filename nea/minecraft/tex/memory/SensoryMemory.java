@@ -16,14 +16,14 @@ public class SensoryMemory {
 	}
 	
 	public void UpdateExternal(){
-		memorysenses.add(brain.senses.Copy());
+		memorysenses.add(brain.senses.senses.Copy());
 		while(memorysenses.size() > 50){
 			memorysenses.remove(0);
 		}
 	}
 	
 	public void UpdateInternal(){
-		memoryactions.add(brain.actions.Copy());
+		memoryactions.add(brain.senses.actions.Copy());
 		while(memoryactions.size() > 50){
 			memoryactions.remove(0);
 		}

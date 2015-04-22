@@ -1,6 +1,7 @@
 package nea.minecraft.tex.ai;
 
 import nea.minecraft.tex.brain.TexBrain;
+import nea.minecraft.tex.learning.ActionKnowledge;
 import nea.minecraft.tex.learning.ActionMemory;
 import nea.minecraft.tex.learning.LearningResult;
 import nea.minecraft.tex.memory.ShortTermMemory;
@@ -42,7 +43,8 @@ public class TexLearning extends Thread {
 					MemAction[] actions = memory.selfMemory.GetActionsInInterval(leadingInterval, true);
 					for(MemAction a : actions){
 						ActionMemory actionmemory = new ActionMemory(a, memory, consequencetime);
-						
+						ActionKnowledge knowledge = brain.knowledge.GetKnowledge(a.type);
+						knowledge.Process(actionmemory);
 						//entity[] ents = blabla
 						//for each entity
 						//  for each property

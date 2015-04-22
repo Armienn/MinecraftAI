@@ -6,13 +6,17 @@ import nea.minecraft.tex.interaction.Senses;
 
 public class BrainSenses {
 	TexBrain brain;
-	public Actions actions = new Actions(brain);
-	public Senses senses = new Senses(brain);
-	public Rewards rewards = new Rewards(brain);
+	public Actions actions;
+	public Senses senses;
+	public Rewards rewards;
 	protected boolean alive = true;
 
 	public BrainSenses(TexBrain brain){
 		this.brain = brain;
+		
+		actions = new Actions(brain);
+		senses = new Senses(brain);
+		rewards = new Rewards(brain);
 	}
 	
 	public boolean IsAlive(){
