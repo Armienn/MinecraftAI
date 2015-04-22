@@ -1,4 +1,4 @@
-package nea.minecraft.tex;
+package nea.minecraft.tex.brain;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,15 +17,12 @@ public class TexBrain {
 	private Logger logger = LogManager.getLogger();
 	public World worldObj;
 	public int id;
-	public Actions actions = new Actions(this);
-	public Senses senses = new Senses(this);
-	public Rewards rewards = new Rewards(this);
 	
-	public SensoryMemory sensememory = new SensoryMemory(this);
-	public ShortTermMemory shortmemory = new ShortTermMemory(this);
+	public BrainSenses senses = new BrainSenses(this);
+	public BrainMemory memory = new BrainMemory(this);
+	public BrainKnowledge knowledge = new BrainKnowledge(this);
 	
 	private long lastupdate = 0;
-	private boolean alive = true;
 	
 	public TexBrain(World worldin, int id){
 		worldObj = worldin;
@@ -34,11 +31,11 @@ public class TexBrain {
 	}
 	
 	public void OnDeath(){
-		alive = false;
+		senses.alive = false;
 	}
 	
 	public boolean KeepRunning(){
-		if(!alive){
+		if(!senses.alive){
 			return false;
 		}
 		boolean serverisrunning = ((WorldServer)worldObj).func_73046_m().isServerRunning();

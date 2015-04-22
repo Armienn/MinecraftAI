@@ -1,6 +1,6 @@
 package nea.minecraft.tex.memory.utility;
 
-import nea.minecraft.tex.TexBrain;
+import nea.minecraft.tex.brain.TexBrain;
 
 public class MemReward {
 	public long time;

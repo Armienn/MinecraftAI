@@ -2,7 +2,7 @@ package nea.minecraft.tex.memory;
 
 import java.util.ArrayList;
 
-import nea.minecraft.tex.TexBrain;
+import nea.minecraft.tex.brain.TexBrain;
 import nea.minecraft.tex.interaction.Actions;
 import nea.minecraft.tex.interaction.Senses;
 

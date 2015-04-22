@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import nea.minecraft.tex.EntityTex;
-import nea.minecraft.tex.TexBrain;
+import nea.minecraft.tex.brain.TexBrain;
 import nea.minecraft.tex.memory.utility.MemEntity;
 import nea.minecraft.tex.memory.utility.MemParameter;
 import nea.minecraft.tex.memory.utility.MemReward;

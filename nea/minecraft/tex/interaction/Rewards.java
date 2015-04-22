@@ -1,7 +1,7 @@
 package nea.minecraft.tex.interaction;
 
 import nea.minecraft.tex.EntityTex;
-import nea.minecraft.tex.TexBrain;
+import nea.minecraft.tex.brain.TexBrain;
 
 public class Rewards {
 	TexBrain brain;

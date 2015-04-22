@@ -3,6 +3,7 @@ package nea.minecraft.tex;
 import nea.minecraft.tex.ai.TexAnalysis;
 import nea.minecraft.tex.ai.TexLearning;
 import nea.minecraft.tex.ai.TexMainAI;
+import nea.minecraft.tex.brain.TexBrain;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityHanging;
 import net.minecraft.entity.EntityLiving;
@@ -59,15 +60,15 @@ public class EntityTex extends EntityLiving implements net.minecraft.entity.pass
 		if (!this.worldObj.isRemote){ // if this is server
 			//update input to ai
 			synchronized(brain){
-				brain.senses.Update(this);
-				brain.rewards.Update(this);
-				brain.sensememory.UpdateExternal();
+				brain.senses.senses.Update(this);
+				brain.senses.rewards.Update(this);
+				brain.memory.sensory.UpdateExternal();
 			}
 			
 			//update output to world
 			synchronized(brain){
-				brain.actions.Update(this);
-				brain.sensememory.UpdateInternal();
+				brain.senses.actions.Update(this);
+				brain.memory.sensory.UpdateInternal();
 			}
 			
 			//tell brain that it's been updated

@@ -1,6 +1,6 @@
 package nea.minecraft.tex.ai;
 
-import nea.minecraft.tex.TexBrain;
+import nea.minecraft.tex.brain.TexBrain;
 import nea.minecraft.tex.interaction.Action;
 
 public class TexMainAI extends Thread {
@@ -33,7 +33,7 @@ public class TexMainAI extends Thread {
 			action.SetParameter(i, (float)Math.random());
 		}
 		synchronized(brain){
-			brain.actions.actions.add(action);
+			brain.senses.actions.actions.add(action);
 		}
 	}
 	

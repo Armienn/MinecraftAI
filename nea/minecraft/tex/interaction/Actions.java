@@ -3,7 +3,7 @@ package nea.minecraft.tex.interaction;
 import java.util.ArrayList;
 
 import nea.minecraft.tex.EntityTex;
-import nea.minecraft.tex.TexBrain;
+import nea.minecraft.tex.brain.TexBrain;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;

@@ -1,6 +1,6 @@
 package nea.minecraft.tex.ai;
 
-import nea.minecraft.tex.TexBrain;
+import nea.minecraft.tex.brain.TexBrain;
 import nea.minecraft.tex.interaction.Action;
 import nea.minecraft.tex.interaction.Actions;
 import nea.minecraft.tex.interaction.Senses;
@@ -19,28 +19,28 @@ public class TexAnalysis extends Thread {
 		brain.Log("Starting Analysis thread");
 		while(brain.KeepRunning()){
 			synchronized(brain){
-				while( brain.sensememory.memorysenses.size() > 0){
-					Senses nextsenses = brain.sensememory.memorysenses.get(0);
-					brain.shortmemory.StartUpdate(nextsenses.time);
+				while( brain.memory.sensory.memorysenses.size() > 0){
+					Senses nextsenses = brain.memory.sensory.memorysenses.get(0);
+					brain.memory.shortterm.StartUpdate(nextsenses.time);
 					for(MemEntity mem : nextsenses.entityinfo){
-						brain.shortmemory.Update(mem);
+						brain.memory.shortterm.Update(mem);
 					}
 					for(MemReward reward : nextsenses.rewards){
-						brain.shortmemory.AddReward(reward);
+						brain.memory.shortterm.AddReward(reward);
 					}
-					brain.shortmemory.UpdateSelf(nextsenses.self);
+					brain.memory.shortterm.UpdateSelf(nextsenses.self);
 					
-					brain.sensememory.memorysenses.remove(0);
+					brain.memory.sensory.memorysenses.remove(0);
 				}
-				while( brain.sensememory.memoryactions.size() > 0){
-					Actions nextactions = brain.sensememory.memoryactions.get(0);
+				while( brain.memory.sensory.memoryactions.size() > 0){
+					Actions nextactions = brain.memory.sensory.memoryactions.get(0);
 					for(Action action : nextactions.succeededactions){
-						brain.shortmemory.Update(action, true, nextactions.time);
+						brain.memory.shortterm.Update(action, true, nextactions.time);
 					}
 					for(Action action : nextactions.failedactions){
-						brain.shortmemory.Update(action, false, nextactions.time);
+						brain.memory.shortterm.Update(action, false, nextactions.time);
 					}
-					brain.sensememory.memoryactions.remove(0);
+					brain.memory.sensory.memoryactions.remove(0);
 				}
 			}
 			trySleep(100);

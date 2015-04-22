@@ -1,6 +1,6 @@
 package nea.minecraft.tex.ai;
 
-import nea.minecraft.tex.TexBrain;
+import nea.minecraft.tex.brain.TexBrain;
 import nea.minecraft.tex.learning.ActionMemory;
 import nea.minecraft.tex.learning.LearningResult;
 import nea.minecraft.tex.memory.ShortTermMemory;
@@ -31,7 +31,7 @@ public class TexLearning extends Thread {
 	private void Homebrew(){
 		while(brain.KeepRunning()){
 			synchronized(brain){
-				ShortTermMemory memory = brain.shortmemory;
+				ShortTermMemory memory = brain.memory.shortterm;
 				if(memory.selfMemory != null){
 					long currenttime = memory.currentTime;
 					Interval newInterval = new Interval(lastCheck + 1, currenttime);
