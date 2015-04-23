@@ -21,7 +21,7 @@ public class ConditionSet {
 	
 	//  Effect
 	//    List of:
-	//      Entity with so and so properties and parameters
+	//      Entity with so and so properties and (complex) parameters
 	//        will (dis)appear
 	//        will get event (with velocity or setting value) in (complex) parameter x
 	//    Or:

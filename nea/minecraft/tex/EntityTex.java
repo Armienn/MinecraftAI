@@ -25,7 +25,8 @@ public class EntityTex extends EntityLiving implements net.minecraft.entity.pass
 	Logger logger = LogManager.getLogger();
 	TexBrain brain;
 	TexMainAI aithread;
-	TexLearning learningthread;
+	TexLearning learningthreadhomebrew;
+	TexLearning learningthreadneat;
 	TexAnalysis analysisthread;
 	
 	public ItemStack[] inventory = new ItemStack[8];
@@ -39,18 +40,15 @@ public class EntityTex extends EntityLiving implements net.minecraft.entity.pass
 		logger.info("Tex #" + ((Entity)this).getEntityId() + ": Constructor");
 		if (!this.worldObj.isRemote){ // if this is server
 			brain = new TexBrain(worldObj, ((Entity)this).getEntityId());
+			
 			aithread = new TexMainAI(brain);
-			boolean useNEAT = false;
-			if(useNEAT){
-				learningthread = new TexLearning(brain, true);
-				learningthread.start();
-			}
-			else{
-				learningthread = new TexLearning(brain, false);
-				analysisthread = new TexAnalysis(brain);
-				learningthread.start();
-				analysisthread.start();
-			}
+			learningthreadhomebrew = new TexLearning(brain, false);
+			learningthreadneat = new TexLearning(brain, true);
+			analysisthread = new TexAnalysis(brain);
+			
+			learningthreadhomebrew.start();
+			learningthreadneat.start();
+			analysisthread.start();
 			aithread.start();
 		}
 	}
@@ -60,8 +58,7 @@ public class EntityTex extends EntityLiving implements net.minecraft.entity.pass
 		if (!this.worldObj.isRemote){ // if this is server
 			//update input to ai
 			synchronized(brain){
-				brain.senses.senses.Update(this);
-				brain.senses.rewards.Update(this);
+				brain.senses.senses.Update(this); //this includes finding rewards
 				brain.memory.sensory.UpdateExternal();
 			}
 			

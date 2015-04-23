@@ -4,7 +4,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import nea.minecraft.tex.interaction.Actions;
-import nea.minecraft.tex.interaction.Rewards;
 import nea.minecraft.tex.interaction.Senses;
 import nea.minecraft.tex.memory.SensoryMemory;
 import nea.minecraft.tex.memory.ShortTermMemory;
