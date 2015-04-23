@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class ConditionSet {
 	ArrayList<Condition> conditions = new ArrayList<Condition>();
-	ArrayList<ConditionEffect> effects = new ArrayList<ConditionEffect>();
+	ArrayList<Effect> effects = new ArrayList<Effect>();
 	//  ConditionSet
 	//    Conditions
 	//    Effect

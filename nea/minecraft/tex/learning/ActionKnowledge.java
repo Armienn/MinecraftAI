@@ -14,6 +14,12 @@ public class ActionKnowledge {
 	}
 	
 	public void Process(ActionMemory memory){
+		if(conditionSets.size() == 0){
+			
+		}
+		else {
+			
+		}
 		//TODO
 	}
 	
