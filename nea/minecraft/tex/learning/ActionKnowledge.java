@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import nea.minecraft.tex.interaction.Action;
 
 public class ActionKnowledge {
-	Action.Type type;
+	final Action.Type type;
 	ArrayList<ConditionSet> conditionSets = new ArrayList<ConditionSet>();
 	//ArrayList<ActionMemory> memories = new ArrayList<ActionMemory>();
 	
@@ -14,8 +14,9 @@ public class ActionKnowledge {
 	}
 	
 	public void Process(ActionMemory memory){
+		if(memory.action.type != type) throw new RuntimeException("Mismatch in Action Types");
 		if(conditionSets.size() == 0){
-			
+			conditionSets.add(new ConditionSet(memory));
 		}
 		else {
 			

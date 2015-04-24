@@ -4,6 +4,7 @@ import nea.minecraft.tex.memory.utility.MemParameter;
 import nea.minecraft.tex.memory.utility.ParameterValue;
 
 public class SnapParameter {
+	private String type;
 	ParameterValue value;
 	double velocity;
 	
@@ -18,5 +19,9 @@ public class SnapParameter {
 	
 	public double GetVelocity(){
 		return velocity;
+	}
+	
+	public String GetType(){
+		return type;
 	}
 }

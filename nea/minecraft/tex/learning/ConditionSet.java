@@ -5,6 +5,21 @@ import java.util.ArrayList;
 public class ConditionSet {
 	ArrayList<Condition> conditions = new ArrayList<Condition>();
 	ArrayList<Effect> effects = new ArrayList<Effect>();
+	int observations;
+	
+	public ConditionSet(ActionMemory memory){
+		observations = 1;
+		for(SnapEntity entity : memory.snapshot.entities){
+			conditions.add(new Condition(entity, memory));
+		}
+		if(memory.action.success){
+			// TODO
+		}
+		else {
+			effects = null;
+		}
+	}
+	
 	//  ConditionSet
 	//    Conditions
 	//    Effect
