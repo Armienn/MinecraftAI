@@ -9,6 +9,7 @@ public class SnapParameter {
 	double velocity;
 	
 	public SnapParameter(MemParameter source, long time){
+		type = source.GetType();
 		value = source.GetParameter(time);
 		velocity = source.GetVelocity(time);
 	}

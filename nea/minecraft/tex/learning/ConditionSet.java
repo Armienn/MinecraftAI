@@ -12,6 +12,7 @@ public class ConditionSet {
 		for(SnapEntity entity : memory.snapshot.entities){
 			conditions.add(new Condition(entity, memory));
 		}
+		conditions.add(new Condition(memory.snapshot.self, memory));
 		if(memory.action.success){
 			// TODO
 		}

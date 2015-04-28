@@ -18,4 +18,13 @@ public class SnapEntity {
 			parameters.add(new SnapParameter(source.GetParameter(param), time));
 		}
 	}
+	
+	public SnapParameter GetParameter(String type){
+		for(SnapParameter param : parameters){
+			if(param.GetType().equalsIgnoreCase(type)){
+				return param;
+			}
+		}
+		return null;
+	}
 }
