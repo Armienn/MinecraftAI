@@ -1,5 +1,6 @@
 package nea.minecraft.tex.ai;
 
+import nea.minecraft.tex.brain.NeatBrain;
 import nea.minecraft.tex.brain.TexBrain;
 import nea.minecraft.tex.learning.ActionKnowledge;
 import nea.minecraft.tex.learning.ActionMemory;
@@ -16,10 +17,18 @@ public class TexLearning extends Thread {
 	
 	static final int consequencetime = 20;
 	
+	// NEAT
+	NeatBrain neatbrain;
+	
+	//NEAT END
+	
 	public TexLearning(TexBrain brain, boolean useneat){
 		this.brain = brain;
 		this.setName("TexLearning");
 		this.useNEAT = useneat;
+		if(useneat){
+			neatbrain = new NeatBrain(brain);
+		}
 	}
 	
 	public void run(){
