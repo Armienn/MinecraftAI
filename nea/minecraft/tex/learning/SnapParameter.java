@@ -14,6 +14,12 @@ public class SnapParameter {
 		velocity = source.GetVelocity(time);
 	}
 	
+	public SnapParameter(MemParameter source){
+		type = source.GetType();
+		value = source.GetParameter();
+		velocity = 0;
+	}
+	
 	public ParameterValue GetParameter(){
 		return value;
 	}

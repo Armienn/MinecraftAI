@@ -109,6 +109,10 @@ public class MemParameter {
 		}
 	}
 	
+	public ArrayList<MemEvent> GetEvents(){
+		return events;
+	}
+	
 	public String GetType(){
 		return type;
 	}

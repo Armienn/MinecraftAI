@@ -2,6 +2,8 @@ package nea.minecraft.tex.learning;
 
 import java.util.ArrayList;
 
+import nea.minecraft.tex.memory.Episode;
+
 public class ConditionSet {
 	ArrayList<Condition> conditions = new ArrayList<Condition>();
 	ArrayList<Effect> effects = new ArrayList<Effect>();
@@ -9,12 +11,16 @@ public class ConditionSet {
 	
 	public ConditionSet(ActionMemory memory){
 		observations = 1;
+		//conditions
 		for(SnapEntity entity : memory.snapshot.entities){
 			conditions.add(new Condition(entity, memory));
 		}
 		conditions.add(new Condition(memory.snapshot.self, memory));
+		//effects
 		if(memory.action.success){
-			// TODO
+			// TODO: Analyse interval?
+			Episode trailing = memory.trailingEpisode;
+			effects = Effect.GetEffects(memory);
 		}
 		else {
 			effects = null;

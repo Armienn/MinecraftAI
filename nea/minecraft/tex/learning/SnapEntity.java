@@ -19,6 +19,16 @@ public class SnapEntity {
 		}
 	}
 	
+	public SnapEntity(MemEntity source){
+		for(String s : source.GetProperties()){
+			properties.add(s);
+		}
+		String[] params = source.GetParameters();
+		for(String param : params){
+			parameters.add(new SnapParameter(source.GetParameter(param)));
+		}
+	}
+	
 	public SnapParameter GetParameter(String type){
 		for(SnapParameter param : parameters){
 			if(param.GetType().equalsIgnoreCase(type)){

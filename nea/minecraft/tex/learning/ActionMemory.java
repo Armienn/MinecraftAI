@@ -19,7 +19,7 @@ public class ActionMemory {
 	
 	public ActionMemory(MemAction action, ShortTermMemory shortmemory, long episodelength){
 		this.action = action.Copy();
-		trailingEpisode = new Episode(shortmemory, new Interval(action.interval.startTime, action.interval.startTime + episodelength));
+		trailingEpisode = new Episode(shortmemory, new Interval(action.interval.startTime-2, action.interval.startTime + episodelength));
 		snapshot = new MemorySnapshot(shortmemory, action.interval.startTime);
 	}
 }
