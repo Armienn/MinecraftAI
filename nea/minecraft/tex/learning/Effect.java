@@ -33,26 +33,38 @@ public class Effect {
 	
 	public static ArrayList<Effect> GetEffects(ActionMemory memory){
 		ArrayList<Effect> effects = new ArrayList<Effect>();
-		Episode episode = memory.trailingEpisode;
 		
-		for(MemEntity entity : episode.entityMemories){
-			if(memory.action.interval.startTime <= entity.appearanceInterval.startTime){ // all entities that appear
-				Effect effect = new Effect(new SnapEntity(entity), memory);
-				effect.SetEvent(new EventEffect(EventEffect.EventType.Appearance));
-				effects.add(effect);
-			}
-			else if(memory.action.interval.startTime <= entity.appearanceInterval.endTime){ // all entities that disappear
-				Effect effect = new Effect(new SnapEntity(entity), memory);
-				effect.SetEvent(new EventEffect(EventEffect.EventType.Disappearance));
-				effects.add(effect);
-			}
-			
-			for(String s : entity.GetParameters()){
-				MemParameter param = entity.GetParameter(s);
-				for(MemEvent event : param.GetEvents()){
-					//Add event effects
+		for(MemEntity entity : memory.trailingEpisode.entityMemories){
+			effects.addAll(GetEffects(entity, memory));
+		}
+		effects.addAll(GetEffects(memory.trailingEpisode.selfMemory, memory));
+		
+		return effects;
+	}
+	
+	private static ArrayList<Effect> GetEffects(MemEntity entity, ActionMemory memory){
+		ArrayList<Effect> effects = new ArrayList<Effect>();
+		if(memory.action.interval.startTime <= entity.appearanceInterval.startTime){ // all entities that appear
+			Effect effect = new Effect(new SnapEntity(entity), memory);
+			effect.SetEvent(new EventEffect(EventEffect.EventType.Appearance));
+			effects.add(effect);
+		}
+		else if(memory.action.interval.startTime <= entity.appearanceInterval.endTime && entity.appearanceInterval.endTime < memory.trailingEpisode.interval.endTime){ // all entities that disappear
+			Effect effect = new Effect(new SnapEntity(entity), memory);
+			effect.SetEvent(new EventEffect(EventEffect.EventType.Disappearance));
+			effects.add(effect);
+		}
+		
+		for(String s : entity.GetParameters()){
+			MemParameter param = entity.GetParameter(s);
+			for(MemEvent event : param.GetEvents()){
+				if(memory.action.interval.startTime <= event.interval.startTime){
+					Effect effect = new Effect(new SnapEntity(entity), memory);
+					effect.SetEvent(new EventEffect(s, event, memory));
+					effects.add(effect);
 				}
 			}
+			
 		}
 		
 		return effects;

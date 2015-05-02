@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class MemParameter {
 	private String type;
 	private ParameterValue initialValue;
-	ArrayList<MemEvent> events;
+	ArrayList<MemEvent> events = new ArrayList<MemEvent>();
 	
 	public MemParameter(String type, ParameterValue value){
 		this.type = type;
@@ -15,12 +15,12 @@ public class MemParameter {
 	public MemParameter(MemParameter source, Interval interval){
 		type = source.type;
 		initialValue = source.GetParameter(interval.startTime);
-		if(source.events == null || source.events.size() == 0){
+		if(source.events.size() == 0){
 			;
 		}
 		else {
 			for(int i=0; i<source.events.size(); i++){
-				MemEvent event = events.get(i);
+				MemEvent event = source.events.get(i);
 				ParameterValue startvalue;
 				ParameterValue endvalue;
 				Interval inter;
@@ -55,7 +55,7 @@ public class MemParameter {
 	}
 	
 	public ParameterValue GetParameter(){
-		if(events == null || events.size() == 0){
+		if(events.size() == 0){
 			return initialValue;
 		}
 		else {
@@ -64,7 +64,7 @@ public class MemParameter {
 	}
 	
 	public ParameterValue GetParameter(long time){
-		if(events == null || events.size() == 0){
+		if(events.size() == 0){
 			return initialValue;
 		}
 		else {
@@ -97,7 +97,7 @@ public class MemParameter {
 	}
 	
 	public double GetVelocity(long time){
-		if(events == null || events.size() == 0){
+		if(events.size() == 0){
 			return 0;
 		}
 		else {
@@ -123,17 +123,12 @@ public class MemParameter {
 		}
 		else if(value.IsUndefined() || GetParameter().IsUndefined()){
 			//going from undefined to defined or vice versa
-			if(events == null)
-				events = new ArrayList<MemEvent>();
 			events.add(new MemEvent(initialValue, previoustime, value, currenttime));
 		}
 		else{
 			//possibly going from one value to another
 			double delta = value.value - GetParameter().value;
 			if(Math.abs(delta) > 0.000001){
-				if(events == null)
-					events = new ArrayList<MemEvent>();
-				
 				if(events.size() == 0){
 					events.add(new MemEvent(initialValue, previoustime, value, currenttime));
 				}
@@ -146,7 +141,7 @@ public class MemParameter {
 						double oldvel = event.GetVelocity();
 						double newvel = delta/(double)(currenttime-previoustime);
 						if(Math.signum(newvel) == Math.signum(oldvel) && Math.abs(newvel) < Math.abs(oldvel)*2 && Math.abs(newvel) > Math.abs(oldvel)*0.5){
-							event.interval.endTime = currenttime;
+							event.interval = new Interval(event.interval.startTime, currenttime);
 							event.endValue = value;
 						}
 						else{

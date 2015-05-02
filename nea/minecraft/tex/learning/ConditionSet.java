@@ -18,8 +18,6 @@ public class ConditionSet {
 		conditions.add(new Condition(memory.snapshot.self, memory));
 		//effects
 		if(memory.action.success){
-			// TODO: Analyse interval?
-			Episode trailing = memory.trailingEpisode;
 			effects = Effect.GetEffects(memory);
 		}
 		else {

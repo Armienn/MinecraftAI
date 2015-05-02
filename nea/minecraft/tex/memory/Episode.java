@@ -20,7 +20,6 @@ public class Episode {
 				MemEntity newEntity = new MemEntity(entity, interval);
 			}
 		}
-		this.interval = interval;
-		// TODO: create episode from short term memory
+		selfMemory = new MemEntity(shortmemory.selfMemory, interval);
 	}
 }

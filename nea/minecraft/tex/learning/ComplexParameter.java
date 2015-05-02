@@ -2,6 +2,7 @@ package nea.minecraft.tex.learning;
 
 import java.util.ArrayList;
 
+import nea.minecraft.tex.interaction.Action;
 import nea.minecraft.tex.memory.MemorySnapshot;
 
 public class ComplexParameter {
@@ -65,10 +66,15 @@ public class ComplexParameter {
 			two = memory.snapshot.self.GetParameter(parameterPrimary).value.value;
 			return one-two;
 		case DistanceToAI:
-			one = Math.pow(entity.GetParameter("PositionX").value.value - memory.snapshot.self.GetParameter("PositionX").value.value, 2);
-			two = Math.pow(entity.GetParameter("PositionY").value.value - memory.snapshot.self.GetParameter("PositionY").value.value, 2);
-			three = Math.pow(entity.GetParameter("PositionZ").value.value - memory.snapshot.self.GetParameter("PositionZ").value.value, 2);
-			return Math.sqrt(one+two+three);
+			try{
+				one = Math.pow(entity.GetParameter("PositionX").value.value - memory.snapshot.self.GetParameter("PositionX").value.value, 2);
+				two = Math.pow(entity.GetParameter("PositionY").value.value - memory.snapshot.self.GetParameter("PositionY").value.value, 2);
+				three = Math.pow(entity.GetParameter("PositionZ").value.value - memory.snapshot.self.GetParameter("PositionZ").value.value, 2);
+				return Math.sqrt(one+two+three);
+			}
+			catch(Exception e){
+				return 0;
+			}
 		default:
 			throw new RuntimeException("Is this even a possible error?");
 		}
@@ -90,10 +96,15 @@ public class ComplexParameter {
 			two = memory.snapshot.self.GetParameter(parameterPrimary).GetVelocity();
 			return one-two;
 		case DistanceToAI:
-			one = Math.pow(entity.GetParameter("PositionX").GetVelocity() - memory.snapshot.self.GetParameter("PositionX").GetVelocity(), 2);
-			two = Math.pow(entity.GetParameter("PositionY").GetVelocity() - memory.snapshot.self.GetParameter("PositionY").GetVelocity(), 2);
-			three = Math.pow(entity.GetParameter("PositionZ").GetVelocity() - memory.snapshot.self.GetParameter("PositionZ").GetVelocity(), 2);
-			return Math.sqrt(one+two+three);
+			try{
+				one = Math.pow(entity.GetParameter("PositionX").GetVelocity() - memory.snapshot.self.GetParameter("PositionX").GetVelocity(), 2);
+				two = Math.pow(entity.GetParameter("PositionY").GetVelocity() - memory.snapshot.self.GetParameter("PositionY").GetVelocity(), 2);
+				three = Math.pow(entity.GetParameter("PositionZ").GetVelocity() - memory.snapshot.self.GetParameter("PositionZ").GetVelocity(), 2);
+				return Math.sqrt(one+two+three);
+			}
+			catch(Exception e){
+				return 0;
+			}
 		default:
 			throw new RuntimeException("Is this even a possible error?");
 		}
@@ -112,6 +123,8 @@ public class ComplexParameter {
 	}
 	
 	private static void AddActionDeltas(ArrayList<ComplexParameter> list, SnapEntity entity, ActionMemory memory){
+		if(Action.DegreesOfFreedom(memory.action.type) < 1)
+			return;
 		for(SnapParameter param : entity.parameters){
 			String primarytype = param.GetType();
 			if(primarytype.equalsIgnoreCase("positionInventory")) //remove this line to add actiondelta for all parameters

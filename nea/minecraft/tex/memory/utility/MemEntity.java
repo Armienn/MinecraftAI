@@ -28,13 +28,17 @@ public class MemEntity {
 		properties.addAll(source.properties);
 		
 		if(interval.Contains(source.appearanceInterval)){
+			appearanceInterval = source.appearanceInterval;
 			for(MemParameter param : source.parameters){
 				MemParameter parameter = param.Copy();
+				parameters.add(parameter);
 			}
 		}
-		else{
+		else if (interval.Intersects(source.appearanceInterval)){
+			appearanceInterval = source.appearanceInterval.Intersection(interval);
 			for(MemParameter param : source.parameters){
 				MemParameter parameter = new MemParameter(param, interval);
+				parameters.add(parameter);
 			}
 		}
 	}
@@ -78,7 +82,7 @@ public class MemEntity {
 	public void Update(MemEntity memory, long time){
 		previousTime = currentTime;
 		currentTime = time;
-		appearanceInterval.endTime = currentTime;
+		appearanceInterval = new Interval(appearanceInterval.startTime, currentTime);
 		
 		for(MemParameter parameter : parameters){
 			MemParameter param = memory.GetParameter(parameter.GetType());

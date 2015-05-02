@@ -2,7 +2,7 @@ package nea.minecraft.tex.memory.utility;
 
 public class Interval {
 	public final long startTime;
-	public long endTime;
+	public final long endTime;
 	
 	public Interval(long start, long end){
 		startTime = start;
@@ -15,6 +15,13 @@ public class Interval {
 	
 	public Interval Offset(long offset){
 		return new Interval(startTime + offset, endTime + offset);
+	}
+	
+	public Interval Intersection(Interval other){
+		if(Intersects(other)){
+			return new Interval( other.startTime < startTime ? startTime : other.startTime, other.endTime < endTime ? other.endTime : endTime);
+		}
+		else return null;
 	}
 	
 	public boolean Intersects(Interval other){
