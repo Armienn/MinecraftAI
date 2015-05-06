@@ -18,7 +18,26 @@ public class Condition {
 		}
 	}
 	
-
+	@Override
+	public String toString(){
+		return toString(0);
+	}
+	
+	public String toString(int level){
+		String tab = "";
+		for(int i=0; i<level; i++){
+			tab += "\t";
+		}
+		if(level > 2) return "Condition";
+		
+		String result = "Condition - \n";
+		result += tab + "\tProperties " + properties + "\n";
+		for(int i=0; i<parameterConditions.size(); i++){
+			result += tab + "\t" + i + ": " + parameterConditions.get(i).toString(level+1) + "\n";
+		}
+		result += tab + "\tObservations " + observations;
+		return result;
+	}
 	
 	/*public static void AddAllToList(ArrayList<ParameterCondition> parameterConditions, SnapEntity entity, ActionMemory memory){
 		//First the basic parameters
@@ -29,13 +48,4 @@ public class Condition {
 		}
 		//TODO
 	}*/
-	
-	//  Condition
-	//    Must (not) have (with certainty u) Entity with property x
-	//      which has parameter y
-	//        with value p
-	//        with velocity q
-	//      which has complex parameter z
-	//        with value m
-	//        with velocity n
 }

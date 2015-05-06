@@ -152,5 +152,15 @@ public class ComplexParameter {
 		}
 	}
 	
+	@Override
+	public String toString(){
+		return toString(0);
+	}
+	
+	public String toString(int level){
+		String result = "ComplexParameter - " + type + " " + parameterPrimary + " " + parameterSecondary;
+		return result;
+	}
+	
 	public enum ComplexType { Basic, ActionDelta, IntraDelta, InterDelta, DistanceToAI }
 }

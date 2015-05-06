@@ -32,4 +32,23 @@ public class ActionKnowledge {
 	public Action.Type GetType(){
 		return type;
 	}
+	
+	@Override
+	public String toString(){
+		return toString(0);
+	}
+	
+	public String toString(int level){
+		String tab = "";
+		for(int i=0; i<level; i++){
+			tab += "\t";
+		}
+		if(level > 2) return "ActionKnowledge";
+		
+		String result = "ActionKnowledge - " + type + "\n";
+		for(int i=0; i<conditionSets.size(); i++){
+			result += tab + "\t" + i + ": " + conditionSets.get(0).toString(level+1) + "\n";
+		}
+		return result;
+	}
 }

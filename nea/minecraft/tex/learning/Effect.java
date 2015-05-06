@@ -21,12 +21,6 @@ public class Effect {
 		}
 	}
 	
-	//  Effect
-	//    Entity with so and so properties and (complex) parameters
-	//      will (dis)appear
-	//      will get event (with velocity or setting value) in (complex) parameter x
-	
-	
 	public void SetEvent(EventEffect event){
 		eventEffect = event;
 	}
@@ -68,5 +62,27 @@ public class Effect {
 		}
 		
 		return effects;
+	}
+	
+	@Override
+	public String toString(){
+		return toString(0);
+	}
+	
+	public String toString(int level){
+		String tab = "";
+		for(int i=0; i<level; i++){
+			tab += "\t";
+		}
+		if(level > 2) return "Effect";
+		
+		String result = "Effect - \n";
+		result += tab + "\tProperties " + properties + "\n";
+		for(int i=0; i<parameterConditions.size(); i++){
+			result += tab + "\t" + i + ": " + parameterConditions.get(i).toString(level+1) + "\n";
+		}
+		result += tab + "\t" + eventEffect.toString(level+1) + "\n";
+		result += tab + "\tObservations " + observations;
+		return result;
 	}
 }

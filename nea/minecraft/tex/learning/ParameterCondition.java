@@ -22,5 +22,24 @@ public class ParameterCondition {
 	
 	//public void AddObservation(
 	
+	@Override
+	public String toString(){
+		return toString(0);
+	}
+	
+	public String toString(int level){
+		String tab = "";
+		for(int i=0; i<level; i++){
+			tab += "\t";
+		}
+		if(level > 2) return "ParameterCondition - Val:" + valueCondition + " Vel:" + velocityCondition;
+		
+		String result = "ParameterCondition - ValueCondition: " + valueCondition + " VelocityCondition: " + velocityCondition + "\n";
+		result += tab + "\t" + parameter.toString(level+1) + "\n";
+		result += tab + "\tDelays " + observedValues + "\n";
+		result += tab + "\tValues " + observedVelocities;
+		return result;
+	}
+	
 	enum ConditionType { Above, Below, Between, Outside, None };
 }

@@ -38,5 +38,25 @@ public class EventEffect {
 		}
 	}
 	
+	@Override
+	public String toString(){
+		return toString(0);
+	}
+	
+	public String toString(int level){
+		String tab = "";
+		for(int i=0; i<level; i++){
+			tab += "\t";
+		}
+		if(level > 2) return "EventEffect";
+		
+		String result = "EventEffect - " + type + "\n";
+		result += tab + "\tDelays " + observedDelays + "\n";
+		result += tab + "\tValues " + observedValues + "\n";
+		result += tab + "\tObservations " + observations + "\n";
+		result += tab + "\t" + parameter.toString(level+1);
+		return result;
+	}
+	
 	public enum EventType { Appearance, Disappearance, Add, Set, Velocity }
 }
