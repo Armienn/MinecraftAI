@@ -53,7 +53,7 @@ public class Action {
 	public static int DegreesOfFreedom(Type type){
 		switch(type){
 		case Move:
-			return 2; // direction and speed
+			return 1; // direction (and not speed)
 		case Jump:
 			return 0;
 		case PickUp:

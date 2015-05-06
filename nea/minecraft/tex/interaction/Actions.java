@@ -38,7 +38,7 @@ public class Actions {
 			case Move:
 				if (entity.onGround) {
 					float angle = action.GetParameter(0);
-					float speed = action.GetParameter(1);
+					float speed = 0.5f;//action.GetParameter(1);
 					dx = speed*0.3*Math.cos(angle*Math.PI*2);
 					dz = speed*0.3*Math.sin(angle*Math.PI*2);
 					entity.rotationYaw = angle*360;
