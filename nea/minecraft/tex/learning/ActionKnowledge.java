@@ -19,9 +19,16 @@ public class ActionKnowledge {
 			conditionSets.add(new ConditionSet(memory));
 		}
 		else {
-			
+			//for each existing ConditionSet:
+			//  Check if current ActionMemory's effects fit any already observed effects
+			//  if so:
+			//    check if any conditions fit the corresponding conditions
+			//    if so:
+			//      add the ActionMemory's observations to the fitting ConditionSet
+			//      break
+			//if no fit exists:
+			//  create New conditionSet
 		}
-		//TODO
 	}
 	
 	public Action.Type GetType(){
