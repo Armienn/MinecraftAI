@@ -25,25 +25,32 @@ public class ConditionSet {
 		}
 	}
 	
-	//  ConditionSet
-	//    Conditions
-	//    Effect
+	public boolean AddIfFits(ActionMemory memory){
+		ArrayList<Condition> conditionfits;
+		ArrayList<Effect> effectfits = CheckEffectFits(memory);
+		if(effectfits.size() > 0){
+			conditionfits = CheckConditionFits(memory);
+			if(conditionfits.size() > 0){
+				Add(memory, conditionfits, effectfits);
+			}
+		}
+		return false;
+	}
+
+	private ArrayList<Condition> CheckConditionFits(ActionMemory memory){
+		ArrayList<Condition> fits = new ArrayList<Condition>();
+		//TODO
+		return fits;
+	}
 	
-	//  Condition
-	//    List of:
-	//      Must (not) have (with certainty u) Entity with property x
-	//        which has parameter y
-	//          with value p
-	//          with velocity q
-	//        which has complex parameter z
-	//          with value m
-	//          with velocity n
+	private ArrayList<Effect> CheckEffectFits(ActionMemory memory){
+		ArrayList<Effect> fits = new ArrayList<Effect>();
+		//TODO
+		return fits;
+	}
 	
-	//  Effect
-	//    List of:
-	//      Entity with so and so properties and (complex) parameters
-	//        will (dis)appear
-	//        will get event (with velocity or setting value) in (complex) parameter x
-	//    Or:
-	//      Fails
+	private void Add(ActionMemory memory, ArrayList<Condition> conditionfits, ArrayList<Effect> effectfits) {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -19,15 +19,13 @@ public class ActionKnowledge {
 			conditionSets.add(new ConditionSet(memory));
 		}
 		else {
-			//for each existing ConditionSet:
-			//  Check if current ActionMemory's effects fit any already observed effects
-			//  if so:
-			//    check if any conditions fit the corresponding conditions
-			//    if so:
-			//      add the ActionMemory's observations to the fitting ConditionSet
-			//      break
-			//if no fit exists:
-			//  create New conditionSet
+			boolean foundfit = false;
+			for(ConditionSet set : conditionSets){
+				if(set.AddIfFits(memory)) break; // checks if memory fits the set, and adds it to the set if so. Then breaks out of the loop
+			}
+			if(!foundfit && conditionSets.size() < 20){
+				conditionSets.add(new ConditionSet(memory));
+			}
 		}
 	}
 	
