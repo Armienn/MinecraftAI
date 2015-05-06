@@ -58,12 +58,37 @@ public class Effect {
 					effects.add(effect);
 				}
 			}
-			
 		}
 		
 		return effects;
 	}
 	
+	public boolean Fits(ActionMemory memory){
+		ArrayList<MemEntity> entities = GetFittingEntities(memory);
+		//TODO
+		return false;
+	}
+	
+	private ArrayList<MemEntity> GetFittingEntities(ActionMemory memory) {
+		ArrayList<MemEntity> entities = new ArrayList<MemEntity>();
+		/*for(MemEntity entity : memory.trailingEpisode.entityMemories){
+			ArrayList<String> props = new ArrayList<String>();
+			for(String s : entity.GetProperties()){
+				for(String t : properties){
+					if(s.equalsIgnoreCase(t)){
+						props.add(s);
+						break;
+					}
+				}
+			}
+			if(props.size() > 0){
+				
+				entities.add(entity);
+			}
+		}*/// hmm
+		return entities;
+	}
+
 	@Override
 	public String toString(){
 		return toString(0);

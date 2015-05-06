@@ -39,6 +39,11 @@ public class Condition {
 		return result;
 	}
 	
+	public boolean Fits(ActionMemory memory){
+		//TODO
+		return false;
+	}
+	
 	/*public static void AddAllToList(ArrayList<ParameterCondition> parameterConditions, SnapEntity entity, ActionMemory memory){
 		//First the basic parameters
 		for(SnapParameter param : entity.parameters){

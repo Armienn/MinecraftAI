@@ -39,13 +39,21 @@ public class ConditionSet {
 
 	private ArrayList<Condition> CheckConditionFits(ActionMemory memory){
 		ArrayList<Condition> fits = new ArrayList<Condition>();
-		//TODO
+		for(Condition condition : conditions){
+			if(condition.Fits(memory))
+				fits.add(condition);
+		}
+		//TODO: Additional checks?
 		return fits;
 	}
 	
 	private ArrayList<Effect> CheckEffectFits(ActionMemory memory){
 		ArrayList<Effect> fits = new ArrayList<Effect>();
-		//TODO
+		for(Effect effect : effects){
+			if(effect.Fits(memory))
+				fits.add(effect);
+		}
+		//TODO: Additional checks?
 		return fits;
 	}
 	
