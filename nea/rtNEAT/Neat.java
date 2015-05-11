@@ -418,131 +418,131 @@ public class Neat{
 		
 		while ((currentLine = paramFile.readLine()) != null){
 			splitLine = currentLine.split(" ", 1);
-			if (splitLine[0] == "trait_param_mut_prob"){
+			if (splitLine[0].equalsIgnoreCase("trait_param_mut_prob")){
 				trait_param_mut_prob = Integer.parseInt(splitLine[1]);
 				System.out.println(splitLine[0] + " set to " + splitLine[1]);
 			}
-			else if (splitLine[0] == "trait_mutation_power"){
+			else if (splitLine[0].equalsIgnoreCase("trait_mutation_power")){
 				trait_mutation_power = Integer.parseInt(splitLine[1]);
 				System.out.println(splitLine[0] + " set to " + splitLine[1]);
 			}
-			else if (splitLine[0] == "linktrait_mut_sig"){
+			else if (splitLine[0].equalsIgnoreCase("linktrait_mut_sig")){
 				linktrait_mut_sig = Integer.parseInt(splitLine[1]);
 				System.out.println(splitLine[0] + " set to " + splitLine[1]);
 			}
-			else if (splitLine[0] == "nodetrait_mut_sig"){
+			else if (splitLine[0].equalsIgnoreCase("nodetrait_mut_sig")){
 				nodetrait_mut_sig = Integer.parseInt(splitLine[1]);
 				System.out.println(splitLine[0] + " set to " + splitLine[1]);
 			}
-			else if (splitLine[0] == "weigh_mut_power"){
+			else if (splitLine[0].equalsIgnoreCase("weigh_mut_power")){
 				weigh_mut_power = Integer.parseInt(splitLine[1]);
 				System.out.println(splitLine[0] + " set to " + splitLine[1]);
 			}
-			else if (splitLine[0] == "recur_prob"){
+			else if (splitLine[0].equalsIgnoreCase("recur_prob")){
 				recur_prob = Integer.parseInt(splitLine[1]);
 				System.out.println(splitLine[0] + " set to " + splitLine[1]);
 			}
-			else if (splitLine[0] == "disjoint_coeff"){
+			else if (splitLine[0].equalsIgnoreCase("disjoint_coeff")){
 				disjoint_coeff = Integer.parseInt(splitLine[1]);
 				System.out.println(splitLine[0] + " set to " + splitLine[1]);
 			}
-			else if (splitLine[0] == "excess_coeff"){
+			else if (splitLine[0].equalsIgnoreCase("excess_coeff")){
 				excess_coeff = Integer.parseInt(splitLine[1]);
 				System.out.println(splitLine[0] + " set to " + splitLine[1]);
 			}
-			else if (splitLine[0] == "mutdiff_coeff"){
+			else if (splitLine[0].equalsIgnoreCase("mutdiff_coeff")){
 				mutdiff_coeff = Integer.parseInt(splitLine[1]);
 				System.out.println(splitLine[0] + " set to " + splitLine[1]);
 			}
-			else if (splitLine[0] == "compat_thresh"){
+			else if (splitLine[0].equalsIgnoreCase("compat_thresh")){
 				compat_thresh = Integer.parseInt(splitLine[1]);
 				System.out.println(splitLine[0] + " set to " + splitLine[1]);
 			}
-			else if (splitLine[0] == "age_significance"){
+			else if (splitLine[0].equalsIgnoreCase("age_significance")){
 				age_significance = Integer.parseInt(splitLine[1]);
 				System.out.println(splitLine[0] + " set to " + splitLine[1]);
 			}
-			else if (splitLine[0] == "survival_thresh"){
+			else if (splitLine[0].equalsIgnoreCase("survival_thresh")){
 				survival_thresh = Integer.parseInt(splitLine[1]);
 				System.out.println(splitLine[0] + " set to " + splitLine[1]);
 			}
-			else if (splitLine[0] == "mutate_only_prob"){
+			else if (splitLine[0].equalsIgnoreCase("mutate_only_prob")){
 				mutate_only_prob = Integer.parseInt(splitLine[1]);
 				System.out.println(splitLine[0] + " set to " + splitLine[1]);
 			}
-			else if (splitLine[0] == "mutate_random_trait_prob"){
+			else if (splitLine[0].equalsIgnoreCase("mutate_random_trait_prob")){
 				mutate_random_trait_prob = Integer.parseInt(splitLine[1]);
 				System.out.println(splitLine[0] + " set to " + splitLine[1]);
 			}
-			else if (splitLine[0] == "mutate_link_trait_prob"){
+			else if (splitLine[0].equalsIgnoreCase("mutate_link_trait_prob")){
 				mutate_link_trait_prob = Integer.parseInt(splitLine[1]);
 				System.out.println(splitLine[0] + " set to " + splitLine[1]);
 			}
-			else if (splitLine[0] == "mutate_node_trait_prob"){
+			else if (splitLine[0].equalsIgnoreCase("mutate_node_trait_prob")){
 				mutate_node_trait_prob = Integer.parseInt(splitLine[1]);
 				System.out.println(splitLine[0] + " set to " + splitLine[1]);
 			}
-			else if (splitLine[0] == "mutate_link_weights_prob"){
+			else if (splitLine[0].equalsIgnoreCase("mutate_link_weights_prob")){
 				mutate_link_weights_prob = Integer.parseInt(splitLine[1]);
 				System.out.println(splitLine[0] + " set to " + splitLine[1]);
 			}
-			else if (splitLine[0] == "mutate_toggle_enable_prob"){
+			else if (splitLine[0].equalsIgnoreCase("mutate_toggle_enable_prob")){
 				mutate_toggle_enable_prob = Integer.parseInt(splitLine[1]);
 				System.out.println(splitLine[0] + " set to " + splitLine[1]);
 			}
-			else if (splitLine[0] == "mutate_gene_reenable_prob"){
+			else if (splitLine[0].equalsIgnoreCase("mutate_gene_reenable_prob")){
 				mutate_gene_reenable_prob = Integer.parseInt(splitLine[1]);
 				System.out.println(splitLine[0] + " set to " + splitLine[1]);
 			}
-			else if (splitLine[0] == "mutate_add_node_prob"){
+			else if (splitLine[0].equalsIgnoreCase("mutate_add_node_prob")){
 				mutate_add_node_prob = Integer.parseInt(splitLine[1]);
 				System.out.println(splitLine[0] + " set to " + splitLine[1]);
 			}
-			else if (splitLine[0] == "mutate_add_link_prob"){
+			else if (splitLine[0].equalsIgnoreCase("mutate_add_link_prob")){
 				mutate_add_link_prob = Integer.parseInt(splitLine[1]);
 				System.out.println(splitLine[0] + " set to " + splitLine[1]);
 			}
-			else if (splitLine[0] == "interspecies_mate_rate"){
+			else if (splitLine[0].equalsIgnoreCase("interspecies_mate_rate")){
 				interspecies_mate_rate = Integer.parseInt(splitLine[1]);
 				System.out.println(splitLine[0] + " set to " + splitLine[1]);
 			}
-			else if (splitLine[0] == "mate_multipoint_prob"){
+			else if (splitLine[0].equalsIgnoreCase("mate_multipoint_prob")){
 				mate_multipoint_prob = Integer.parseInt(splitLine[1]);
 				System.out.println(splitLine[0] + " set to " + splitLine[1]);
 			}
-			else if (splitLine[0] == "mate_multipoint_avg_prob"){
+			else if (splitLine[0].equalsIgnoreCase("mate_multipoint_avg_prob")){
 				mate_multipoint_avg_prob = Integer.parseInt(splitLine[1]);
 				System.out.println(splitLine[0] + " set to " + splitLine[1]);
 			}
-			else if (splitLine[0] == "mate_singlepoint_prob"){
+			else if (splitLine[0].equalsIgnoreCase("mate_singlepoint_prob")){
 				mate_singlepoint_prob = Integer.parseInt(splitLine[1]);
 				System.out.println(splitLine[0] + " set to " + splitLine[1]);
 			}
-			else if (splitLine[0] == "mate_only_prob"){
+			else if (splitLine[0].equalsIgnoreCase("mate_only_prob")){
 				mate_only_prob = Integer.parseInt(splitLine[1]);
 				System.out.println(splitLine[0] + " set to " + splitLine[1]);
 			}
-			else if (splitLine[0] == "recur_only_prob"){
+			else if (splitLine[0].equalsIgnoreCase("recur_only_prob")){
 				recur_only_prob = Integer.parseInt(splitLine[1]);
 				System.out.println(splitLine[0] + " set to " + splitLine[1]);
 			}
-			else if (splitLine[0] == "pop_size"){
+			else if (splitLine[0].equalsIgnoreCase("pop_size")){
 				pop_size = Integer.parseInt(splitLine[1]);
 				System.out.println(splitLine[0] + " set to " + splitLine[1]);
 			}
-			else if (splitLine[0] == "dropoff_age"){
+			else if (splitLine[0].equalsIgnoreCase("dropoff_age")){
 				dropoff_age = Integer.parseInt(splitLine[1]);
 				System.out.println(splitLine[0] + " set to " + splitLine[1]);
 			}
-			else if (splitLine[0] == "newlink_tries"){
+			else if (splitLine[0].equalsIgnoreCase("newlink_tries")){
 				newlink_tries = Integer.parseInt(splitLine[1]);
 				System.out.println(splitLine[0] + " set to " + splitLine[1]);
 			}
-			else if (splitLine[0] == "print_every"){
+			else if (splitLine[0].equalsIgnoreCase("print_every")){
 				print_every = Integer.parseInt(splitLine[1]);
 				System.out.println(splitLine[0] + " set to " + splitLine[1]);
 			}
-			else if (splitLine[0] == "babies_stolen"){
+			else if (splitLine[0].equalsIgnoreCase("babies_stolen")){
 				babies_stolen = Integer.parseInt(splitLine[1]);
 				System.out.println(splitLine[0] + " set to " + splitLine[1]);
 			}

@@ -41,7 +41,7 @@ import java.util.Vector;
 //	//    link-building.
 //
 //	class Genome {
-class Genome {
+public class Genome {
 
 	public enum mutator {
 		GAUSSIAN, COLDGAUSSIAN
@@ -53,11 +53,11 @@ class Genome {
 	public int genome_id;
 	//
 	// std::vector<Trait*> traits; //parameter conglomerations
-	public Vector<Trait> traits;
+	public Vector<Trait> traits = new Vector<Trait>();
 	// std::vector<NNode*> nodes; //List of NNodes for the Network
-	public Vector<Nnode> nodes;
+	public Vector<Nnode> nodes = new Vector<Nnode>();
 	// std::vector<Gene*> genes; //List of innovation-tracking genes
-	public Vector<Gene> genes;
+	public Vector<Gene> genes = new Vector<Gene>();
 	//
 	// Network *phenotype; //Allows Genome to be matched with its Network
 	public Network phenotype;
@@ -249,7 +249,7 @@ class Genome {
 				// printf(" test\n");
 				// Check for end of Genome
 				// if (strcmp(curword,"genomeend")==0) {
-				if (curword == "genomeend") {
+				if (curword.equalsIgnoreCase("genomeend")) {
 					// strcpy(curword, NEAT::getUnit(curline, curwordnum++,
 					// delimiters));
 					// ss >> curword;
@@ -263,13 +263,13 @@ class Genome {
 				}
 
 				// Ignore genomestart if it hasn't been gobbled yet
-				else if ((curword == "genomestart")) {
+				else if (curword.equalsIgnoreCase("genomestart")) {
 					++curwordnum;
 					// cout<<"genomestart"<<endl;
 				}
 
 				// Ignore comments surrounded by - they get printed to screen
-				else if ((curword == "/*")) {
+				else if (curword.equalsIgnoreCase("/*")) {
 					// strcpy(curword, NEAT::getUnit(curline, curwordnum++,
 					// delimiters));
 					// ss >> curword;
@@ -308,7 +308,7 @@ class Genome {
 				}
 
 				// Read in a node
-				else if ((curword == "node")) {
+				else if (curword.equalsIgnoreCase("node")) {
 					Nnode newnode = null;
 
 					// char argline[1024];
@@ -328,7 +328,7 @@ class Genome {
 				}
 
 				// Read in a Gene
-				else if ((curword == "gene")) {
+				else if (curword.equalsIgnoreCase("gene")) {
 					Gene newgene = null;
 
 					// char argline[1024];
@@ -799,7 +799,7 @@ class Genome {
 
 		// std::ifstream iFile(filename);
 		try {
-			InputStream is = new FileInputStream("filename");
+			InputStream is = new FileInputStream(filename);
 			BufferedReader iFile = new BufferedReader(new InputStreamReader(is));
 
 			// Make sure it worked
@@ -873,9 +873,9 @@ class Genome {
 		// Inputs and outputs will be collected here for the network
 		// All nodes are collected in an all_list-
 		// this will be used for later safe destruction of the net
-		Vector<Nnode> inlist = null;
-		Vector<Nnode> outlist = null;
-		Vector<Nnode> all_list = null;
+		Vector<Nnode> inlist = new Vector<Nnode>();
+		Vector<Nnode> outlist = new Vector<Nnode>();
+		Vector<Nnode> all_list = new Vector<Nnode>();
 
 		// Gene translation variables
 		Nnode inode;
