@@ -13,7 +13,7 @@ import java.util.Vector;
 //#include "link.h"
 //
 //namespace NEAT {
-class Nnode{
+public class Nnode{
 //
 //	enum nodetype {
 //		NEURON = 0,

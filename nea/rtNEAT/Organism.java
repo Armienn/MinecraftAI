@@ -27,7 +27,7 @@ import java.io.OutputStreamWriter;
 //	//   i.e. The genotype and phenotype together
 //	// ---------------------------------------------  
 //	class Organism {
-class Organism implements Comparable<Organism>{
+public class Organism implements Comparable<Organism>{
 //
 //	public:
 //		double fitness;  //A measure of fitness for the Organism
@@ -129,7 +129,7 @@ class Organism implements Comparable<Organism>{
 	}
 //
 //		Organism(double fit, Genome *g, int gen, const char* md = 0);
-	public Organism(double fit, Genome g,int gen, String md) {
+	public Organism(double fit, Genome g, int gen, String md) {
 		fitness=fit;
 		orig_fitness=fitness;
 		gnome=g;
@@ -164,7 +164,7 @@ class Organism implements Comparable<Organism>{
 		modified = true;
 	}
 	
-	public Organism(double fit, Genome g,int gen) {
+	public Organism(double fit, Genome g, int gen) {
 		fitness=fit;
 		orig_fitness=fitness;
 		gnome=g;

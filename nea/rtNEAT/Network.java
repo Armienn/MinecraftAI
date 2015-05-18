@@ -27,7 +27,7 @@ import java.util.Vector;
 //	//   The point of the network is to define a single entity which can evolve
 //	//   or learn on its own, even though it may be part of a larger framework 
 //	class Network {
-class Network{
+public class Network{
 //
 //		friend class Genome;
 //
