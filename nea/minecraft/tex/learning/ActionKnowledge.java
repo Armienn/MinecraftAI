@@ -21,7 +21,7 @@ public class ActionKnowledge {
 		else {
 			boolean foundfit = false;
 			for(ConditionSet set : conditionSets){
-				if(set.AddIfFits(memory)) break; // checks if memory fits the set, and adds it to the set if so. Then breaks out of the loop
+				if(set.UpdateIfFits(memory)) break; // checks if memory fits the set, and adds it to the set if so. Then breaks out of the loop
 			}
 			if(!foundfit && conditionSets.size() < 20){
 				conditionSets.add(new ConditionSet(memory));

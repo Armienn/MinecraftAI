@@ -116,8 +116,10 @@ public class Actions {
 			}
 		}
 		actions = new ArrayList<Action>();
-		entity.motionX = dx;
-		entity.motionZ = dz;
+		if(entity.onGround){
+			entity.motionX = dx;
+			entity.motionZ = dz;
+		}
 		if(Math.abs(dz)+Math.abs(dx) > 0.1){
 			entity.hunger += 0.01;
 		}

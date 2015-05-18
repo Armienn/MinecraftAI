@@ -25,18 +25,31 @@ public class ConditionSet {
 		}
 	}
 	
-	public boolean AddIfFits(ActionMemory memory){
+	/**
+	 * Checks if the given ActionMemory fits this ConditionSet, and updates the
+	 * set with it if so.
+	 * @param memory
+	 * @return
+	 */
+	public boolean UpdateIfFits(ActionMemory memory){
 		ArrayList<Condition> conditionfits;
 		ArrayList<Effect> effectfits = CheckEffectFits(memory);
 		if(effectfits.size() > 0){
 			conditionfits = CheckConditionFits(memory);
 			if(conditionfits.size() > 0){
-				Add(memory, conditionfits, effectfits);
+				Update(memory, conditionfits, effectfits);
+				return true;
 			}
 		}
 		return false;
 	}
 
+	/**
+	 * Returns a list of all conditions which fit with the snapshot in the
+	 * given ActionMemory.
+	 * @param memory
+	 * @return
+	 */
 	private ArrayList<Condition> CheckConditionFits(ActionMemory memory){
 		ArrayList<Condition> fits = new ArrayList<Condition>();
 		for(Condition condition : conditions){
@@ -47,6 +60,12 @@ public class ConditionSet {
 		return fits;
 	}
 	
+	/**
+	 * Returns a list of all effects which fit with the episode in the given
+	 * ActionMemory.
+	 * @param memory
+	 * @return
+	 */
 	private ArrayList<Effect> CheckEffectFits(ActionMemory memory){
 		ArrayList<Effect> fits = new ArrayList<Effect>();
 		for(Effect effect : effects){
@@ -57,7 +76,7 @@ public class ConditionSet {
 		return fits;
 	}
 	
-	private void Add(ActionMemory memory, ArrayList<Condition> conditionfits, ArrayList<Effect> effectfits) {
+	private void Update(ActionMemory memory, ArrayList<Condition> conditionfits, ArrayList<Effect> effectfits) {
 		// TODO Auto-generated method stub
 		
 	}

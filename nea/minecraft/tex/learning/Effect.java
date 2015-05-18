@@ -9,8 +9,10 @@ import nea.minecraft.tex.memory.utility.MemParameter;
 
 public class Effect {
 	int observations;
+	// Conditions that hold for the subject of this effect:
 	ArrayList<String> properties = new ArrayList<String>();
 	ArrayList<ParameterCondition> parameterConditions = new ArrayList<ParameterCondition>();
+	// The change that happens to the subject of this effect: 
 	EventEffect eventEffect;
 	
 	public Effect(SnapEntity entity, ActionMemory memory){
@@ -25,16 +27,99 @@ public class Effect {
 		eventEffect = event;
 	}
 	
-	public static ArrayList<Effect> GetEffects(ActionMemory memory){
-		ArrayList<Effect> effects = new ArrayList<Effect>();
-		
-		for(MemEntity entity : memory.trailingEpisode.entityMemories){
-			effects.addAll(GetEffects(entity, memory));
+	/**
+	 * Checks whether this Effect occurs in the given ActionMemory
+	 * @param memory
+	 * @return
+	 */
+	public boolean Fits(ActionMemory memory){
+		ArrayList<MemEntity> entities = new ArrayList<MemEntity>();
+		for(MemEntity entity : memory.trailingEpisode.entityMemories)
+			if(memory.action.interval.startTime <= entity.appearanceInterval.endTime)
+				entities.add(entity);
+		if(observations == 1){
+			entities = FilterByProperties(entities, true);
+			entities = FilterByParameters(entities, true);
+			//TODO
 		}
-		effects.addAll(GetEffects(memory.trailingEpisode.selfMemory, memory));
+		else{
+			//TODO
+		}
+		//entities = GetFittingEntities(memory);
 		
-		return effects;
+		//TODO
+		return false;
 	}
+	
+	/**
+	 * Filters the given list of entities. Only entities with one (loosely=true)
+	 * or all (loosely=false) properties remain in the returned list.
+	 * @param source
+	 * @param loosely
+	 * @return A filtered list of entities
+	 */
+	public ArrayList<MemEntity> FilterByProperties(ArrayList<MemEntity> source, boolean loosely){
+		ArrayList<MemEntity> entities = new ArrayList<MemEntity>();
+		for(MemEntity entity : source){
+			ArrayList<String> props = new ArrayList<String>();
+			for(String s : entity.GetProperties()){
+				for(String t : properties){
+					if(s.equalsIgnoreCase(t)){
+						props.add(s);
+						break;
+					}
+				}
+			}
+			if(loosely){
+				if(props.size() > 0)
+					entities.add(entity);
+			}
+			else{
+				if(props.size() == properties.size())
+					entities.add(entity);
+			}
+		}
+		return entities;
+	}
+	
+	/**
+	 * 
+	 * @param source
+	 * @param loosely
+	 * @return
+	 */
+	public ArrayList<MemEntity> FilterByParameters(ArrayList<MemEntity> source, boolean loosely){
+		ArrayList<MemEntity> entities = new ArrayList<MemEntity>();
+		
+		return entities;
+	}
+	
+	/* *
+	 * Returns a list of Entities which loosely fit as subjects for this
+	 * Effect. "Loosely" in this case means that only one property needs to
+	 * fit, rather than every one.
+	 * @param memory
+	 * @return
+	 *
+	private ArrayList<MemEntity> GetFittingEntities(ActionMemory memory) {
+		ArrayList<MemEntity> entities = new ArrayList<MemEntity>();
+		for(MemEntity entity : memory.trailingEpisode.entityMemories){
+			ArrayList<String> props = new ArrayList<String>();
+			for(String s : entity.GetProperties()){
+				for(String t : properties){
+					if(s.equalsIgnoreCase(t)){
+						props.add(s);
+						break;
+					}
+				}
+			}
+			if(props.size() > 0){
+				entities.add(entity);
+			}
+		}
+		for(entity)
+		return entities;
+	}///*///
 	
 	private static ArrayList<Effect> GetEffects(MemEntity entity, ActionMemory memory){
 		ArrayList<Effect> effects = new ArrayList<Effect>();
@@ -63,30 +148,15 @@ public class Effect {
 		return effects;
 	}
 	
-	public boolean Fits(ActionMemory memory){
-		ArrayList<MemEntity> entities = GetFittingEntities(memory);
-		//TODO
-		return false;
-	}
-	
-	private ArrayList<MemEntity> GetFittingEntities(ActionMemory memory) {
-		ArrayList<MemEntity> entities = new ArrayList<MemEntity>();
-		/*for(MemEntity entity : memory.trailingEpisode.entityMemories){
-			ArrayList<String> props = new ArrayList<String>();
-			for(String s : entity.GetProperties()){
-				for(String t : properties){
-					if(s.equalsIgnoreCase(t)){
-						props.add(s);
-						break;
-					}
-				}
-			}
-			if(props.size() > 0){
-				
-				entities.add(entity);
-			}
-		}*/// hmm
-		return entities;
+	public static ArrayList<Effect> GetEffects(ActionMemory memory){
+		ArrayList<Effect> effects = new ArrayList<Effect>();
+		
+		for(MemEntity entity : memory.trailingEpisode.entityMemories){
+			effects.addAll(GetEffects(entity, memory));
+		}
+		effects.addAll(GetEffects(memory.trailingEpisode.selfMemory, memory));
+		
+		return effects;
 	}
 
 	@Override
