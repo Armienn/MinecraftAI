@@ -181,7 +181,7 @@ class Gene{
 	public void print_to_file(BufferedWriter outFile) {
 		  //outFile<<"gene ";
 		try{
-			outFile.write("gene");
+			outFile.write("gene" + " ");
 			  //Start off with the trait number for this gene
 			  if ((lnk.linktrait)==null) outFile.write("0 ");
 			  else outFile.write(((lnk.linktrait).trait_id) + " ");

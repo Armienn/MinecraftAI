@@ -162,9 +162,9 @@ public class Genome {
 			nodes.add(newnode);
 		}
 
-		Nnode inode; // For forming a gene
-		Nnode onode; // For forming a gene
-		Trait traitptr;
+		Nnode inode = null; // For forming a gene
+		Nnode onode = null;; // For forming a gene
+		Trait traitptr = null;
 
 		// Duplicate Genes
 		// for(curgene=genome.genes.begin(); curgene!=genome.genes.end();
@@ -254,12 +254,15 @@ public class Genome {
 					// delimiters));
 					// ss >> curword;
 					curword = curline.split(" ", 2)[0];
-					curline = new String(curline.split(" ", 2)[1]);
+					//curline = new String(curline.split(" ", 2)[1]);
 					int idcheck = Integer.parseInt(curword);
 					// iFile>>idcheck;
 					if (idcheck != genome_id)
 						System.out.println("ERROR: id mismatch in genome");
-					done = true;
+					else{
+						done = true;
+						System.out.println("Genome successfully loaded!");
+					}
 				}
 
 				// Ignore genomestart if it hasn't been gobbled yet
@@ -274,21 +277,21 @@ public class Genome {
 					// delimiters));
 					// ss >> curword;
 					curword = curline.split(" ", 2)[0];
-					curline = new String(curline.split(" ", 2)[1]);
+					//curline = new String(curline.split(" ", 2)[1]);
 					while ((curword != "*/")) {
 						// cout<<curword<<" ";
 						// strcpy(curword, NEAT::getUnit(curline, curwordnum++,
 						// delimiters));
 						// ss >> curword;
 						curword = curline.split(" ", 2)[0];
-						curline = new String(curline.split(" ", 2)[1]);
+						//curline = new String(curline.split(" ", 2)[1]);
 					}
 					// cout<<endl;
 				}
 
 				// Read in a trait
-				else if ((curword == "trait")) {
-					Trait newtrait;
+				else if ((curword.equalsIgnoreCase("trait"))) {
+					Trait newtrait  = null;
 
 					// char argline[1024];
 					String argline;
@@ -299,7 +302,7 @@ public class Genome {
 
 					// ss.getline(argline, 1024);
 					argline = curline.split("\n", 2)[0];
-					curline = curline.split("\n", 2)[1];
+					//curline = curline.split("\n", 2)[1];
 					// Allocate the new trait
 					newtrait = new Trait(argline);
 
@@ -319,7 +322,7 @@ public class Genome {
 
 					// ss.getline(argline, 1024);
 					argline = curline.split("\n", 2)[0];
-					curline = curline.split("\n", 2)[1];
+					//curline = curline.split("\n", 2)[1];
 					// Allocate the new node
 					newnode = new Nnode(argline, traits);
 
@@ -339,7 +342,7 @@ public class Genome {
 
 					// ss.getline(argline, 1024);
 					argline = curline.split("\n", 2)[0];
-					curline = curline.split("\n", 2)[1];
+					//curline = curline.split("\n", 2)[1];
 					// std::cout << "New gene: " << ss.str() << std::endl;
 					// Allocate the new Gene
 					newgene = new Gene(argline, traits, nodes);
@@ -349,13 +352,19 @@ public class Genome {
 
 					// std::cout<<"Added gene " << newgene << std::endl;
 				}
-
+				curline = iFile.readLine();
 			}
+
 		} catch (Exception e) {
 			System.out.println("Genome has had trouble reading from file");
 			System.out.println(e.getMessage());
 		}
-
+		try {
+			iFile.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	//
@@ -368,23 +377,23 @@ public class Genome {
 	// Genome(int new_id,int i, int o, int n,int nmax, bool r, double linkprob);
 	public Genome(int new_id, int i, int o, int n, int nmax, boolean r,
 			double linkprob) {
-		int totalnodes;
-		boolean[] cm; // The connection matrix which will be randomized
-		boolean[] cmp; // Connection matrix pointer
-		int matrixdim;
-		int count;
+		int totalnodes = 0;
+		boolean[] cm = null; // The connection matrix which will be randomized
+		boolean[] cmp = null; // Connection matrix pointer
+		int matrixdim = 0;
+		int count = 0;
 
-		int ncount; // Node and connection counters
-		int ccount;
+		int ncount = 0; // Node and connection counters
+		int ccount = 0;
 
-		int row; // For navigating the matrix
-		int col;
+		int row = 0; // For navigating the matrix
+		int col = 0;
 
-		double new_weight;
+		double new_weight = 0;
 
-		int maxnode; // No nodes above this number for this genome
+		int maxnode = 0; // No nodes above this number for this genome
 
-		int first_output; // Number of first output node
+		int first_output = 0; // Number of first output node
 
 		totalnodes = i + o + nmax;
 		matrixdim = totalnodes * totalnodes;
@@ -394,9 +403,9 @@ public class Genome {
 		first_output = totalnodes - o + 1;
 
 		// For creating the new genes
-		Nnode newnode;
-		Gene newgene;
-		Trait newtrait;
+		Nnode newnode = null;
+		Gene newgene = null;
+		Trait newtrait = null;
 		Nnode in_node = null;
 		Nnode out_node = null;
 
@@ -419,7 +428,7 @@ public class Genome {
 		}
 
 		// Create a dummy trait (this is for future expansion of the system)
-		newtrait = new Trait(1, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+		newtrait = new Trait(1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
 		traits.add(newtrait);
 
 		// Build the input nodes
@@ -861,14 +870,14 @@ public class Genome {
 	public Network genesis(int id) {
 		// std::vector<NNode*>::iterator curnode;
 		// std::vector<Gene*>::iterator curgene;
-		Nnode newnode;
-		Trait curtrait;
-		Link curlink;
-		Link newlink;
+		Nnode newnode = null;
+		Trait curtrait = null;
+		Link curlink= null;
+		Link newlink= null;
 
 		double maxweight = 0.0; // Compute the maximum weight for adaptation
 								// purposes
-		double weight_mag; // Measures absolute value of weights
+		double weight_mag = 0.0; // Measures absolute value of weights
 
 		// Inputs and outputs will be collected here for the network
 		// All nodes are collected in an all_list-
@@ -878,11 +887,11 @@ public class Genome {
 		Vector<Nnode> all_list = new Vector<Nnode>();
 
 		// Gene translation variables
-		Nnode inode;
-		Nnode onode;
+		Nnode inode = null;
+		Nnode onode = null;
 
 		// The new network
-		Network newnet;
+		Network newnet = null;
 
 		// Create the nodes
 		// for(curnode=nodes.begin();curnode!=nodes.end();++curnode) {
@@ -915,8 +924,10 @@ public class Genome {
 			// Only create the link if the gene is enabled
 			if (((curgene).enable) == true) {
 				curlink = (curgene).lnk;
-				inode = (curlink.in_node).analogue;
-				onode = (curlink.out_node).analogue;
+				//inode = (curlink.in_node).analogue;
+				//onode = (curlink.out_node).analogue;
+				inode = curlink.in_node;
+				onode = curlink.out_node;
 				// NOTE: This line could be run through a recurrency check if
 				// desired
 				// (no need to in the current implementation of NEAT)
@@ -991,10 +1002,15 @@ public class Genome {
 			// outFile<<"genomeend "<<genome_id<<std::endl;
 			outFile.write("genomeend" + genome_id + "\n");
 		} catch (Exception e) {
-			System.out.println("Genome had trouble writing to fiel.");
+			System.out.println("Genome had trouble writing to field.");
 			System.out.println(e.getMessage());
 		}
-
+		try {
+			outFile.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	//
@@ -1039,7 +1055,7 @@ public class Genome {
 		Nnode onode = null; // For forming a gene
 		Trait traitptr = null;
 
-		Genome newgenome;
+		Genome newgenome = null;
 
 		// verify();
 
@@ -1123,12 +1139,12 @@ public class Genome {
 		// std::vector<NNode*>::iterator curnode;
 		// std::vector<Gene*>::iterator curgene;
 		// std::vector<Gene*>::iterator curgene2;
-		Nnode inode;
-		Nnode onode;
+		Nnode inode = null;
+		Nnode onode = null;
 
-		boolean disab;
+		boolean disab = false;
 
-		int last_id;
+		int last_id = 0;
 
 		// int pause;
 
@@ -1262,7 +1278,7 @@ public class Genome {
 	// void mutate_random_trait();
 	public void mutate_random_trait() {
 		// std::vector<Trait*>::iterator thetrait; //Trait to be mutated
-		int traitnum;
+		int traitnum = 0;
 
 		// Choose a random traitnum
 		traitnum = Neat.randint(0, (traits.size()) - 1);
@@ -1280,12 +1296,12 @@ public class Genome {
 	// // Change random link's trait. Repeat times times
 	// void mutate_link_trait(int times);
 	public void mutate_link_trait(int times) {
-		int traitnum;
-		int genenum;
+		int traitnum = 0;
+		int genenum = 0;
 		// std::vector<Gene*>::iterator thegene; //Link to be mutated
 		// std::vector<Trait*>::iterator thetrait; //Trait to be attached
-		int count;
-		int loop;
+		int count = 0;
+		int loop = 0;
 
 		for (loop = 1; loop <= times; loop++) {
 
@@ -1320,15 +1336,15 @@ public class Genome {
 	// // Change random node's trait times times
 	// void mutate_node_trait(int times);
 	public void mutate_node_trait(int times) {
-		int traitnum;
-		int nodenum;
+		int traitnum = 0;
+		int nodenum = 0;
 		// std::vector<NNode*>::iterator thenode; //Link to be mutated
-		Nnode thenode;
+		Nnode thenode = null;
 		// std::vector<Gene*>::iterator thegene; //Gene to record innovation
 		// std::vector<Trait*>::iterator thetrait; //Trait to be attached
-		Trait thetrait;
-		int count;
-		int loop;
+		Trait thetrait = null;
+		int count = 0;
+		int loop = 0;
 
 		for (loop = 1; loop <= times; loop++) {
 
@@ -1372,20 +1388,20 @@ public class Genome {
 	// void mutate_link_weights(double power,double rate,mutator mut_type);
 	public void mutate_link_weights(double power, double rate, mutator mut_type) {
 		// std::vector<Gene*>::iterator curgene;
-		double num; // counts gene placement
-		double gene_total;
-		double powermod; // Modified power by gene number
+		double num = 0.0; // counts gene placement
+		double gene_total = 0.0;
+		double powermod = 0.0; // Modified power by gene number
 		// The power of mutation will rise farther into the genome
 		// on the theory that the older genes are more fit since
 		// they have stood the test of time
 
-		double randnum;
-		double randchoice; // Decide what kind of mutation to do on a gene
-		double endpart; // Signifies the last part of the genome
-		double gausspoint;
-		double coldgausspoint;
+		double randnum = 0.0;
+		double randchoice = 0.0; // Decide what kind of mutation to do on a gene
+		double endpart = 0.0; // Signifies the last part of the genome
+		double gausspoint = 0.0;
+		double coldgausspoint = 0.0;
 
-		boolean severe; // Once in a while really shake things up
+		boolean severe = false; // Once in a while really shake things up
 
 		// Wright variables
 		// double oldval;
@@ -1569,8 +1585,8 @@ public class Genome {
 	// // toggle genes on or off
 	// void mutate_toggle_enable(int times);
 	public void mutate_toggle_enable(int times) {
-		int genenum;
-		int count;
+		int genenum = 0;
+		int count = 0;
 		// std::vector<Gene*>::iterator thegene; //Gene to toggle
 		// std::vector<Gene*>::iterator checkgene; //Gene to check
 		int genecount;
@@ -1653,10 +1669,10 @@ public class Genome {
 		// std::vector<Gene*>::iterator thegene; //random gene containing the
 		// original link
 		Gene thegene = null;
-		int genenum; // The random gene number
-		Nnode in_node; // Here are the nodes connected by the gene
-		Nnode out_node;
-		Link thelink; // The link inside the random gene
+		int genenum = 0; // The random gene number
+		Nnode in_node = null; // Here are the nodes connected by the gene
+		Nnode out_node = null;
+		Link thelink = null; // The link inside the random gene
 
 		// double randmult; //using a gaussian to find the random gene
 
@@ -1670,19 +1686,18 @@ public class Genome {
 		Trait traitptr = null; // The original link's trait
 
 		// double splitweight; //If used, Set to sqrt(oldweight of oldlink)
-		double oldweight; // The weight of the original link
+		double oldweight = 0.0; // The weight of the original link
 
-		int trycount; // Take a few tries to find an open node
-		boolean found;
+		int trycount = 0; // Take a few tries to find an open node
+		boolean found = false;
 
 		// First, find a random gene already in the genome
 		trycount = 0;
-		found = false;
 
 		// Split next link with a bias towards older links
 		// NOTE: 7/2/01 - for robots, went back to random split
 		// because of large # of inputs
-		if (false) {
+		if (found) {
 			// thegene=genes.begin();
 			// while (((thegene!=genes.end())
 			// &&(!((*thegene)->enable)))||
@@ -1756,7 +1771,7 @@ public class Genome {
 
 				// If either the gene is disabled, or it has a bias input, try
 				// again
-				if (!(((thegene).enable == false) || (((((thegene).lnk).in_node).gen_node_label) == Nnode.nodeplace.BIAS)))
+				if (!thegene.enable == false || thegene.lnk.in_node.gen_node_label == Nnode.nodeplace.BIAS)
 					found = true;
 
 				++trycount;
@@ -2214,23 +2229,23 @@ public class Genome {
 
 	public double compatibility(Genome g) {
 		//iterators for moving through the two potential parents' Genes
-		Gene p1gene;
-		Gene p2gene;
+		Gene p1gene = null;
+		Gene p2gene = null;
 
 		//Innovation numbers
-		double p1innov;
-		double p2innov;
+		double p1innov = 0.0;
+		double p2innov = 0.0;
 
 		//Intermediate value
-		double mut_diff;
+		double mut_diff = 0.0;
 
 		//Set up the counters
-		double num_disjoint=0.0;
-		double num_excess=0.0;
-		double mut_diff_total=0.0;
-		double num_matching=0.0;  //Used to normalize mutation_num differences
+		double num_disjoint = 0.0;
+		double num_excess = 0.0;
+		double mut_diff_total = 0.0;
+		double num_matching = 0.0;  //Used to normalize mutation_num differences
 
-		double max_genome_size; //Size of larger Genome
+		double max_genome_size = 0.0; //Size of larger Genome
 
 		//Get the length of the longest Genome for percentage computations
 		if (genes.size()<(g.genes).size()) 

@@ -77,7 +77,7 @@ public class Nnode{
 	protected Nnode dup;
 //
 //		NNode *analogue;  // Used for Gene decoding
-	protected Nnode analogue;
+	public Nnode analogue;
 //
 //		bool override; // The NNode cannot compute its own output- something is overriding it
 	protected boolean override;
@@ -117,25 +117,25 @@ public class Nnode{
 	public double[] params = new double[Neat.NUM_TRAIT_PARAMS];
 //
 //		std::vector<Link*> incoming; // A list of pointers to incoming weighted signals from other nodes
-	public Vector<Link> incoming;
+	public Vector<Link> incoming = new Vector<Link>();
 //		std::vector<Link*> outgoing;  // A list of pointers to links carrying this node's signal
-	public Vector<Link> outgoing;
+	public Vector<Link> outgoing = new Vector<Link>();
 //
 //		// These members are used for graphing with GTK+/GDK
 //		std::vector<double> rowlevels;  // Depths from output where this node appears
-	public Vector<Double> rowlevels;
+	public Vector<Double> rowlevels = new Vector<Double>();
 //		int row;  // Final row decided upon for drawing this NNode in
-	public int row;
+	public int row = 0;
 //		int ypos;
-	public int ypos;
+	public int ypos = 0;
 //		int xpos;
-	public int xpos;
+	public int xpos = 0;
 //
 //		int node_id;  // A node can be given an identification number for saving in files
-	public int node_id;
+	public int node_id = 0;
 //
 //		nodeplace gen_node_label;  // Used for genetic marking of nodes
-	public nodeplace gen_node_label;
+	public nodeplace gen_node_label = null;
 //
 //		NNode(nodetype ntype,int nodeid);
 	public Nnode(nodetype ntype,int nodeid) {
@@ -150,6 +150,8 @@ public class Nnode{
 		node_id=nodeid;
 		ftype=functype.SIGMOID;
 		gen_node_label= nodeplace.HIDDEN;
+		analogue = null;
+		dup = null;
 		frozen=false;
 		trait_id=1;
 		override=false;
@@ -168,6 +170,8 @@ public class Nnode{
 		node_id=nodeid;
 		ftype=functype.SIGMOID;
 		gen_node_label=placement;
+		analogue = null;
+		dup = null;
 		frozen=false;
 		trait_id=1;
 		override=false;
@@ -187,6 +191,8 @@ public class Nnode{
 		ftype=functype.SIGMOID;
 		gen_node_label=n.gen_node_label;
 		nodetrait=t;
+		analogue = n.get_analogue();
+		dup = null;
 		frozen=false;
 		if (t != null)
 			trait_id=t.trait_id;
