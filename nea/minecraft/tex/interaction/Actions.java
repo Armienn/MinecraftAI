@@ -88,7 +88,7 @@ public class Actions {
 					failedactions.add(action);
 				}
 				break;
-			case Use:
+			case Eat:
 				slot = (int)(action.GetParameter(0)*8);
 				itemstack = entity.inventory[slot];
 				if(itemstack != null){

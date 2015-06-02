@@ -26,4 +26,9 @@ public class MemEvent {
 	public boolean IsAppearanceOrDisapperance(){
 		return startValue.IsUndefined() || endValue.IsUndefined();
 	}
+	
+	@Override
+	public String toString(){
+		return "E(" + startValue + " -> " + endValue + " " + interval + ")";
+	}
 }

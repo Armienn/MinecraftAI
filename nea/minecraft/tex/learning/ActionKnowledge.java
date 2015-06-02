@@ -47,7 +47,7 @@ public class ActionKnowledge {
 		
 		String result = "ActionKnowledge - " + type + "\n";
 		for(int i=0; i<conditionSets.size(); i++){
-			result += tab + "\t" + i + ": " + conditionSets.get(0).toString(level+1) + "\n";
+			result += tab + "\t" + i + ": " + conditionSets.get(i).toString(level+1) + "\n";
 		}
 		return result;
 	}

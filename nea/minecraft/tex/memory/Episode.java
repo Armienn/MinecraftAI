@@ -17,9 +17,32 @@ public class Episode {
 		this.interval = interval;
 		for(MemEntity entity : shortmemory.entityMemories){
 			if(entity.appearanceInterval.Intersects(interval)){
-				MemEntity newEntity = new MemEntity(entity, interval);
+				entityMemories.add(new MemEntity(entity, interval));
 			}
 		}
 		selfMemory = new MemEntity(shortmemory.selfMemory, interval);
+	}
+	
+	@Override
+	public String toString(){
+		return toString(0);
+	}
+	
+	public String toString(int level){
+		String tab = "";
+		for(int i=0; i<level; i++){
+			tab += "\t";
+		}
+		if(level > 2) return "Episode";
+		
+		String result = "Episode - " + interval + "\n";
+		result += tab + "\tTex: " + selfMemory.toString(level+1) + "\n";
+		for(int i=0; i<entityMemories.size(); i++){
+			result += tab + "\tE" + i + ": " + entityMemories.get(i).toString(level+1) + "\n";
+		}
+		for(int i=0; i<rewardMemories.size(); i++){
+			result += tab + "\tR" + i + ": " + rewardMemories.get(i).toString(level+1) + "\n";
+		}
+		return result;
 	}
 }

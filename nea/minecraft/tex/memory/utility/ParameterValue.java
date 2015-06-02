@@ -1,5 +1,7 @@
 package nea.minecraft.tex.memory.utility;
 
+import java.text.DecimalFormat;
+
 public class ParameterValue {
 	public final double value;
 	public final boolean defined;
@@ -23,5 +25,11 @@ public class ParameterValue {
 	
 	public boolean IsUndefined(){
 		return !defined;
+	}
+	
+	@Override
+	public String toString(){
+		DecimalFormat df = new DecimalFormat("#.##");
+		return defined ? df.format(value) : "Undefined";
 	}
 }

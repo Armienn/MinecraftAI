@@ -109,7 +109,28 @@ public class MemEntity {
 		return result.toArray(new MemAction[0]);
 	}
 	
-	/*public MemAction[] GetEventsInInterval(Interval interval){
+	@Override
+	public String toString(){
+		return toString(0);
+	}
+	
+	public String toString(int level){
+		String tab = "";
+		for(int i=0; i<level; i++){
+			tab += "\t";
+		}
+		if(level > 2) return "MemEntity";
 		
-	}*/
+		String result = "MemEntity - ID:" + id + " " + appearanceInterval + "\n";
+		result += tab + "\t" + properties + "\n";
+		for(int i=0; i<parameters.size(); i++){
+			result += tab + "\t" + i + ": " + parameters.get(i).toString(level+1) + "\n";
+		}
+		if(actions.size() > 0){
+			for(int i=0; i<actions.size(); i++){
+				result += tab + "\t" + i + ": " + actions.get(i).toString(level+1) + "\n";
+			}
+		}
+		return result;
+	}
 }

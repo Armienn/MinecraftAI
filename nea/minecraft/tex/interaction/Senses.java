@@ -11,7 +11,11 @@ import nea.minecraft.tex.memory.utility.MemParameter;
 import nea.minecraft.tex.memory.utility.MemReward;
 import nea.minecraft.tex.memory.utility.ParameterValue;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.passive.EntityAnimal;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 
 public class Senses {
@@ -51,9 +55,13 @@ public class Senses {
 		self.AddParameter(new MemParameter("Hunger", new ParameterValue(entity.hunger)));
 		for(int i=0;i<8;i++){
 			ItemStack item = entity.inventory[i];
+				
 			if(item != null){
 				MemEntity ent = new MemEntity(-i,item.getUnlocalizedName(),time);
 				ent.AddProperty("Item");
+				Item it = item.getItem();
+				if(it instanceof ItemFood)
+					ent.AddProperty("Edible");
 				//ent.AddParameter(new MemParameter("PositionX", new ParameterValue(entity.posX)));
 				//ent.AddParameter(new MemParameter("PositionY", new ParameterValue(entity.posY)));
 				//ent.AddParameter(new MemParameter("PositionZ", new ParameterValue(entity.posZ)));
@@ -72,17 +80,26 @@ public class Senses {
             //EntityItem var3 = (EntityItem)var2.next();
             Entity var3 = (Entity)var2.next();
             if(var3.getDistanceSqToEntity(entity) < 10*10) {
-            	if(var3 instanceof EntityItem) {
-            		AddItem((EntityItem)var3);
-            	}
+            	AddEntity(var3);
     			//logger.info("Entity nearby: " + var3.toString());
             }
         }
 	}
 	
-	private void AddItem(EntityItem item){
-		MemEntity info = new MemEntity(item.getEntityId(),item.getEntityItem().getUnlocalizedName(),time);
-		info.AddProperty("Item");
+	private void AddEntity(Entity item){
+		MemEntity info = new MemEntity(item.getEntityId(),item.getName(),time);
+		if(item instanceof EntityItem) {
+			info.AddProperty("Item");
+			if(((EntityItem)item).getEntityItem().getItem() instanceof ItemFood) {
+				info.AddProperty("Edible");
+			}
+		}
+		if(item instanceof EntityCreature) {
+			info.AddProperty("Creature");
+		}
+		if(item instanceof EntityAnimal) {
+			info.AddProperty("Animal");
+		}
 		info.AddParameter(new MemParameter("PositionX", new ParameterValue(item.posX)));
 		info.AddParameter(new MemParameter("PositionY", new ParameterValue(item.posY)));
 		info.AddParameter(new MemParameter("PositionZ", new ParameterValue(item.posZ)));

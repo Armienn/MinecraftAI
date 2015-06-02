@@ -60,7 +60,7 @@ public class Action {
 			return 1; // Pick up closest item to inventory slot [value*8]
 		case Drop:
 			return 1; // Drop item in inventory slot [value*8]
-		case Use:
+		case Eat:
 			return 1; // Use item in inventory slot [value*8]
 		default:
 			return 0;
@@ -68,6 +68,6 @@ public class Action {
 	}
 	
 	public enum Type{
-		Move, Jump, PickUp, Drop, Use
+		Move, Jump, PickUp, Drop, Eat
 	}
 }

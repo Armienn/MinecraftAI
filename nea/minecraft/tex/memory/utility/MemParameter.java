@@ -158,4 +158,23 @@ public class MemParameter {
 		param.events = (ArrayList<MemEvent>) events.clone();
 		return param;
 	}
+	
+	@Override
+	public String toString(){
+		return toString(0);
+	}
+	
+	public String toString(int level){
+		String tab = "";
+		for(int i=0; i<level; i++){
+			tab += "\t";
+		}
+		//if(level > 2) return "MemParameter";
+		
+		String result = "MemParameter - " + type + " " + initialValue;
+		for(int i=0; i<events.size(); i++){
+			result += " " + events.get(i);
+		}
+		return result;
+	}
 }

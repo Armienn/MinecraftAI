@@ -1,5 +1,7 @@
 package nea.minecraft.tex.learning;
 
+import java.text.DecimalFormat;
+
 import nea.minecraft.tex.memory.utility.MemParameter;
 import nea.minecraft.tex.memory.utility.ParameterValue;
 
@@ -30,5 +32,21 @@ public class SnapParameter {
 	
 	public String GetType(){
 		return type;
+	}
+	
+	@Override
+	public String toString(){
+		return toString(0);
+	}
+	
+	public String toString(int level){
+		String tab = "";
+		for(int i=0; i<level; i++){
+			tab += "\t";
+		}
+		//if(level > 2) return "MemParameter";
+		DecimalFormat df = new DecimalFormat("#.##");
+		String result = "SnapParameter - " + type + " value: " + value + " velocity: " + df.format(velocity);
+		return result;
 	}
 }

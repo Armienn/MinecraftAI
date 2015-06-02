@@ -15,7 +15,8 @@ public class TexMainAI extends Thread {
 		brain.Log("Starting Main AI thread");
 		brain.Say("Good morning, world!");
 		while(brain.KeepRunning()){
-			//ChooseRandomAction();
+			//trySleep(100);
+			ChooseRandomAction();
 			trySleep(1000);
 			while(brain.Pause()){
 				trySleep(100);

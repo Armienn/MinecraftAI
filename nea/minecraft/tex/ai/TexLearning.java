@@ -59,6 +59,8 @@ public class TexLearning extends Thread {
 					/// Examine results of actions:
 					MemAction[] actions = memory.selfMemory.GetActionsInInterval(leadingInterval, true);
 					for(MemAction a : actions){
+						//if(a.type==Action.Type.Jump)
+						//	a = a;
 						ActionMemory actionmemory = new ActionMemory(a, memory, consequencetime);
 						ActionKnowledge knowledge = brain.knowledge.GetKnowledge(a.type);
 						knowledge.Process(actionmemory);

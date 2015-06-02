@@ -25,4 +25,20 @@ public class MemAction {
 	public MemAction Copy(){
 		return new MemAction(type, parameters, interval.startTime, interval.endTime, success);
 	}
+	
+	@Override
+	public String toString(){
+		return toString(0);
+	}
+	
+	public String toString(int level){
+		String tab = "";
+		for(int i=0; i<level; i++){
+			tab += "\t";
+		}
+		//if(level > 2) return "Action";
+		
+		String result = "Action - " + type + " " + (success?"succeeded":"failed") + " " + interval + " " + (parameters != null && parameters.length > 0 ? parameters[0] : "");
+		return result;
+	}
 }

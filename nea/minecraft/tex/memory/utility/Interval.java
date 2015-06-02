@@ -41,4 +41,9 @@ public class Interval {
 	public boolean Contains(Interval interval){
 		return startTime <= interval.startTime && interval.endTime <= endTime;
 	}
+	
+	@Override
+	public String toString(){
+		return "I[" + startTime + "-" + endTime + "]";
+	}
 }

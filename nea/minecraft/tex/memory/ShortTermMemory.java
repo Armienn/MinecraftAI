@@ -63,4 +63,27 @@ public class ShortTermMemory {
 	public void Update(Action action, boolean success, long time) {
 		selfMemory.AddAction(new MemAction(action, time, success));
 	}
+	
+	@Override
+	public String toString(){
+		return toString(0);
+	}
+	
+	public String toString(int level){
+		String tab = "";
+		for(int i=0; i<level; i++){
+			tab += "\t";
+		}
+		if(level > 2) return "ShortTermMemory";
+		
+		String result = "ShortTermMemory - " + currentTime + "\n";
+		result += tab + "\tTex: " + selfMemory.toString(level+1) + "\n";
+		for(int i=0; i<entityMemories.size(); i++){
+			result += tab + "\tE" + i + ": " + entityMemories.get(i).toString(level+1) + "\n";
+		}
+		for(int i=0; i<rewardMemories.size(); i++){
+			result += tab + "\tR" + i + ": " + rewardMemories.get(i).toString(level+1) + "\n";
+		}
+		return result;
+	}
 }

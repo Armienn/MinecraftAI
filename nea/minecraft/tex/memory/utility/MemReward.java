@@ -12,4 +12,20 @@ public class MemReward {
 		this.value = new ParameterValue(value);
 		this.time = time;
 	}
+	
+	@Override
+	public String toString(){
+		return toString(0);
+	}
+	
+	public String toString(int level){
+		String tab = "";
+		for(int i=0; i<level; i++){
+			tab += "\t";
+		}
+		//if(level > 2) return "Reward";
+		
+		String result = "Reward - " + type + " " + value + "\n";
+		return result;
+	}
 }
