@@ -35,21 +35,28 @@ public class EntityTex extends EntityLiving implements net.minecraft.entity.pass
 	
 	private NBTTagCompound leashNBTTag;
 	
+	/******* LOOK HERE *******/
+	boolean use_rtNEAT = true;
+	
 	public EntityTex(World worldIn){
 		super(worldIn);
 		logger.info("Tex #" + ((Entity)this).getEntityId() + ": Constructor");
 		if (!this.worldObj.isRemote){ // if this is server
 			brain = new TexBrain(worldObj, ((Entity)this).getEntityId());
 			
-			aithread = new TexMainAI(brain);
-			learningthreadhomebrew = new TexLearning(brain, false);
-			//learningthreadneat = new TexLearning(brain, true);
-			analysisthread = new TexAnalysis(brain);
+			if(use_rtNEAT){
+				learningthreadneat = new TexLearning(brain, true);
+				learningthreadneat.start();
+			}
+			else{
+				aithread = new TexMainAI(brain);
+				aithread.start();
+				learningthreadhomebrew = new TexLearning(brain, false);
+				learningthreadhomebrew.start();
+			}
 			
-			learningthreadhomebrew.start();
-			//learningthreadneat.start();
+			analysisthread = new TexAnalysis(brain);
 			analysisthread.start();
-			aithread.start();
 		}
 	}
 	
