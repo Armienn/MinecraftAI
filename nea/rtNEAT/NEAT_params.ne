@@ -1,4 +1,4 @@
-trait_param_mut_prob 0.5 
+trait_param_mut_prob 0.5
 trait_mutation_power 1.0
 linktrait_mut_sig 1.0
 nodetrait_mut_sig 0.5
@@ -27,7 +27,7 @@ mate_only_prob 0.2
 recur_only_prob 0.0
 pop_size 150
 dropoff_age 15
-newlink_tries 20
+newlink_tries 200
 print_every 30
 babies_stolen 0
-num_runs 100
+num_runs 200

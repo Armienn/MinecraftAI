@@ -431,14 +431,16 @@ public class Network{
 		//std::vector<NNode*>::iterator curnode;
 		int count;
 
-		//if (name!=0)
+		//if (!name.isEmpty())
 		//  cout<<"Network "<<name<<" with id "<<net_id<<" outputs: (";
-		//else cout<<"Network id "<<net_id<<" outputs: (";
+		//else System.out.println("Network ID: " + net_id + "output: " + );.//cout<<"Network id "<<net_id<<" outputs: (";
 
 		count=1;
 		//for(curnode=outputs.begin();curnode!=outputs.end();++curnode) {
 		for (Nnode curnode : outputs){
 			//cout<<"[Output #"<<count<<": "<<(*curnode)<<"] ";
+			System.out.println("Output # " + curnode + "output: " + curnode.activation);
+			//System.out.println("Output # " + curnode + "output: " + curnode.activation);
 			count++;
 		}
 
@@ -459,6 +461,7 @@ public class Network{
 		//for(curnode=inputs.begin();curnode!=inputs.end();++curnode) {
 		for (Nnode curnode : inputs){
 			//cout<<"[Input #"<<count<<": "<<(*curnode)<<"] ";
+			System.out.println("Input # " + curnode + "input: " + curnode.incoming);
 			count++;
 		}
 
@@ -648,7 +651,7 @@ public class Network{
 		//}
 		
 		try{
-			OutputStream os = new FileOutputStream("filename");
+			OutputStream os = new FileOutputStream(filename);
 			BufferedWriter oFile = new BufferedWriter(new OutputStreamWriter(os));
 
 			//for(curnode=all_nodes.begin();curnode!=all_nodes.end();++curnode) {

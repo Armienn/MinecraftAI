@@ -30,7 +30,7 @@ class Trait{
 //		int trait_id; // Used in file saving and loading
 	public int trait_id;
 //		double params[NEAT::num_trait_params]; // Keep traits in an array
-	public double[] params;
+	public double[] params = new double[Neat.NUM_TRAIT_PARAMS];
 	private Neat neat = new Neat();
 //
 //		Trait ();
@@ -56,6 +56,7 @@ class Trait{
 //		// Copy Constructor
 //		Trait(const Trait& t);
 	public Trait(Trait t) {
+		params = new double[Neat.NUM_TRAIT_PARAMS];
 		for(int count=0; count < Neat.NUM_TRAIT_PARAMS; count++)
 			params[count]=(t.params)[count];
 
@@ -84,6 +85,7 @@ class Trait{
 	    //ss >> trait_id;
 		String[] splitArgLine = argline.split(" ");
 		trait_id = Integer.parseInt(splitArgLine[0]);
+		params = new double [Neat.NUM_TRAIT_PARAMS];
 
 	    //std::cout << ss.str() << " trait_id: " << trait_id << std::endl;
 

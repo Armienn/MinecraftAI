@@ -42,8 +42,13 @@ public class EntityTex extends EntityLiving implements net.minecraft.entity.pass
 			brain = new TexBrain(worldObj, ((Entity)this).getEntityId());
 			
 			aithread = new TexMainAI(brain);
+			
+			//Start the "homebrew learning"
 			//learningthreadhomebrew = new TexLearning(brain, false);
+			
+			//Start the rtNEAT learning
 			learningthreadneat = new TexLearning(brain, true);
+			
 			analysisthread = new TexAnalysis(brain);
 			
 			//learningthreadhomebrew.start();
