@@ -66,13 +66,13 @@ public class EntityTex extends EntityLiving implements net.minecraft.entity.pass
 			//update input to ai
 			synchronized(brain){
 				brain.senses.senses.Update(this); //this includes finding rewards
-				brain.memory.sensory.UpdateExternal();
+				brain.memory.instant.UpdateExternal();
 			}
 			
 			//update output to world
 			synchronized(brain){
 				brain.senses.actions.Update(this);
-				brain.memory.sensory.UpdateInternal();
+				brain.memory.instant.UpdateInternal();
 			}
 			
 			//tell brain that it's been updated

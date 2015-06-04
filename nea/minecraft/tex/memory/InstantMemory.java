@@ -6,12 +6,12 @@ import nea.minecraft.tex.brain.TexBrain;
 import nea.minecraft.tex.interaction.Actions;
 import nea.minecraft.tex.interaction.Senses;
 
-public class SensoryMemory {
+public class InstantMemory {
 	TexBrain brain;
 	public ArrayList<Senses> memorysenses = new ArrayList<Senses>();
 	public ArrayList<Actions> memoryactions = new ArrayList<Actions>();
 	
-	public SensoryMemory(TexBrain brain){
+	public InstantMemory(TexBrain brain){
 		this.brain = brain;
 	}
 	

@@ -19,8 +19,8 @@ public class TexAnalysis extends Thread {
 		brain.Log("Starting Analysis thread");
 		while(brain.KeepRunning()){
 			synchronized(brain){
-				while( brain.memory.sensory.memorysenses.size() > 0){
-					Senses nextsenses = brain.memory.sensory.memorysenses.get(0);
+				while( brain.memory.instant.memorysenses.size() > 0){
+					Senses nextsenses = brain.memory.instant.memorysenses.get(0);
 					brain.memory.shortterm.StartUpdate(nextsenses.time);
 					for(MemEntity mem : nextsenses.entityinfo){
 						brain.memory.shortterm.Update(mem);
@@ -30,17 +30,17 @@ public class TexAnalysis extends Thread {
 					}
 					brain.memory.shortterm.UpdateSelf(nextsenses.self);
 					
-					brain.memory.sensory.memorysenses.remove(0);
+					brain.memory.instant.memorysenses.remove(0);
 				}
-				while( brain.memory.sensory.memoryactions.size() > 0){
-					Actions nextactions = brain.memory.sensory.memoryactions.get(0);
+				while( brain.memory.instant.memoryactions.size() > 0){
+					Actions nextactions = brain.memory.instant.memoryactions.get(0);
 					for(Action action : nextactions.succeededactions){
 						brain.memory.shortterm.Update(action, true, nextactions.time);
 					}
 					for(Action action : nextactions.failedactions){
 						brain.memory.shortterm.Update(action, false, nextactions.time);
 					}
-					brain.memory.sensory.memoryactions.remove(0);
+					brain.memory.instant.memoryactions.remove(0);
 				}
 			}
 			trySleep(100);

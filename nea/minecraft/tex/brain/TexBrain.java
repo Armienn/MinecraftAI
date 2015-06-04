@@ -5,7 +5,7 @@ import org.apache.logging.log4j.Logger;
 
 import nea.minecraft.tex.interaction.Actions;
 import nea.minecraft.tex.interaction.Senses;
-import nea.minecraft.tex.memory.SensoryMemory;
+import nea.minecraft.tex.memory.InstantMemory;
 import nea.minecraft.tex.memory.ShortTermMemory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ChatComponentText;
