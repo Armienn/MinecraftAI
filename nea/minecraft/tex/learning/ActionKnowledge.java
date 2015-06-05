@@ -7,7 +7,7 @@ import nea.minecraft.tex.interaction.Action;
 public class ActionKnowledge {
 	final Action.Type type;
 	ArrayList<ConditionSet> conditionSets = new ArrayList<ConditionSet>();
-	//ArrayList<ActionMemory> memories = new ArrayList<ActionMemory>();
+	ArrayList<ActionMemory> memories = new ArrayList<ActionMemory>();
 	
 	public ActionKnowledge(Action.Type type){
 		this.type = type;
@@ -15,7 +15,33 @@ public class ActionKnowledge {
 	
 	public void Process(ActionMemory memory){
 		if(memory.action.type != type) throw new RuntimeException("Mismatch in Action Types");
-		if(conditionSets.size() == 0){
+		if(memories.size() < 20){
+			memories.add(memory);
+		}
+		else{
+			if(conditionSets.size() == 0){
+				//First look at successes vs fails
+				ArrayList<ActionMemory> successes = new ArrayList<ActionMemory>();
+				ArrayList<ActionMemory> fails = new ArrayList<ActionMemory>();
+				for(ActionMemory am : memories){
+					if(am.action.success)
+						successes.add(am);
+					else
+						fails.add(am);
+				}
+				//compare snapshots
+				//create list of all conditions in each
+				ArrayList<Condition> successconditions = new ArrayList<Condition>();
+				ArrayList<Condition> failconditions = new ArrayList<Condition>();
+				for(ActionMemory am : memories){
+					if(am.action.success)
+						AddConditions(am, successconditions);
+					else
+						AddConditions(am, failconditions);
+				}
+			}
+		}
+		/*if(conditionSets.size() == 0){
 			conditionSets.add(new ConditionSet(memory));
 		}
 		else {
@@ -26,6 +52,43 @@ public class ActionKnowledge {
 			if(!foundfit && conditionSets.size() < 20){
 				conditionSets.add(new ConditionSet(memory));
 			}
+		}*/
+	}
+	
+	void AddConditions(ActionMemory memory, ArrayList<Condition> conditions){
+		for(SnapEntity snap : memory.snapshot.entities){
+			ArrayList<ArrayList<String>> permutations = Permutations(snap.properties);
+			permutations = null;
+			//for each property
+			
+			//for each property
+			//  for each later property
+			
+			//for each property
+			//  for each later property
+			//    for each later later property
+			
+			
+		}
+	}
+	
+	static <T> ArrayList<ArrayList<T>> Permutations(ArrayList<T> source){
+		ArrayList<ArrayList<T>> result = new ArrayList<ArrayList<T>>();
+		for(int i=0; i<source.size(); i++){
+			ArrayList<T> current = new ArrayList<T>();
+			current.add(source.get(i));
+			result.add(current);
+			Permutations(result, source, current, i);
+		}
+		return result;
+	}
+	
+	static <T> void Permutations(ArrayList<ArrayList<T>> destination, ArrayList<T> source, ArrayList<T> previous, int index){
+		for(int i=index+1; i<source.size(); i++){
+			ArrayList<T> current = new ArrayList<T>(previous);
+			current.add(source.get(i));
+			destination.add(current);
+			Permutations(destination, source, current, i);
 		}
 	}
 	

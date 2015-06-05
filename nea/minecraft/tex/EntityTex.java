@@ -36,7 +36,7 @@ public class EntityTex extends EntityLiving implements net.minecraft.entity.pass
 	private NBTTagCompound leashNBTTag;
 	
 	/******* LOOK HERE *******/
-	boolean use_rtNEAT = true;
+	boolean use_rtNEAT = false;
 	
 	public EntityTex(World worldIn){
 		super(worldIn);
