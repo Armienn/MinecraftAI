@@ -18,6 +18,19 @@ public class Condition {
 		}
 	}
 	
+	public Condition(ArrayList<String> props){
+		observations = 1;
+		properties.addAll(props);
+	}
+	
+	public boolean equals(Condition other){
+		//TODO: properly finish this
+		if(other.properties.size() == properties.size())
+			if(other.Fits(properties))
+				return true;
+		return false;
+	}
+	
 	@Override
 	public String toString(){
 		return toString(0);
@@ -37,6 +50,22 @@ public class Condition {
 		}
 		result += tab + "\tObservations " + observations;
 		return result;
+	}
+	
+	public boolean Fits(ArrayList<String> props){
+		boolean fit = true;
+		for(String s : properties){
+			fit = false;
+			for(String t : props){
+				if(t.equalsIgnoreCase(s)){
+					fit = true;
+					break;
+				}
+			}
+			if(!fit)
+				return false;
+		}
+		return true;
 	}
 	
 	public boolean Fits(ActionMemory memory){

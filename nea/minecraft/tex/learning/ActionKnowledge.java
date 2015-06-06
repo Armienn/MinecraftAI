@@ -20,7 +20,7 @@ public class ActionKnowledge {
 		}
 		else{
 			if(conditionSets.size() == 0){
-				//First look at successes vs fails
+				//Part into successes vs fails
 				ArrayList<ActionMemory> successes = new ArrayList<ActionMemory>();
 				ArrayList<ActionMemory> fails = new ArrayList<ActionMemory>();
 				for(ActionMemory am : memories){
@@ -29,49 +29,80 @@ public class ActionKnowledge {
 					else
 						fails.add(am);
 				}
-				//compare snapshots
-				//create list of all conditions in each
-				ArrayList<Condition> successconditions = new ArrayList<Condition>();
-				ArrayList<Condition> failconditions = new ArrayList<Condition>();
-				for(ActionMemory am : memories){
-					if(am.action.success)
-						AddConditions(am, successconditions);
-					else
-						AddConditions(am, failconditions);
+				FindConditions(successes);
+				FindConditions(fails);
+			}
+		}
+	}
+	
+	void FindConditions(ArrayList<ActionMemory> memories){
+		ArrayList<ArrayList<Condition>> conditions = new ArrayList<ArrayList<Condition>>();
+		for(ActionMemory memory : memories){
+			conditions.add(GetConditions(memory));
+		}
+		//first find all common conditions in each list
+		ArrayList<Condition> common = new ArrayList<Condition>();
+		for(Condition condition : conditions.get(0)){
+			boolean bool = true;
+			for(int i=1; i<conditions.size(); i++){
+				bool = false;
+				for(Condition cond : conditions.get(i))
+					if(cond.equals(condition)){
+						bool = true;
+						break;
+					}
+				if(!bool)
+					break;
+			}
+			if(bool)
+				common.add(condition);
+		}
+		//if no common exists, do?
+		if(common.size() == 0){
+			;
+		}
+		//else single out the entities in snapshots that fit the common conditions and start looking at their parameters.
+		else{
+			
+		}
+		
+	}
+	
+	/**
+	 * Creates a list of all property conditions this memory meets.
+	 * @param memory
+	 * @return
+	 */
+	ArrayList<Condition> GetConditions(ActionMemory memory){
+		ArrayList<Condition> conditions = new ArrayList<Condition>();
+		for(SnapEntity snap : memory.snapshot.entities){
+			ArrayList<ArrayList<String>> permutations = Permutations(snap.properties);
+			for(ArrayList<String> props : permutations){
+				Condition condition = null;
+				for(Condition cond : conditions){
+					if(cond.Fits(props)){
+						condition = cond;
+						break;
+					}
+				}
+				if(condition != null){
+					condition.observations++;//add observation to condition
+				}
+				else{
+					conditions.add(new Condition(props));//create new condition
 				}
 			}
 		}
-		/*if(conditionSets.size() == 0){
-			conditionSets.add(new ConditionSet(memory));
-		}
-		else {
-			boolean foundfit = false;
-			for(ConditionSet set : conditionSets){
-				if(set.UpdateIfFits(memory)) break; // checks if memory fits the set, and adds it to the set if so. Then breaks out of the loop
-			}
-			if(!foundfit && conditionSets.size() < 20){
-				conditionSets.add(new ConditionSet(memory));
-			}
-		}*/
+		return conditions;
 	}
 	
-	void AddConditions(ActionMemory memory, ArrayList<Condition> conditions){
-		for(SnapEntity snap : memory.snapshot.entities){
-			ArrayList<ArrayList<String>> permutations = Permutations(snap.properties);
-			permutations = null;
-			//for each property
-			
-			//for each property
-			//  for each later property
-			
-			//for each property
-			//  for each later property
-			//    for each later later property
-			
-			
-		}
-	}
-	
+	/**
+	 * Finds all ways one or more of the items in the source list can be chosen.
+	 * An item can only be chosen once per group, and the sequence does not
+	 * matter.
+	 * @param source
+	 * @return
+	 */
 	static <T> ArrayList<ArrayList<T>> Permutations(ArrayList<T> source){
 		ArrayList<ArrayList<T>> result = new ArrayList<ArrayList<T>>();
 		for(int i=0; i<source.size(); i++){
