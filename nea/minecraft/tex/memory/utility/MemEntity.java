@@ -16,6 +16,12 @@ public class MemEntity {
 	public long previousTime;
 	public long currentTime;
 	
+	public MemEntity(int id, long appeartime){
+		this.id = id;
+		appearanceInterval = new Interval(appeartime, appeartime);
+		currentTime = previousTime = appeartime;
+	}
+	
 	public MemEntity(int id, String type, long appeartime){
 		this.id = id;
 		properties.add(type);

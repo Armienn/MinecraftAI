@@ -15,7 +15,7 @@ public class ActionKnowledge {
 	
 	public void Process(ActionMemory memory){
 		if(memory.action.type != type) throw new RuntimeException("Mismatch in Action Types");
-		if(memories.size() < 20){
+		if(memories.size() < 10){
 			memories.add(memory);
 		}
 		else{
@@ -29,19 +29,26 @@ public class ActionKnowledge {
 					else
 						fails.add(am);
 				}
-				FindConditions(successes);
-				FindConditions(fails);
+				ArrayList<Condition> condsucc = FindPropertyConditions(successes);
+				ArrayList<Condition> condfail = FindPropertyConditions(fails);
 			}
 		}
 	}
 	
-	void FindConditions(ArrayList<ActionMemory> memories){
+	/**
+	 * Finds a the conditions that appear in every ActionMemory, if any.
+	 * @param memories
+	 * @return
+	 */
+	ArrayList<Condition> FindPropertyConditions(ArrayList<ActionMemory> memories){
 		ArrayList<ArrayList<Condition>> conditions = new ArrayList<ArrayList<Condition>>();
 		for(ActionMemory memory : memories){
 			conditions.add(GetConditions(memory));
 		}
 		//first find all common conditions in each list
 		ArrayList<Condition> common = new ArrayList<Condition>();
+		if(conditions.size() == 0)
+			return common;
 		for(Condition condition : conditions.get(0)){
 			boolean bool = true;
 			for(int i=1; i<conditions.size(); i++){
@@ -57,15 +64,15 @@ public class ActionKnowledge {
 			if(bool)
 				common.add(condition);
 		}
-		//if no common exists, do?
+		/*/if no common exists, do?
 		if(common.size() == 0){
 			;
 		}
 		//else single out the entities in snapshots that fit the common conditions and start looking at their parameters.
 		else{
 			
-		}
-		
+		}*/
+		return common;
 	}
 	
 	/**
@@ -75,7 +82,7 @@ public class ActionKnowledge {
 	 */
 	ArrayList<Condition> GetConditions(ActionMemory memory){
 		ArrayList<Condition> conditions = new ArrayList<Condition>();
-		for(SnapEntity snap : memory.snapshot.entities){
+		for(SnapEntity snap : memory.snapshot.GetAllEntities()){
 			ArrayList<ArrayList<String>> permutations = Permutations(snap.properties);
 			for(ArrayList<String> props : permutations){
 				Condition condition = null;

@@ -71,7 +71,7 @@ public class TexLearning extends Thread {
 					//Interval trailingInterval = new Interval(leadingInterval.endTime, currenttime);
 					
 					/// Examine results of actions:
-					MemAction[] actions = memory.selfMemory.GetActionsInInterval(leadingInterval, true);
+					MemAction[] actions = memory.selfMemory.GetActionsInInterval(leadingInterval);
 					for(MemAction a : actions){
 						//if(a.type==Action.Type.Jump)
 						//	a = a;

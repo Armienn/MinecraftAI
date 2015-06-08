@@ -14,7 +14,8 @@ public class MemorySnapshot {
 	public MemorySnapshot(ShortTermMemory shortmemory, long time){
 		this.time = time;
 		for(MemEntity entity : shortmemory.entityMemories){
-			entities.add(new SnapEntity(entity, time));
+			if(entity.appearanceInterval.Contains(time))
+				entities.add(new SnapEntity(entity, time));
 		}
 		self = new SnapEntity(shortmemory.selfMemory, time);
 	}
@@ -36,6 +37,12 @@ public class MemorySnapshot {
 		for(int i=0; i<entities.size(); i++){
 			result += tab + "\tE" + i + ": " + entities.get(i).toString(level+1) + "\n";
 		}
+		return result;
+	}
+	
+	public ArrayList<SnapEntity> GetAllEntities(){
+		ArrayList<SnapEntity> result = new ArrayList<SnapEntity>(entities);
+		result.add(self);
 		return result;
 	}
 }
