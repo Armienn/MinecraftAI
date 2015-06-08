@@ -46,6 +46,7 @@ public class Actions {
 					succeededactions.add(action);
 				}
 				else{
+					brain.Log("Failed to Move");
 					failedactions.add(action);
 				}
 				break;
@@ -56,6 +57,7 @@ public class Actions {
 					succeededactions.add(action);
 				}
 				else{
+					brain.Log("Failed to Jump");
 					failedactions.add(action);
 				}
 				break;
@@ -72,6 +74,8 @@ public class Actions {
 					succeededactions.add(action);
 				}
 				else{
+
+					brain.Log("Failed to Pick Up");
 					failedactions.add(action);
 				}
 				break;
@@ -85,6 +89,7 @@ public class Actions {
 					succeededactions.add(action);
 				}
 				else{
+					brain.Log("Failed to Drop");
 					failedactions.add(action);
 				}
 				break;
@@ -104,14 +109,17 @@ public class Actions {
 						succeededactions.add(action);
 					}
 					else{
+						brain.Log("Failed to Eat");
 						failedactions.add(action);
 					}
 				}
 				else{
+					brain.Log("Failed to Eat");
 					failedactions.add(action);
 				}
 				break;
 			default:
+				brain.Log("Tried action that does not exist: " + action.type);
 				break;
 			}
 		}
