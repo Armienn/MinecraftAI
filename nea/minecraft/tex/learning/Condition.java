@@ -52,8 +52,36 @@ public class Condition {
 		return result;
 	}
 	
+	/**
+	 * Checks whether this conditions properties all exist in the given list 
+	 * @param props
+	 * @return
+	 */
 	public boolean Fits(ArrayList<String> props){
 		boolean fit = true;
+		for(String s : properties){
+			fit = false;
+			for(String t : props){
+				if(t.equalsIgnoreCase(s)){
+					fit = true;
+					break;
+				}
+			}
+			if(!fit)
+				return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * Checks whether this conditions properties are the same as in the given list 
+	 * @param props
+	 * @return
+	 */
+	public boolean FitsExactly(ArrayList<String> props){
+		boolean fit = true;
+		if(props.size() != properties.size())
+			return false;
 		for(String s : properties){
 			fit = false;
 			for(String t : props){

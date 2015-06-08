@@ -55,6 +55,7 @@ public class ActionKnowledge {
 				bool = false;
 				for(Condition cond : conditions.get(i))
 					if(cond.equals(condition)){
+						condition.observations = cond.observations = Math.min(cond.observations, condition.observations); 
 						bool = true;
 						break;
 					}
@@ -70,7 +71,9 @@ public class ActionKnowledge {
 		}
 		//else single out the entities in snapshots that fit the common conditions and start looking at their parameters.
 		else{
-			
+			for(Condition condition : common){
+				condition.observations = 0;
+			}
 		}*/
 		return common;
 	}
@@ -87,7 +90,7 @@ public class ActionKnowledge {
 			for(ArrayList<String> props : permutations){
 				Condition condition = null;
 				for(Condition cond : conditions){
-					if(cond.Fits(props)){
+					if(cond.FitsExactly(props)){
 						condition = cond;
 						break;
 					}
