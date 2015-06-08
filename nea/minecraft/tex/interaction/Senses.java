@@ -89,12 +89,17 @@ public class Senses {
 	}
 	
 	private void AddEntity(Entity item){
-		MemEntity info = new MemEntity(item.getEntityId(),item.getName(),time);
+		MemEntity info = new MemEntity(item.getEntityId(),time);
 		if(item instanceof EntityItem) {
 			info.AddProperty("Item");
-			if(((EntityItem)item).getEntityItem().getItem() instanceof ItemFood) {
+			Item it = ((EntityItem)item).getEntityItem().getItem();
+			info.AddProperty(it.getUnlocalizedName());
+			if(it instanceof ItemFood) {
 				info.AddProperty("Edible");
 			}
+		}
+		else{
+			info.AddProperty(item.getName());
 		}
 		if(item instanceof EntityCreature) {
 			info.AddProperty("Creature");
