@@ -92,6 +92,7 @@ public class Senses {
 		MemEntity info = new MemEntity(item.getEntityId(),time);
 		if(item instanceof EntityItem) {
 			info.AddProperty("Item");
+			info.AddParameter(new MemParameter("PositionInventory", new ParameterValue()));
 			Item it = ((EntityItem)item).getEntityItem().getItem();
 			info.AddProperty(it.getUnlocalizedName());
 			if(it instanceof ItemFood) {
