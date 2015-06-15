@@ -1,6 +1,7 @@
 package nea.rtNEAT;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Vector;
 
 //#ifndef _SPECIES_H_
@@ -360,468 +361,504 @@ public class Species implements Comparable<Species>{
 		return age - age_of_last_improvement;
 	}
 	
-//	public boolean reproduce(int generation, Population pop, Vector<Species> sorted_species) {
-//		int count;
-//		Vector<Organism> curorg = new Vector<Organism>();
-//
-//		int poolsize;  //The number of Organisms in the old generation
-//
-//		int orgnum;  //Random variable
-//		int orgcount;
-//		//Organism *mom; //Parent Organisms
-//		//Organism *dad;
-//		//Organism *baby;  //The new Organism
-//		Organism mom;
-//		Organism dad;
-//		Organism baby;
-//		
-//		//Genome *new_genome;  //For holding baby's genes
-//		Genome new_genome;
-//
-//		//std::vector<Species*>::iterator curspecies;  //For adding baby
-//		Vector<Species> curspecies = new Vector<Species>();
-//		//Species *newspecies; //For babies in new Species
-//		Species newspecies;
-//		//Organism *comporg;  //For Species determination through comparison
-//		Organism comporg;
-//
-//		//Species *randspecies;  //For mating outside the Species
-//		Species randspecies;
-//		double randmult;
-//		int randspeciesnum;
-//		int spcount;  
-//		//std::vector<Species*>::iterator cursp;
-//		Vector<Species> cursp = new Vector<Species>();
-//
-//		//Network *net_analogue;  //For adding link to test for recurrency
-//		Network net_analogue;
-//		int pause;
-//
-//		boolean outside;
-//
-//		boolean found;  //When a Species is found
-//
-//		boolean champ_done = false; //Flag the preservation of the champion  
-//
-//		//Organism *thechamp;
-//		Organism thechamp;
-//
-//		int giveup; //For giving up finding a mate outside the species
-//
-//		boolean mut_struct_baby;
-//		boolean mate_baby;
-//
-//		//The weight mutation power is species specific depending on its age
-//		double mut_power = Neat.weigh_mut_power;
-//
-//		//Roulette wheel variables
-//		double total_fitness = 0.0;
-//		double marble;  //The marble will have a number between 0 and total_fitness
-//		double spin;  //0Fitness total while the wheel is spinning
-//
-//		//Compute total fitness of species for a roulette wheel
-//		//Note: You don't get much advantage from a roulette here
-//		// because the size of a species is relatively small.
-//		// But you can use it by using the roulette code here
-//		//for(curorg=organisms.begin();curorg!=organisms.end();++curorg) {
-//		//  total_fitness+=(*curorg)->fitness;
-//		//}
-//
-//		//Check for a mistake
-//		/*if ((expected_offspring>0)&&
-//			(organisms.size()==0)) {
-//				//    std::cout<<"ERROR:  ATTEMPT TO REPRODUCE OUT OF EMPTY SPECIES"<<std::endl;
-//				return false;
-//			}*/
-//		
-//		if(expected_offspring > 0 && organisms.size() == 0){
-//			return false;
-//		}
-//
-//		poolsize = organisms.size()-1;
-//
-//		//thechamp=(*(organisms.begin()));
-//		thechamp = organisms.get(0);
-//
-//		//Create the designated number of offspring for the Species
-//		//one at a time
-//		for (count = 0; count < expected_offspring; count++) {
-//
-//			mut_struct_baby = false;
-//			mate_baby = false;
-//
-//			outside = false;
-//
-//			//Debug Trap
-//			if (expected_offspring>Neat.pop_size) {
-//				//      std::cout<<"ALERT: EXPECTED OFFSPRING = "<<expected_offspring<<std::endl;
-//				//      cin>>pause;
-//			}
-//
-//			//If we have a super_champ (Population champion), finish off some special clones
-//			/*if ((thechamp->super_champ_offspring) > 0) {
-//				mom=thechamp;
-//				new_genome=(mom->gnome)->duplicate(count);*/
-//			if(thechamp.super_champ_offspring > 0){
-//				mom = thechamp;
-//				new_genome = mom.gnome.duplicate(count);
-//			}
-//				//if ((thechamp->super_champ_offspring) == 1) {
-//			else if(thechamp.super_champ_offspring == 1){
-//					dad = thechamp;
-//					new_genome = dad.gnome.duplicate(count);
-//			}
-//					//Most superchamp offspring will have their connection weights mutated only
-//					//The last offspring will be an exact duplicate of this super_champ
-//					//Note: Superchamp offspring only occur with stolen babies!
-//					//      Settings used for published experiments did not use this
-//			else if(thechamp.super_champ_offspring > 1){ // ((thechamp->super_champ_offspring) > 1) {
-//				if ((randfloat()<0.8)||
-//					(NEAT::mutate_add_link_prob==0.0)) 
-//					//ABOVE LINE IS FOR:
-//					//Make sure no links get added when the system has link adding disabled
-//					new_genome->mutate_link_weights(mut_power,1.0,GAUSSIAN);
-//				else {
-//					//Sometimes we add a link to a superchamp
-//					net_analogue=new_genome->genesis(generation);
-//					new_genome->mutate_add_link(pop->innovations,pop->cur_innov_num,NEAT::newlink_tries);
-//					delete net_analogue;
-//					mut_struct_baby=true;
-//				}
-//			}
-//
-//			baby=new Organism(0.0,new_genome,generation);
-//
-///*					if ((thechamp->super_champ_offspring) == 1) {
-//						if (thechamp->pop_champ) {
-//							//std::cout<<"The new org baby's genome is "<<baby->gnome<<std::endl;
-//							baby->pop_champ_child=true;
-//							baby->high_fit=mom->orig_fitness;
-//						}
-//					}
-//
-//					thechamp->super_champ_offspring--;
-//				}
-//				//If we have a Species champion, just clone it 
-//				else if ((!champ_done)&&
-//					(expected_offspring>5)) {
-//
-//						mom=thechamp; //Mom is the champ
-//
-//						new_genome=(mom->gnome)->duplicate(count);
-//
-//						baby=new Organism(0.0,new_genome,generation);  //Baby is just like mommy
-//
-//						champ_done=true;
-//
-//					}
-//					//First, decide whether to mate or mutate
-//					//If there is only one organism in the pool, then always mutate
-//				else if ((randfloat()<NEAT::mutate_only_prob)||
-//					poolsize== 0) {
-//
-//						//Choose the random parent
-//
-//						//RANDOM PARENT CHOOSER
-//						orgnum=randint(0,poolsize);
-//						curorg=organisms.begin();
-//						for(orgcount=0;orgcount<orgnum;orgcount++)
-//							++curorg;                       
-//
-//
-//
-//						////Roulette Wheel
-//						//marble=randfloat()*total_fitness;
-//						//curorg=organisms.begin();
-//						//spin=(*curorg)->fitness;
-//						//while(spin<marble) {
-//						//++curorg;
-//
-//						////Keep the wheel spinning
-//						//spin+=(*curorg)->fitness;
-//						//}
-//						////Finished roulette
-//						//
-//
-//						mom=(*curorg);
-//
-//						new_genome=(mom->gnome)->duplicate(count);
-//
-//						//Do the mutation depending on probabilities of 
-//						//various mutations
-//
-//						if (randfloat()<NEAT::mutate_add_node_prob) {
-//							//std::cout<<"mutate add node"<<std::endl;
-//							new_genome->mutate_add_node(pop->innovations,pop->cur_node_id,pop->cur_innov_num);
-//							mut_struct_baby=true;
-//						}
-//						else if (randfloat()<NEAT::mutate_add_link_prob) {
-//							//std::cout<<"mutate add link"<<std::endl;
-//							net_analogue=new_genome->genesis(generation);
-//							new_genome->mutate_add_link(pop->innovations,pop->cur_innov_num,NEAT::newlink_tries);
-//							delete net_analogue;
-//							mut_struct_baby=true;
-//						}
-//						//NOTE:  A link CANNOT be added directly after a node was added because the phenotype
-//						//       will not be appropriately altered to reflect the change
-//						else {
-//							//If we didn't do a structural mutation, we do the other kinds
-//
-//							if (randfloat()<NEAT::mutate_random_trait_prob) {
-//								//std::cout<<"mutate random trait"<<std::endl;
-//								new_genome->mutate_random_trait();
-//							}
-//							if (randfloat()<NEAT::mutate_link_trait_prob) {
-//								//std::cout<<"mutate_link_trait"<<std::endl;
-//								new_genome->mutate_link_trait(1);
-//							}
-//							if (randfloat()<NEAT::mutate_node_trait_prob) {
-//								//std::cout<<"mutate_node_trait"<<std::endl;
-//								new_genome->mutate_node_trait(1);
-//							}
-//							if (randfloat()<NEAT::mutate_link_weights_prob) {
-//								//std::cout<<"mutate_link_weights"<<std::endl;
-//								new_genome->mutate_link_weights(mut_power,1.0,GAUSSIAN);
-//							}
-//							if (randfloat()<NEAT::mutate_toggle_enable_prob) {
-//								//std::cout<<"mutate toggle enable"<<std::endl;
-//								new_genome->mutate_toggle_enable(1);
-//
-//							}
-//							if (randfloat()<NEAT::mutate_gene_reenable_prob) {
-//								//std::cout<<"mutate gene reenable"<<std::endl;
-//								new_genome->mutate_gene_reenable();
-//							}
-//						}
-//
-//						baby=new Organism(0.0,new_genome,generation);
-//
-//					}
-//
-//					//Otherwise we should mate 
-//				else {
-//
-//					//Choose the random mom
-//					orgnum=randint(0,poolsize);
-//					curorg=organisms.begin();
-//					for(orgcount=0;orgcount<orgnum;orgcount++)
-//						++curorg;
-//
-//
-//					////Roulette Wheel
-//					//marble=randfloat()*total_fitness;
-//					//curorg=organisms.begin();
-//					//spin=(*curorg)->fitness;
-//					//while(spin<marble) {
-//					//++curorg;
-//
-//					////Keep the wheel spinning
-//					//spin+=(*curorg)->fitness;
-//					//}
-//					////Finished roulette
-//					//
-//
-//					mom=(*curorg);         
-//
-//					//Choose random dad
-//
-//					if ((randfloat()>NEAT::interspecies_mate_rate)) {
-//						//Mate within Species
-//
-//						orgnum=randint(0,poolsize);
-//						curorg=organisms.begin();
-//						for(orgcount=0;orgcount<orgnum;orgcount++)
-//							++curorg;
-//
-//
-//						////Use a roulette wheel
-//						//marble=randfloat()*total_fitness;
-//						//curorg=organisms.begin();
-//						//spin=(*curorg)->fitness;
-//						//while(spin<marble) {
-//						//++curorg;
-//						//}
-//
-//						////Keep the wheel spinning
-//						//spin+=(*curorg)->fitness;
-//						//}
-//						////Finished roulette
-//						//
-//
-//						dad=(*curorg);
-//					}
-//					else {
-//
-//						//Mate outside Species  
-//						randspecies=this;
-//
-//						//Select a random species
-//						giveup=0;  //Give up if you cant find a different Species
-//						while((randspecies==this)&&(giveup<5)) {
-//
-//							//This old way just chose any old species
-//							//randspeciesnum=randint(0,(pop->species).size()-1);
-//
-//							//Choose a random species tending towards better species
-//							randmult=gaussrand()/4;
-//							if (randmult>1.0) randmult=1.0;
-//							//This tends to select better species
-//							randspeciesnum=(int) floor((randmult*(sorted_species.size()-1.0))+0.5);
-//							cursp=(sorted_species.begin());
-//							for(spcount=0;spcount<randspeciesnum;spcount++)
-//								++cursp;
-//							randspecies=(*cursp);
-//
-//							++giveup;
-//						}
-//
-//						//OLD WAY: Choose a random dad from the random species
-//						//Select a random dad from the random Species
-//						//NOTE:  It is possible that a mating could take place
-//						//       here between the mom and a baby from the NEW
-//						//       generation in some other Species
-//						//orgnum=randint(0,(randspecies->organisms).size()-1);
-//						//curorg=(randspecies->organisms).begin();
-//						//for(orgcount=0;orgcount<orgnum;orgcount++)
-//						//  ++curorg;
-//						//dad=(*curorg);            
-//
-//						//New way: Make dad be a champ from the random species
-//						dad=(*((randspecies->organisms).begin()));
-//
-//						outside=true;	
-//					}
-//
-//					//Perform mating based on probabilities of differrent mating types
-//					if (randfloat()<NEAT::mate_multipoint_prob) { 
-//						new_genome=(mom->gnome)->mate_multipoint(dad->gnome,count,mom->orig_fitness,dad->orig_fitness,outside);
-//					}
-//					else if (randfloat()<(NEAT::mate_multipoint_avg_prob/(NEAT::mate_multipoint_avg_prob+NEAT::mate_singlepoint_prob))) {
-//						new_genome=(mom->gnome)->mate_multipoint_avg(dad->gnome,count,mom->orig_fitness,dad->orig_fitness,outside);
-//					}
-//					else {
-//						new_genome=(mom->gnome)->mate_singlepoint(dad->gnome,count);
-//					}
-//
-//					mate_baby=true;
-//
-//					//Determine whether to mutate the baby's Genome
-//					//This is done randomly or if the mom and dad are the same organism
-//					if ((randfloat()>NEAT::mate_only_prob)||
-//						((dad->gnome)->genome_id==(mom->gnome)->genome_id)||
-//						(((dad->gnome)->compatibility(mom->gnome))==0.0))
-//					{
-//
-//						//Do the mutation depending on probabilities of 
-//						//various mutations
-//						if (randfloat()<NEAT::mutate_add_node_prob) {
-//							new_genome->mutate_add_node(pop->innovations,pop->cur_node_id,pop->cur_innov_num);
-//							//  std::cout<<"mutate_add_node: "<<new_genome<<std::endl;
-//							mut_struct_baby=true;
-//						}
-//						else if (randfloat()<NEAT::mutate_add_link_prob) {
-//							net_analogue=new_genome->genesis(generation);
-//							new_genome->mutate_add_link(pop->innovations,pop->cur_innov_num,NEAT::newlink_tries);
-//							delete net_analogue;
-//							//std::cout<<"mutate_add_link: "<<new_genome<<std::endl;
-//							mut_struct_baby=true;
-//						}
-//						else {
-//							//Only do other mutations when not doing sturctural mutations
-//
-//							if (randfloat()<NEAT::mutate_random_trait_prob) {
-//								new_genome->mutate_random_trait();
-//								//std::cout<<"..mutate random trait: "<<new_genome<<std::endl;
-//							}
-//							if (randfloat()<NEAT::mutate_link_trait_prob) {
-//								new_genome->mutate_link_trait(1);
-//								//std::cout<<"..mutate link trait: "<<new_genome<<std::endl;
-//							}
-//							if (randfloat()<NEAT::mutate_node_trait_prob) {
-//								new_genome->mutate_node_trait(1);
-//								//std::cout<<"mutate_node_trait: "<<new_genome<<std::endl;
-//							}
-//							if (randfloat()<NEAT::mutate_link_weights_prob) {
-//								new_genome->mutate_link_weights(mut_power,1.0,GAUSSIAN);
-//								//std::cout<<"mutate_link_weights: "<<new_genome<<std::endl;
-//							}
-//							if (randfloat()<NEAT::mutate_toggle_enable_prob) {
-//								new_genome->mutate_toggle_enable(1);
-//								//std::cout<<"mutate_toggle_enable: "<<new_genome<<std::endl;
-//							}
-//							if (randfloat()<NEAT::mutate_gene_reenable_prob) {
-//								new_genome->mutate_gene_reenable(); 
-//								//std::cout<<"mutate_gene_reenable: "<<new_genome<<std::endl;
-//							}
-//						}
-//
-//						//Create the baby
-//						baby=new Organism(0.0,new_genome,generation);
-//
-//					}
-//					else {
-//						//Create the baby without mutating first
-//						baby=new Organism(0.0,new_genome,generation);
-//					}
-//
-//				}
-//
-//				//Add the baby to its proper Species
-//				//If it doesn't fit a Species, create a new one
-//
-//				baby->mut_struct_baby=mut_struct_baby;
-//				baby->mate_baby=mate_baby;
-//
-//				curspecies=(pop->species).begin();
-//				if (curspecies==(pop->species).end()){
-//					//Create the first species
-//					newspecies=new Species(++(pop->last_species),true);
-//					(pop->species).push_back(newspecies);
-//					newspecies->add_Organism(baby);  //Add the baby
-//					baby->species=newspecies;  //Point the baby to its species
-//				} 
-//				else {
-//					comporg=(*curspecies)->first();
-//					found=false;
-//					while((curspecies!=(pop->species).end())&&
-//						(!found)) {	
-//							if (comporg==0) {
-//								//Keep searching for a matching species
-//								++curspecies;
-//								if (curspecies!=(pop->species).end())
-//									comporg=(*curspecies)->first();
-//							}
-//							else if (((baby->gnome)->compatibility(comporg->gnome))<NEAT::compat_threshold) {
-//								//Found compatible species, so add this organism to it
-//								(*curspecies)->add_Organism(baby);
-//								baby->species=(*curspecies);  //Point organism to its species
-//								found=true;  //Note the search is over
-//							}
-//							else {
-//								//Keep searching for a matching species
-//								++curspecies;
-//								if (curspecies!=(pop->species).end()) 
-//									comporg=(*curspecies)->first();
-//							}
-//						}
-//
-//						//If we didn't find a match, create a new species
-//						if (found==false) {
-//						  newspecies=new Species(++(pop->last_species),true);
-//						  //std::std::cout<<"CREATING NEW SPECIES "<<pop->last_species<<std::std::endl;
-//						  (pop->species).push_back(newspecies);
-//						  newspecies->add_Organism(baby);  //Add the baby
-//						  baby->species=newspecies;  //Point baby to its species
-//						}
-//
-//
-//				} //end else 
-//
-//			}*/
-//			return true;
-//	}
-//	
-	
+	public boolean reproduce(int generation, Population pop, Vector<Species> sorted_species) {
+		int count;
+		Organism curorg; // = new Vector<Organism>();
+
+		int poolsize;  //The number of Organisms in the old generation
+
+		int orgnum;  //Random variable
+		int orgcount;
+		//Organism *mom; //Parent Organisms
+		//Organism *dad;
+		//Organism *baby;  //The new Organism
+		Organism mom = null;
+		Organism dad = null;
+		Organism baby = null;
+		
+		//Genome *new_genome;  //For holding baby's genes
+		Genome new_genome = null;
+
+		//std::vector<Species*>::iterator curspecies;  //For adding baby
+		Species curspecies; // = new Vector<Species>();
+		//Species *newspecies; //For babies in new Species
+		Species newspecies;
+		//Organism *comporg;  //For Species determination through comparison
+		Organism comporg = null;
+
+		//Species *randspecies;  //For mating outside the Species
+		Species randspecies;
+		double randmult;
+		int randspeciesnum;
+		int spcount;  
+		//std::vector<Species*>::iterator cursp;
+		Species cursp; // = new Vector<Species>();
+
+		//Network *net_analogue;  //For adding link to test for recurrency
+		Network net_analogue;
+		int pause;
+
+		boolean outside = false;
+
+		boolean found;  //When a Species is found
+
+		boolean champ_done = false; //Flag the preservation of the champion  
+
+		//Organism *thechamp;
+		Organism thechamp;
+
+		int giveup; //For giving up finding a mate outside the species
+
+		boolean mut_struct_baby = false;
+		boolean mate_baby = false;
+
+		//The weight mutation power is species specific depending on its age
+		double mut_power = Neat.weigh_mut_power;
+
+		//Roulette wheel variables
+		double total_fitness = 0.0;
+		double marble;  //The marble will have a number between 0 and total_fitness
+		double spin;  //0Fitness total while the wheel is spinning
+
+		//Compute total fitness of species for a roulette wheel
+		//Note: You don't get much advantage from a roulette here
+		// because the size of a species is relatively small.
+		// But you can use it by using the roulette code here
+		//for(curorg=organisms.begin();curorg!=organisms.end();++curorg) {
+		//  total_fitness+=(*curorg)->fitness;
+		//}
+
+		//Check for a mistake
+		/*if ((expected_offspring>0)&&
+			(organisms.size()==0)) {
+				//    std::cout<<"ERROR:  ATTEMPT TO REPRODUCE OUT OF EMPTY SPECIES"<<std::endl;
+				return false;
+			}*/
+		
+		if(expected_offspring > 0 && organisms.size() == 0){
+			return false;
+		}
+
+		poolsize = organisms.size()-1;
+
+		//thechamp=(*(organisms.begin()));
+		thechamp = organisms.get(0);
+
+		//Create the designated number of offspring for the Species
+		//one at a time
+		for (count = 0; count < expected_offspring; count++) {
+
+			mut_struct_baby = false;
+			mate_baby = false;
+
+			outside = false;
+
+			//Debug Trap
+			if (expected_offspring > Neat.pop_size) {
+				//      std::cout<<"ALERT: EXPECTED OFFSPRING = "<<expected_offspring<<std::endl;
+				//      cin>>pause;
+			}
+
+			//If we have a super_champ (Population champion), finish off some special clones
+			/*if ((thechamp->super_champ_offspring) > 0) {
+				mom=thechamp;
+				new_genome=(mom->gnome)->duplicate(count);*/
+			if(thechamp.super_champ_offspring > 0){
+				mom = thechamp;
+				new_genome = mom.gnome.duplicate(count);
+			}
+				//if ((thechamp->super_champ_offspring) == 1) {
+			else if(thechamp.super_champ_offspring == 1){
+					dad = thechamp;
+					new_genome = dad.gnome.duplicate(count);
+			}
+					//Most superchamp offspring will have their connection weights mutated only
+					//The last offspring will be an exact duplicate of this super_champ
+					//Note: Superchamp offspring only occur with stolen babies!
+					//      Settings used for published experiments did not use this
+			else if(thechamp.super_champ_offspring > 1){ // ((thechamp->super_champ_offspring) > 1) {
+				if ((Math.random() < 0.8) || (Neat.mutate_add_link_prob == 0.0)) 
+					//ABOVE LINE IS FOR:
+					//Make sure no links get added when the system has link adding disabled
+					new_genome.mutate_link_weights(mut_power, 1.0, Genome.mutator.GAUSSIAN);
+				else {
+					//Sometimes we add a link to a superchamp
+					net_analogue = new_genome.genesis(generation);
+					new_genome.mutate_add_link(pop.innovation, pop.cur_innov_num, Neat.newlink_tries);
+					//delete net_analogue;
+					mut_struct_baby=true;
+				}
+			}
+			else {
+				//If we didn't do a structural mutation, we do the other kinds
+				new_genome = thechamp.gnome.duplicate(count);
+
+				if (Math.random() < Neat.mutate_random_trait_prob) {
+					//std::cout<<"mutate random trait"<<std::endl;
+					new_genome.mutate_random_trait();
+				}
+				if (Math.random()<Neat.mutate_link_trait_prob) {
+					//std::cout<<"mutate_link_trait"<<std::endl;
+					new_genome.mutate_link_trait(1);
+				}
+				if (Math.random() < Neat.mutate_node_trait_prob) {
+					//std::cout<<"mutate_node_trait"<<std::endl;
+					new_genome.mutate_node_trait(1);
+				}
+				if (Math.random()<Neat.mutate_link_weights_prob) {
+					//std::cout<<"mutate_link_weights"<<std::endl;
+					new_genome.mutate_link_weights(mut_power, 1.0, Genome.mutator.GAUSSIAN);
+				}
+				if (Math.random() < Neat.mutate_toggle_enable_prob) {
+					//std::cout<<"mutate toggle enable"<<std::endl;
+					new_genome.mutate_toggle_enable(1);
+
+				}
+				if (Math.random()< Neat.mutate_gene_reenable_prob) {
+					//std::cout<<"mutate gene reenable"<<std::endl;
+					new_genome.mutate_gene_reenable();
+				}
+			}
+
+			baby = new Organism(0.0, new_genome, generation);
+			
+					/*if ((thechamp->super_champ_offspring) == 1) {
+						if (thechamp->pop_champ) {
+							//std::cout<<"The new org baby's genome is "<<baby->gnome<<std::endl;
+							baby->pop_champ_child=true;
+							baby->high_fit=mom->orig_fitness;
+						}
+					}*/
+					
+					if(thechamp.super_champ_offspring == 1){
+						if(thechamp.pop_champ){
+							baby.pop_champ_child = true;
+							baby.high_fit = mom.orig_fitness;
+						}
+					}
+
+					thechamp.super_champ_offspring--;
+				}
+				//If we have a Species champion, just clone it 
+				if ((!champ_done)&&
+					(expected_offspring>5)) {
+
+						mom = thechamp; //Mom is the champ
+
+						new_genome = mom.gnome.duplicate(count);
+
+						baby  = new Organism(0.0, new_genome, generation);  //Baby is just like mommy
+
+						champ_done = true;
+
+				}
+					//First, decide whether to mate or mutate
+					//If there is only one organism in the pool, then always mutate
+				else if ((Math.random()< Neat.mutate_only_prob) || poolsize == 0) {
+
+						//Choose the random parent
+
+						//RANDOM PARENT CHOOSER
+						orgnum = (int) (Math.random()*poolsize); // randint(0, poolsize);
+						//curorg = organisms.begin();
+						curorg = organisms.get(0);
+						for(orgcount=0; orgcount < orgnum; orgcount++)
+							//++curorg;     
+							curorg = organisms.get(orgcount);
+
+
+
+						////Roulette Wheel
+						//marble=randfloat()*total_fitness;
+						//curorg=organisms.begin();
+						//spin=(*curorg)->fitness;
+						//while(spin<marble) {
+						//++curorg;
+
+						////Keep the wheel spinning
+						//spin+=(*curorg)->fitness;
+						//}
+						////Finished roulette
+						//
+
+						mom = curorg;
+
+						new_genome = curorg.gnome.duplicate(count); //mom.gnome.duplicate(count);
+
+						//Do the mutation depending on probabilities of 
+						//various mutations
+
+						if (Math.random() < Neat.mutate_add_node_prob) {
+							//std::cout<<"mutate add node"<<std::endl;
+							new_genome.mutate_add_node(pop.innovations, pop.cur_node_id, pop.cur_innov_num);
+							mut_struct_baby = true;
+						}
+						else if (Math.random() < Neat.mutate_add_link_prob) {
+							//std::cout<<"mutate add link"<<std::endl;
+							net_analogue = new_genome.genesis(generation);
+							new_genome.mutate_add_link(pop.innovations, pop.cur_innov_num, Neat.newlink_tries);
+							//delete net_analogue;
+							mut_struct_baby = true;
+						}
+						//NOTE:  A link CANNOT be added directly after a node was added because the phenotype
+						//       will not be appropriately altered to reflect the change
+						else {
+							//If we didn't do a structural mutation, we do the other kinds
+
+							if (Math.random() < Neat.mutate_random_trait_prob) {
+								//std::cout<<"mutate random trait"<<std::endl;
+								new_genome.mutate_random_trait();
+							}
+							if (Math.random()<Neat.mutate_link_trait_prob) {
+								//std::cout<<"mutate_link_trait"<<std::endl;
+								new_genome.mutate_link_trait(1);
+							}
+							if (Math.random() < Neat.mutate_node_trait_prob) {
+								//std::cout<<"mutate_node_trait"<<std::endl;
+								new_genome.mutate_node_trait(1);
+							}
+							if (Math.random()<Neat.mutate_link_weights_prob) {
+								//std::cout<<"mutate_link_weights"<<std::endl;
+								new_genome.mutate_link_weights(mut_power, 1.0, Genome.mutator.GAUSSIAN);
+							}
+							if (Math.random() < Neat.mutate_toggle_enable_prob) {
+								//std::cout<<"mutate toggle enable"<<std::endl;
+								new_genome.mutate_toggle_enable(1);
+
+							}
+							if (Math.random() < Neat.mutate_gene_reenable_prob) {
+								//std::cout<<"mutate gene reenable"<<std::endl;
+								new_genome.mutate_gene_reenable();
+							}
+						}
+
+						baby = new Organism(0.0, new_genome, generation);
+
+				}
+
+					//Otherwise we should mate 
+				else {
+
+					//Choose the random mom
+					orgnum = (int) (Math.random()* poolsize); //randint(0, poolsize);
+					//curorg = organisms.begin();
+					curorg = organisms.get(0);
+					for(orgcount = 0; orgcount < orgnum; orgcount++)
+						((List<Organism>) curorg).get(1);
+
+
+					////Roulette Wheel
+					//marble=randfloat()*total_fitness;
+					//curorg=organisms.begin();
+					//spin=(*curorg)->fitness;
+					//while(spin<marble) {
+					//++curorg;
+
+					////Keep the wheel spinning
+					//spin+=(*curorg)->fitness;
+					//}
+					////Finished roulette
+					//
+
+					mom = curorg;         
+
+					//Choose random dad
+
+					if ((Math.random()> Neat.interspecies_mate_rate)) {
+						//Mate within Species
+
+						orgnum = (int) (Math.random()* poolsize); //randint(0, poolsize);
+						curorg = organisms.get(0);
+						for(orgcount = 0; orgcount < orgnum; orgcount++)
+							((List<Organism>) curorg).get(1);
+
+
+						////Use a roulette wheel
+						//marble=randfloat()*total_fitness;
+						//curorg=organisms.begin();
+						//spin=(*curorg)->fitness;
+						//while(spin<marble) {
+						//++curorg;
+						//}
+
+						////Keep the wheel spinning
+						//spin+=(*curorg)->fitness;
+						//}
+						////Finished roulette
+						//
+
+						dad = curorg;
+					}
+					else {
+
+						//Mate outside Species  
+						randspecies = this;
+
+						//Select a random species
+						giveup = 0;  //Give up if you cant find a different Species
+						while(randspecies == this && giveup < 5) {
+
+							//This old way just chose any old species
+							//randspeciesnum=randint(0,(pop->species).size()-1);
+							java.util.Random randgaus = new java.util.Random();
+							//Choose a random species tending towards better species
+							randmult = randgaus.nextGaussian()/4; //gaussrand()/4;
+							if (randmult > 1.0) 
+								randmult = 1.0;
+							//This tends to select better species
+							randspeciesnum = Math.floorDiv((int)randmult, (int)((sorted_species.size()-1.0)+0.5)); //floor((randmult*(sorted_species.size()-1.0))+0.5);
+							cursp = sorted_species.get(0);
+							for(spcount = 0; spcount < randspeciesnum; spcount++)
+								cursp = sorted_species.get(spcount); //.get(1);
+							randspecies = cursp;
+
+							giveup++;
+						}
+
+						//OLD WAY: Choose a random dad from the random species
+						//Select a random dad from the random Species
+						//NOTE:  It is possible that a mating could take place
+						//       here between the mom and a baby from the NEW
+						//       generation in some other Species
+						//orgnum=randint(0,(randspecies->organisms).size()-1);
+						//curorg=(randspecies->organisms).begin();
+						//for(orgcount=0;orgcount<orgnum;orgcount++)
+						//  ++curorg;
+						//dad=(*curorg);            
+
+						//New way: Make dad be a champ from the random species
+						dad = randspecies.organisms.get(0);
+
+						outside = true;	
+					}
+
+					//Perform mating based on probabilities of differrent mating types
+					if (Math.random()< Neat.mate_multipoint_prob) { 
+						new_genome = mom.gnome.mate_multipoint(dad.gnome, count, mom.orig_fitness, dad.orig_fitness, outside);
+					}
+					else if (Math.random() < (Neat.mate_multipoint_avg_prob/(Neat.mate_multipoint_avg_prob+Neat.mate_singlepoint_prob))) {
+						new_genome = mom.gnome.mate_multipoint_avg(dad.gnome, count, mom.orig_fitness, dad.orig_fitness, outside);
+					}
+					else {
+						new_genome=mom.gnome.mate_singlepoint(dad.gnome,count);
+					}
+
+					mate_baby = true;
+
+					//Determine whether to mutate the baby's Genome
+					//This is done randomly or if the mom and dad are the same organism
+					if ((Math.random()> Neat.mate_only_prob)||
+						(dad.gnome.genome_id == mom.gnome.genome_id)||
+						((dad.gnome.compatibility(mom.gnome))==0.0))
+					{
+
+						//Do the mutation depending on probabilities of 
+						//various mutations
+						if (Math.random() < Neat.mutate_add_node_prob) {
+							new_genome.mutate_add_node(pop. innovations, pop.cur_node_id, pop.cur_innov_num);
+							//  std::cout<<"mutate_add_node: "<<new_genome<<std::endl;
+							mut_struct_baby = true;
+						}
+						else if (Math.random()<Neat.mutate_add_link_prob) {
+							net_analogue = new_genome.genesis(generation);
+							new_genome.mutate_add_link(pop.innovations, pop.cur_innov_num, Neat.newlink_tries);
+							//delete net_analogue;
+							//std::cout<<"mutate_add_link: "<<new_genome<<std::endl;
+							mut_struct_baby = true;
+						}
+						else {
+							//Only do other mutations when not doing sturctural mutations
+
+							if (Math.random()< Neat.mutate_random_trait_prob) {
+								new_genome.mutate_random_trait();
+								//std::cout<<"..mutate random trait: "<<new_genome<<std::endl;
+							}
+							if (Math.random() < Neat.mutate_link_trait_prob) {
+								new_genome.mutate_link_trait(1);
+								//std::cout<<"..mutate link trait: "<<new_genome<<std::endl;
+							}
+							if (Math.random()< Neat.mutate_node_trait_prob) {
+								new_genome.mutate_node_trait(1);
+								//std::cout<<"mutate_node_trait: "<<new_genome<<std::endl;
+							}
+							if (Math.random()< Neat.mutate_link_weights_prob) {
+								new_genome.mutate_link_weights(mut_power, 1.0, Genome.mutator.GAUSSIAN);
+								//std::cout<<"mutate_link_weights: "<<new_genome<<std::endl;
+							}
+							if (Math.random()< Neat.mutate_toggle_enable_prob) {
+								new_genome.mutate_toggle_enable(1);
+								//std::cout<<"mutate_toggle_enable: "<<new_genome<<std::endl;
+							}
+							if (Math.random()< Neat.mutate_gene_reenable_prob) {
+								new_genome.mutate_gene_reenable(); 
+								//std::cout<<"mutate_gene_reenable: "<<new_genome<<std::endl;
+							}
+						}
+
+						//Create the baby
+						baby = new Organism(0.0, new_genome, generation);
+
+					}
+					else {
+						//Create the baby without mutating first
+						baby=new Organism(0.0, new_genome, generation);
+					}
+
+				}
+
+				//Add the baby to its proper Species
+				//If it doesn't fit a Species, create a new one
+
+				baby.mut_struct_baby = mut_struct_baby;
+				baby.mate_baby = mate_baby;
+
+				curspecies = pop.species.get(0); //.begin();
+				if (curspecies.equals(pop.species.lastElement())){
+					//Create the first species
+					newspecies = new Species(++(pop.last_species), true);
+					pop.species.add(newspecies); //push_back(newspecies);
+					newspecies.add_Organism(baby);  //Add the baby
+					baby.species = newspecies;  //Point the baby to its species
+				} 
+				else {
+					//comporg=(*curspecies)->first();
+					comporg = curspecies.first(); //.firstElement();
+					found = false;
+					while(!curspecies.equals(pop.species.lastElement()) && !found) {	
+							if (comporg.equals(0)) {
+								//Keep searching for a matching species
+								curspecies = pop.species.get(1); //curspecies.get(1);
+								if (!curspecies.equals(pop.species.lastElement()))
+									comporg = curspecies.first();
+							}
+							else if (baby.gnome.compatibility(comporg.gnome) < Neat.compat_thresh) {
+								//Found compatible species, so add this organism to it
+								curspecies.add_Organism(baby);
+								baby.species = curspecies;  //Point organism to its species
+								found = true;  //Note the search is over
+							}
+							else {
+								//Keep searching for a matching species
+								curspecies.equals(pop.species.get(1)); //get(1);
+								if (!curspecies.equals(pop.species.lastElement())) 
+									comporg = curspecies.first();
+							}
+						}
+
+						//If we didn't find a match, create a new species
+						if (found == false) {
+						  newspecies = new Species(++(pop.last_species), true);
+						  //std::std::cout<<"CREATING NEW SPECIES "<<pop->last_species<<std::std::endl;
+						  (pop.species).add(newspecies); //push_back(newspecies);
+						  newspecies.add_Organism(baby);  //Add the baby
+						  baby.species = newspecies;  //Point baby to its species
+						}
+
+
+				} //end else 
+			return true;
+	}
+
 	//
 	// ~Species();
 	//

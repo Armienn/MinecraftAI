@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.Vector;
 
 import nea.minecraft.tex.brain.BrainSenses;
 import nea.minecraft.tex.brain.NeatCore;
@@ -111,7 +112,8 @@ public class TexLearning extends Thread {
 	}
 	
 	private void NEAT(){
-		Organism org = null;
+		Vector<Organism> org = new Vector<Organism>();
+		Vector<Organism> organisms = new Vector<Organism>();
 		//Species species = null;
 		int gencount = 1;
 		int invValue = 0;
@@ -124,6 +126,10 @@ public class TexLearning extends Thread {
 		double[] invInput = new double[8];
 		int inputnodes = 1; // add the bias node
 		int outputnodes = 0;
+		boolean firstrun = true;
+		
+		double firstHF = 0; //first high fitness
+		double secondHF = 0; //second high fitness
 		
 		for(int i=0; i<12; i++){
 			neatbrain.neatnet.inputs.add(new Nnode(Nnode.nodetype.SENSOR, i));
@@ -141,6 +147,7 @@ public class TexLearning extends Thread {
 			FileOutputStream os = null;
 			double this_out = 0;
 			double[] out = null;
+			Genome g = null;
 			/*
 			try {
 				is = new FileInputStream("C:\\Users\\Reaver\\Desktop\\minecraft\\mcp910-pre1\\src\\minecraft\\nea\\rtNEAT\\minecraft_startgenes");
@@ -150,7 +157,7 @@ public class TexLearning extends Thread {
 			}
 			BufferedReader iFile = new BufferedReader(new InputStreamReader(is));*/
 			
-			for(int i=1; i<=50; i++){
+			for(int i=0; i<5; i++){
 				try {
 					os = new FileOutputStream("C:\\Users\\Reaver\\Desktop\\minecraft\\mcp910-pre1\\src\\minecraft\\nea\\rtNEAT\\Genome_test" + i);
 				} catch (FileNotFoundException e) {
@@ -164,22 +171,31 @@ public class TexLearning extends Thread {
 				long currentTime = brain.worldObj.getTotalWorldTime();
 				long startTime = brain.worldObj.getTotalWorldTime();
 				
-				//Genome g = new Genome(i, iFile);
-				Genome g = new Genome(i, inputnodes, outputnodes, 0, 100, false, 0.6); //public Genome(int new_id, int i, int o, int n, int nmax, boolean r, double linkprob)
-				//Genome g = new Genome(inputnodes+1, outputnodes, 0, 3);//public Genome(int num_in, int num_out, int num_hidden, int type) {
+				if(gencount == 1){
+					//Genome g = new Genome(i, iFile);
+					g = new Genome(i, inputnodes, outputnodes, 0, 100, false, 0.6); //public Genome(int new_id, int i, int o, int n, int nmax, boolean r, double linkprob)
+					//Genome g = new Genome(inputnodes+1, outputnodes, 0, 3);//public Genome(int num_in, int num_out, int num_hidden, int type) {
+					org.add(new Organism(1, g, gencount));
+					//firstrun = false;
+				}
+				else g =  neatbrain.p.organisms.get(i).gnome;
 				
 				//Print the genomes to a file
 				g.print_to_file(oFile);
 //				g.phenotype.all_nodes.addAll(g.nodes);
 //				g.phenotype.print_links_tofile("C:\\Users\\Reaver\\Desktop\\minecraft\\mcp910-pre1\\src\\minecraft\\nea\\rtNEAT\\phenotype_print");
-				org = new Organism(1, g, gencount);
+				
 //				org.update_phenotype();
-				org.print_to_file("C:\\Users\\Reaver\\Desktop\\minecraft\\mcp910-pre1\\src\\minecraft\\nea\\rtNEAT\\Organism_test");
+				for(int j=0; j < org.size(); j++){
+					org.get(j).print_to_file("C:\\Users\\Reaver\\Desktop\\minecraft\\mcp910-pre1\\src\\minecraft\\nea\\rtNEAT\\Organism_test " + i);
+					//organisms.add(org.get(j));
+				}
 				//NeatCore nc = new NeatCore(brain, g);
 				long timerEnd = System.nanoTime();
 				//brain.Log("Initializing startgene file took :" + (timerEnd - timerStart));
 				
-				while(currentTime < startTime + 500 && brain.KeepRunning()){
+				while(currentTime < startTime + 200 && brain.KeepRunning()){
+					neatbrain.p.organisms.add(org.get(i));
 					//parse inputs and outputs
 					//inputs:
 					long time = 0;
@@ -206,12 +222,6 @@ public class TexLearning extends Thread {
 										}
 									}
 								}
-							}
-							if(!brain.senses.senses.rewards.isEmpty()){
-								input3 = brain.senses.senses.rewards.get(0).value.value;
-							}
-							else if(brain.senses.senses.rewards.isEmpty()){
-								input3 = 0;
 							}
 						}
 						timerEnd = System.nanoTime();
@@ -279,11 +289,14 @@ public class TexLearning extends Thread {
 						
 						synchronized(brain){
 							lastUpdate = brain.senses.senses.time;
-						
-							//if(!brain.senses.senses.rewards.isEmpty()){
-							sum += input3;
-							brain.Log("Total reward " + sum + " took " + System.nanoTime());
-							//}
+							if(!brain.senses.senses.rewards.isEmpty()){
+								input3 = brain.senses.senses.rewards.get(0).value.value;
+								sum += input3;
+								brain.Log("Total reward " + sum + " took " + System.nanoTime());
+							}
+							else if(brain.senses.senses.rewards.isEmpty()){
+								input3 = 0;
+							}
 						}
 					}
 					else{
@@ -303,10 +316,10 @@ public class TexLearning extends Thread {
 				//get final fitness
 				//get genome + fitness
 				if(success){
-					org.fitness = sum;
+					org.get(i).fitness = sum;
 				}
 				else{
-					org.fitness = 0.001;
+					org.get(i).fitness = 0.001;
 				}
 				timerEnd = System.nanoTime();
 				
@@ -315,16 +328,19 @@ public class TexLearning extends Thread {
 				//g.mutate_random_trait();
 				//g.mutate_link_trait(10);
 				//g.mutate_add_node(neatbrain.p.innovation, neatbrain.p.cur_node_id, neatbrain.p.cur_innov_num);
-			}
-			//do generation end stuff and end generation
-			//neatbrain.p.epoch(org.generation);
-			
+				//firstHF = org.get(i).high_fit;
+				//secondHF = org.get(i).high_fit;
+				neatbrain.p.speciate();
+				neatbrain.p.epoch(org.get(i).generation);
+				org.get(i).update_phenotype();
+				}
+			//do generation end stuff and end generation	
 			gencount++;
 			//neatbrain.neatnet.show_activation();
 			neatbrain.neatnet.print_links_tofile("C:\\Users\\Reaver\\Desktop\\minecraft\\mcp910-pre1\\src\\minecraft\\nea\\rtNEAT\\linksToFile");
 			//neatbrain.neatnet.show_input();
+			}			
 		}
-	}
 	
 	static boolean trySleep(long milliseconds){
 		try {

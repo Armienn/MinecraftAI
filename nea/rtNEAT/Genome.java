@@ -12,6 +12,8 @@ import java.io.OutputStreamWriter;
 import java.util.Iterator;
 import java.util.Vector;
 
+import nea.rtNEAT.Nnode.nodeplace;
+
 //#ifndef _GENOME_H_
 //#define _GENOME_H_
 //
@@ -115,6 +117,13 @@ public class Genome {
 			genes.add(tempgene);
 		}
 
+	}
+	
+	public Genome(int id, Vector<Trait> t, Vector<Nnode> n, Vector<Gene> g) {
+		genome_id = id;
+		traits = t;
+		nodes = n; 
+		genes = g;
 	}
 
 	//
@@ -933,9 +942,12 @@ public class Genome {
 				// (no need to in the current implementation of NEAT)
 				newlink = new Link(curlink.weight, inode, onode,
 						curlink.is_recurrent);
-
-				(onode.incoming).add(newlink);
-				(inode.outgoing).add(newlink);
+				if(onode != null || inode != null){
+					if(onode.incoming == null || inode.outgoing == null)
+						newlink = newlink;
+					(onode.incoming).add(newlink);
+					(inode.outgoing).add(newlink);
+				}
 
 				// Derive link's parameters from its Trait pointer
 				curtrait = (curlink.linktrait);
@@ -1123,7 +1135,7 @@ public class Genome {
 		}
 
 		// Finally, return the genome
-		newgenome = new Genome(new_id, traits_dup, nodes_dup, genes_dup, null);
+		newgenome = new Genome(new_id, traits_dup, nodes_dup, genes_dup); //null);
 
 		return newgenome;
 
@@ -1306,10 +1318,13 @@ public class Genome {
 		for (loop = 1; loop <= times; loop++) {
 
 			// Choose a random traitnum
-			traitnum = Neat.randint(0, (traits.size()) - 1);
-
+			int y = traits.size() -1;
+			traitnum = Neat.randint(0, y);
+			
+			y = genes.size() -1;
 			// Choose a random linknum
-			genenum = Neat.randint(0, genes.size() - 1);
+			//genenum = Neat.randint(0, y);
+			genenum = (int)Math.random()*y;
 
 			// set the link to point to the new trait
 			// thegene=genes.begin();
@@ -1349,10 +1364,13 @@ public class Genome {
 		for (loop = 1; loop <= times; loop++) {
 
 			// Choose a random traitnum
-			traitnum = Neat.randint(0, (traits.size()) - 1);
-
+			int y = traits.size() -1;
+			traitnum = Neat.randint(0, y);//(traits.size()) - 1);
+			
+			y = nodes.size() -1;
 			// Choose a random nodenum
-			nodenum = Neat.randint(0, nodes.size() - 1);
+			//nodenum = Neat.randint(0, y); //nodes.size() - 1);
+			nodenum = (int)Math.random()*y;
 
 			// set the link to point to the new trait
 			// thenode=nodes.begin();
@@ -1594,7 +1612,8 @@ public class Genome {
 		for (count = 1; count <= times; count++) {
 
 			// Choose a random genenum
-			genenum = Neat.randint(0, genes.size() - 1);
+			int y = genes.size() -1;
+			genenum = Neat.randint(0, y); //genes.size() - 1);
 
 			// find the gene
 			// thegene=genes.begin();
@@ -1761,7 +1780,8 @@ public class Genome {
 				// This old totally random selection is bad- splitting
 				// inside something recently splitted adds little power
 				// to the system (should use a gaussian if doing it this way)
-				genenum = Neat.randint(0, genes.size() - 1);
+				int y = genes.size() -1;
+				genenum = Neat.randint(0, y); // genes.size() - 1);
 
 				// find the gene
 				// thegene=genes.begin();
@@ -2054,8 +2074,9 @@ public class Genome {
 				// cout<<"TRY "<<trycount<<std::endl;
 
 				// Choose random nodenums
-				nodenum1 = Neat.randint(0, nodes.size() - 1);
-				nodenum2 = Neat.randint(first_nonsensor, nodes.size() - 1);
+				int y = genes.size() -1;
+				nodenum1 = Neat.randint(0, y); //nodes.size() - 1);
+				nodenum2 = Neat.randint(first_nonsensor, y);
 
 				// Find the first node
 				// thenode1=nodes.begin();
@@ -2168,7 +2189,8 @@ public class Genome {
 					// if (randfloat()<recur_prob) recurflag=1;
 
 					// Choose a random trait
-					traitnum = Neat.randint(0, (traits.size()) - 1);
+					int y = traits.size() -1 ;
+					traitnum = Neat.randint(0, y); //(traits.size()) - 1);
 					Iterator<Trait> thetraitIter = traits.iterator();
 					Trait thetrait = thetraitIter.next();
 
@@ -2315,6 +2337,1519 @@ public class Genome {
 			return (Neat.disjoint_coeff*(num_disjoint/1.0)+
 				Neat.excess_coeff*(num_excess/1.0)+
 				Neat.mutdiff_coeff*(mut_diff_total/num_matching));
+	}
+
+	public Genome mate_multipoint(Genome g, int genomeid, double fitness1, double fitness2, boolean interspec_flag) {
+		//The baby Genome will contain these new Traits, NNodes, and Genes
+		//std::vector<Trait*> newtraits; 
+		//std::vector<NNode*> newnodes;   
+		//std::vector<Gene*> newgenes;    
+		//Genome *new_genome;
+		
+		Vector<Trait> newtraits = new Vector<Trait>();
+		Vector<Nnode> newnodes = new Vector<Nnode>();
+		Vector<Gene> newgenes = new Vector<Gene>();
+		Genome new_genome;
+
+		//std::vector<Gene*>::iterator curgene2;  //Checks for link duplication
+		Vector<Gene> curgene2 = new Vector<Gene>();
+
+		//iterators for moving through the two parents' traits
+		//std::vector<Trait*>::iterator p1trait;
+		//std::vector<Trait*>::iterator p2trait;
+		//Trait *newtrait;
+		Trait p1trait; // = new Vector<Trait>();
+		Trait p2trait; // = new Vector<Trait>();
+		Trait newtrait;
+
+		//iterators for moving through the two parents' genes
+		//std::vector<Gene*>::iterator p1gene;
+		//std::vector<Gene*>::iterator p2gene;
+		Gene p1gene; // = new Vector<Gene>();
+		Vector<Gene> p2gene = new Vector<Gene>();
+		double p1innov;  //Innovation numbers for genes inside parents' Genomes
+		double p2innov;
+		//Gene *chosengene;  //Gene chosen for baby to inherit
+		Gene chosengene = null;
+		int traitnum;  //Number of trait new gene points to
+		Nnode inode;  //NNodes connected to the chosen Gene
+		Nnode onode;
+		Nnode new_inode;
+		Nnode new_onode;
+		//std::vector<NNode*>::iterator curnode;  //For checking if NNodes exist already 
+		Vector<Nnode> curnode = new Vector<Nnode>();
+		int nodetraitnum = 0;  //Trait number for a NNode
+
+		boolean disable;  //Set to true if we want to disabled a chosen gene
+
+		disable = false;
+		Gene newgene;
+
+		boolean p1better; //Tells if the first genome (this one) has better fitness or not
+
+		boolean skip;
+
+		//First, average the Traits from the 2 parents to form the baby's Traits
+		//It is assumed that trait lists are the same length
+		//In the future, may decide on a different method for trait mating
+		p2trait = g.traits.get(0);
+		/*for(p1trait = traits.get(0); p1trait!=traits.lastElement(); p1trait.) {
+			newtrait = new Trait(p1trait, p2trait);  //Construct by averaging
+			newtraits.push_back(newtrait);
+			p2trait = g.traits.get(1);
+		}*/
+		for(int i =0; i < traits.size(); i++ ){
+			newtrait = new Trait(traits.get(i), p2trait);
+			newtraits.add(newtrait);
+			p2trait = g.traits.get(i+1);
+		}
+
+		//Figure out which genome is better
+		//The worse genome should not be allowed to add extra structural baggage
+		//If they are the same, use the smaller one's disjoint and excess genes only
+		if (fitness1 > fitness2) 
+			p1better = true;
+		else if (fitness1 == fitness2) {
+			if (genes.size() < (g.genes.size()))
+				p1better = true;
+			else p1better = false;
+		}
+		else 
+			p1better = false;
+
+		//NEW 3/17/03 Make sure all sensors and outputs are included
+		/*for(curnode=(g->nodes).begin();curnode!=(g->nodes).end();++curnode) {
+			if ((((*curnode)->gen_node_label)==INPUT)||
+				(((*curnode)->gen_node_label)==BIAS)||
+				(((*curnode)->gen_node_label)==OUTPUT)) {
+					if (!((*curnode)->nodetrait)) nodetraitnum=0;
+					else
+						nodetraitnum=(((*curnode)->nodetrait)->trait_id)-(*(traits.begin()))->trait_id;
+
+					//Create a new node off the sensor or output
+					new_onode=new NNode((*curnode),newtraits[nodetraitnum]);
+
+					//Add the new node
+					node_insert(newnodes,new_onode);
+
+				}
+
+		}*/
+		for(int i=0; i<g.nodes.size(); i++){
+			if(g.nodes.get(i).gen_node_label == nodeplace.INPUT || 
+			g.nodes.get(i).gen_node_label == nodeplace.BIAS ||
+			g.nodes.get(i).gen_node_label == nodeplace.OUTPUT){
+				if(curnode.get(i).nodetrait == null) nodetraitnum = 0;
+				else
+					nodetraitnum = g.nodes.get(i).nodetrait.trait_id - traits.get(0).trait_id;
+				//Create a new node off the sensor or output
+				new_onode = new Nnode(g.nodes.get(i), newtraits.get(nodetraitnum));
+				
+				//Add the new node
+				node_insert(newnodes, new_onode);
+			}
+		}
+
+		//Now move through the Genes of each parent until both genomes end
+		//p1gene = genes.get(0);
+		//p2gene = g.genes.get(0); //(g->genes).begin();
+		int p1i = 0;
+		int p2i = 0;
+		//while(!((p1gene==genes.end())&&
+		//	(p2gene==(g->genes).end()))) {
+		
+		while(!(p1i == genes.size() && p2i == g.genes.size())){//)p1gene < genes.size() && p2gene < g.genes.size()){
+				skip = false;  //Default to not skipping a chosen gene
+				
+				if(p1i == genes.size()){
+					chosengene = g.genes.get(p2i);
+					p2i++;
+					if (p1better) skip=true;
+				}
+				else if(p2i == g.genes.size()){
+					chosengene = genes.get(p1i);
+					p1i++;
+					if (!p1better) skip=true;
+				}
+				else {
+					p1innov=genes.get(p1i).innovation_num;
+					p2innov=g.genes.get(p2i).innovation_num;
+					
+					if (p1innov==p2innov) {
+						if (Math.random()<0.5) {
+							chosengene= genes.get(p1i);
+						}
+						else {
+							chosengene=g.genes.get(p2i);
+						}
+
+						//If one is disabled, the corresponding gene in the offspring
+						//will likely be disabled
+						if (((genes.get(p1i).enable)==false)||
+							((g.genes.get(p2i).enable)==false)) 
+							if (Math.random()<0.75) disable=true;
+
+						++p1i;
+						++p2i;
+					}
+					else if (p1innov<p2innov) {
+						chosengene=genes.get(p1i);
+						++p1i;
+
+						if (!p1better) skip=true;
+
+					}
+					else if (p2innov<p1innov) {
+						chosengene=g.genes.get(p2i);
+						++p2i;
+						if (p1better) skip=true;
+					}
+				}
+				/*if (p1gene==genes.end()) {
+					chosengene=*p2gene;
+					++p2gene;
+					if (p1better) skip=true;  //Skip excess from the worse genome
+				}
+				else if (p2gene==(g->genes).end()) {
+					chosengene=*p1gene;
+					++p1gene;
+					if (!p1better) skip=true; //Skip excess from the worse genome
+				}
+				else {
+					//Extract current innovation numbers
+					p1innov=(*p1gene)->innovation_num;
+					p2innov=(*p2gene)->innovation_num;
+
+					if (p1innov==p2innov) {
+						if (randfloat()<0.5) {
+							chosengene=*p1gene;
+						}
+						else {
+							chosengene=*p2gene;
+						}
+
+						//If one is disabled, the corresponding gene in the offspring
+						//will likely be disabled
+						if ((((*p1gene)->enable)==false)||
+							(((*p2gene)->enable)==false)) 
+							if (randfloat()<0.75) disable=true;
+
+						++p1gene;
+						++p2gene;
+
+					}
+					else if (p1innov<p2innov) {
+						chosengene=*p1gene;
+						++p1gene;
+
+						if (!p1better) skip=true;
+
+					}
+					else if (p2innov<p1innov) {
+						chosengene=*p2gene;
+						++p2gene;
+						if (p1better) skip=true;
+					}
+				}*/
+
+				/*
+				//Uncomment this line to let growth go faster (from both parents excesses)
+				skip=false;
+
+				//For interspecies mating, allow all genes through:
+				if (interspec_flag)
+					skip=false;
+				*/
+
+				//Check to see if the chosengene conflicts with an already chosen gene
+				//i.e. do they represent the same link    
+				//curgene2 = newgenes.get(0);
+				int curgene2i = 0;
+				while (!(curgene2i == newgenes.size()) &&
+					(!((newgenes.get(curgene2i).lnk.in_node.node_id)==(chosengene.lnk.in_node.node_id)))&&
+					(newgenes.get(curgene2i).lnk.out_node.node_id)==(chosengene.lnk.out_node.node_id)&&((newgenes.get(curgene2i).lnk.is_recurrent)== chosengene.lnk.is_recurrent)&&
+					(!((newgenes.get(curgene2i).lnk.in_node.node_id)== chosengene.lnk.out_node.node_id))&&
+					((newgenes.get(curgene2i).lnk.out_node.node_id)== chosengene.lnk.in_node.node_id)&&
+					(!newgenes.get(curgene2i).lnk.is_recurrent)&&
+					(!(newgenes.get(curgene2i).lnk.is_recurrent)))
+				{	
+					++curgene2i;
+				}
+
+				if (curgene2i == newgenes.size()) skip=true;  //Links conflicts, abort adding
+
+				if (!skip) {
+
+					//Now add the chosengene to the baby
+
+					//First, get the trait pointer
+					if ((newgenes.get(curgene2i).lnk.linktrait == null)) traitnum = traits.get(0).trait_id - 1; 
+					else
+						traitnum = chosengene.lnk.linktrait.trait_id - traits.get(0).trait_id;  //The subtracted number normalizes depending on whether traits start counting at 1 or 0
+
+					//Next check for the nodes, add them if not in the baby Genome already
+					inode = chosengene.lnk.in_node;
+					onode = chosengene.lnk.out_node;
+
+					//Check for inode in the newnodes list
+					if (inode.node_id < onode.node_id) {
+						//inode before onode
+
+						//Checking for inode's existence
+						//curnode = newnodes.get(0);
+						int curnodei = 0;
+						while(!(curnodei == newnodes.size())&&
+							(newnodes.get(curnodei).node_id != inode.node_id)) 
+							++curnodei;
+
+						if (curnodei == newnodes.size()) {
+							//Here we know the node doesn't exist so we have to add it
+							//(normalized trait number for new NNode)
+
+							//old buggy version:
+							// if (!(onode->nodetrait)) nodetraitnum=((*(traits.begin()))->trait_id);
+							if (inode.nodetrait == null) nodetraitnum = 0;
+							else
+								nodetraitnum = (inode.nodetrait.trait_id)-(traits.get(curnodei).trait_id);			       
+
+							new_inode = new Nnode(inode, newtraits.get(nodetraitnum));
+							node_insert(newnodes, new_inode);
+
+						}
+						else {
+							new_inode = newnodes.get(curnodei);
+
+						}
+
+						//Checking for onode's existence
+						curnodei = 0; //newnodes.begin();
+						while(!(curnodei == newnodes.size())&&
+							(newnodes.get(curnodei).node_id != onode.node_id)) 
+							++curnodei;
+						if (curnodei == newnodes.size()) {
+							//Here we know the node doesn't exist so we have to add it
+							//normalized trait number for new NNode
+
+							if (onode.nodetrait == null) nodetraitnum = 0;
+							else
+								nodetraitnum = (onode.nodetrait.trait_id)-(traits.get(curnodei).trait_id);			       
+
+							new_onode = new Nnode(onode, newtraits.get(nodetraitnum));
+
+							node_insert(newnodes, new_onode);
+
+						}
+						else {
+							new_onode = newnodes.get(curnodei);
+						}
+
+					}
+					//If the onode has a higher id than the inode we want to add it first
+					else {
+						//Checking for onode's existence
+						int curnodei = 0; //newnodes.begin();
+						while((curnodei != newnodes.size())&&
+							(newnodes.get(curnodei).node_id != onode.node_id)) 
+							++curnodei;
+						if (curnodei == newnodes.size()) {
+							//Here we know the node doesn't exist so we have to add it
+							//normalized trait number for new NNode
+							if (onode.nodetrait.trait_id == 0) nodetraitnum=0;
+							else
+								nodetraitnum=(onode.nodetrait.trait_id)-(traits.get(0).trait_id);			       
+
+							new_onode = new Nnode(onode, newtraits.get(nodetraitnum));
+							//newnodes.push_back(new_onode);
+							node_insert(newnodes, new_onode);
+
+						}
+						else {
+							new_onode=newnodes.get(curnodei);
+
+						}
+
+						//Checking for inode's existence
+						curnodei = 0; //newnodes.begin();
+						while(curnodei != newnodes.size()&&
+							(newnodes.get(curnodei).node_id != inode.node_id)) 
+							++curnodei;
+						if (curnodei ==newnodes.size()) {
+							//Here we know the node doesn't exist so we have to add it
+							//normalized trait number for new NNode
+							if (!(inode.nodetrait == null)) nodetraitnum=0;
+							else
+								nodetraitnum=(inode.nodetrait.trait_id)-(traits.get(0).trait_id);			    
+
+							new_inode = new Nnode(inode, newtraits.get(nodetraitnum));
+
+							node_insert(newnodes, new_inode);
+
+						}
+						else {
+							new_inode=newnodes.get(curnodei);
+
+						}
+
+					} //End NNode checking section- NNodes are now in new Genome
+
+					//Add the Gene
+					newgene = new Gene(chosengene, newtraits.get(nodetraitnum), new_inode,new_onode);
+					if (disable) {
+						newgene.enable = false;
+						disable = false;
+					}
+					newgenes.add(newgene);
+				}
+		}
+
+			new_genome = new Genome(genomeid, newtraits, newnodes, newgenes);
+
+			//Return the baby Genome
+			return (new_genome);
+	}
+
+	public Genome mate_multipoint_avg(Genome g, int genomeid, double fitness1, double fitness2, boolean interspec_flag) {
+		//The baby Genome will contain these new Traits, NNodes, and Genes
+		//std::vector<Trait*> newtraits;
+		//std::vector<NNode*> newnodes;
+		//td::vector<Gene*> newgenes;
+		
+		Vector<Trait> newtraits = new Vector<Trait>();
+		Vector<Nnode> newnodes = new Vector<Nnode>();
+		Vector<Gene> newgenes = new Vector<Gene>();
+
+		//iterators for moving through the two parents' traits
+		//std::vector<Trait*>::iterator p1trait;
+		//std::vector<Trait*>::iterator p2trait;
+		Vector<Trait> p1trait = new Vector<Trait>();
+		Vector<Trait> p2trait = new Vector<Trait>();
+		Trait newtrait;
+
+		//std::vector<Gene*>::iterator curgene2;  //Checks for link duplication
+		Vector<Gene> curgene2 = new Vector<Gene>();
+
+		//iterators for moving through the two parents' genes
+		//std::vector<Gene*>::iterator p1gene;
+		//std::vector<Gene*>::iterator p2gene;
+		Vector<Gene> p1gene = new Vector<Gene>();
+		Vector<Gene> p2gene = new Vector<Gene>();
+		double p1innov;  //Innovation numbers for genes inside parents' Genomes
+		double p2innov;
+		Gene chosengene = null;  //Gene chosen for baby to inherit
+		int traitnum;  //Number of trait new gene points to
+		Nnode inode;  //NNodes connected to the chosen Gene
+		Nnode onode;
+		Nnode new_inode;
+		Nnode new_onode;
+
+		//std::vector<NNode*>::iterator curnode;  //For checking if NNodes exist already 
+		Vector<Nnode> curnode = new Vector<Nnode>();
+		int nodetraitnum;  //Trait number for a NNode
+
+		//This Gene is used to hold the average of the two genes to be averaged
+		Gene avgene;
+		Gene newgene;
+
+		boolean skip;
+
+		boolean p1better;  //Designate the better genome
+
+		// BLX-alpha variables - for assigning weights within a good space 
+		// This is for BLX-style mating, which isn't used in this implementation,
+		//   but can easily be made from multipoint_avg 
+		//double blx_alpha;
+		//double w1,w2;
+		//double blx_min, blx_max;
+		//double blx_range;   //The space range
+		//double blx_explore;  //Exploration space on left or right
+		//double blx_pos;  //Decide where to put gnes distancewise
+		//blx_pos=randfloat();
+
+		//First, average the Traits from the 2 parents to form the baby's Traits
+		//It is assumed that trait lists are the same length
+		//In future, could be done differently
+		int p2traiti = 0;
+		int p1traiti = 0;
+		for(p1traiti = 0; p1traiti != traits.size(); p1traiti++) {
+			newtrait = new Trait(p1trait.get(p1traiti), p2trait.get(p2traiti));  //Construct by averaging
+			newtraits.add(newtrait);
+			++p2traiti;
+		}
+
+		//Set up the avgene
+		avgene = new Gene(0,null,null,false,0,0);
+		int curnodei = 0;
+		//NEW 3/17/03 Make sure all sensors and outputs are included
+		for(curnodei = 0; curnodei != g.nodes.size(); curnodei++) {
+			if (((g.nodes.get(curnodei).gen_node_label) == nodeplace.INPUT)||
+				((g.nodes.get(curnodei).gen_node_label) == nodeplace.OUTPUT)||
+				((g.nodes.get(curnodei).gen_node_label) == nodeplace.BIAS)) {
+					if (g.nodes.get(curnodei).nodetrait == null) nodetraitnum=0;
+					else 
+						nodetraitnum=(g.nodes.get(curnodei).nodetrait.trait_id)- (traits.get(0).trait_id);
+
+					//Create a new node off the sensor or output
+					new_onode = new Nnode(g.nodes.get(curnodei), newtraits.get(nodetraitnum));
+
+					//Add the new node
+					node_insert(newnodes, new_onode);
+
+				}
+
+		}
+
+		//Figure out which genome is better
+		//The worse genome should not be allowed to add extra structural baggage
+		//If they are the same, use the smaller one's disjoint and excess genes only
+		if (fitness1 > fitness2) 
+			p1better = true;
+		else if (fitness1 == fitness2) {
+			if (genes.size() < g.genes.size())
+				p1better = true;
+			else p1better = false;
+		}
+		else 
+			p1better = false;
+
+
+		//Now move through the Genes of each parent until both genomes end
+		
+		int p1i = 0;
+		int p2i = 0;
+		//while(!((p1gene==genes.end())&&
+		//	(p2gene==(g->genes).end()))) {
+		
+		while(!(p1i == genes.size() && p2i == g.genes.size())){//)p1gene < genes.size() && p2gene < g.genes.size()){
+				skip = false;  //Default to not skipping a chosen gene
+				
+				if(p1i == genes.size()){
+					chosengene = g.genes.get(p2i);
+					p2i++;
+					if (p1better) skip=true;
+				}
+				else if(p2i == g.genes.size()){
+					chosengene = genes.get(p1i);
+					p1i++;
+					if (!p1better) skip=true;
+				}
+				else {
+					p1innov = genes.get(p1i).innovation_num;
+					p2innov = g.genes.get(p2i).innovation_num;
+					
+					if (p1innov == p2innov) {
+						if (Math.random() > 0.5) avgene.lnk.linktrait = genes.get(p1i).lnk.linktrait; //((*p1gene)->lnk)->linktrait;
+						else avgene.lnk.linktrait = g.genes.get(p2i).lnk.linktrait; //((*p2gene)->lnk)->linktrait;
+						
+						//WEIGHTS AVERAGED HERE
+						avgene.lnk.weight = (genes.get(p1i).lnk.weight + g.genes.get(p2i).lnk.weight) / 2.0; //(((*p1gene)->lnk)->weight+((*p2gene)->lnk)->weight)/2.0;
+
+						if (Math.random()>0.5) avgene.lnk.in_node = genes.get(p1i).lnk.in_node; //((*p1gene)->lnk)->in_node;
+						else avgene.lnk.in_node = g.genes.get(p2i).lnk.in_node; //((*p2gene)->lnk)->in_node;
+
+						if (Math.random()>0.5) avgene.lnk.out_node = genes.get(p1i).lnk.out_node;
+						else avgene.lnk.out_node = g.genes.get(p2i).lnk.out_node;
+
+						if (Math.random()>0.5) avgene.lnk.is_recurrent = genes.get(p1i).lnk.is_recurrent;
+						else avgene.lnk.is_recurrent = g.genes.get(p2i).lnk.is_recurrent;
+
+						avgene.innovation_num = genes.get(p1i).innovation_num; //(*p1gene)->innovation_num;
+						avgene.mutation_num = genes.get(p1i).mutation_num/2.0; //((*p1gene)->mutation_num+(*p2gene)->mutation_num)/2.0;
+
+						//If one is disabled, the corresponding gene in the offspring
+						//will likely be disabled
+						if (((genes.get(p1i).enable)==false)||
+							((g.genes.get(p2i).enable)==false)) 
+							if (Math.random()<0.75) avgene.enable=false;
+
+						++p1i;
+						++p2i;
+					}
+					else if (p1innov<p2innov) {
+						chosengene=genes.get(p1i);
+						++p1i;
+
+						if (!p1better) skip=true;
+
+					}
+					else if (p2innov<p1innov) {
+						chosengene=g.genes.get(p2i);
+						++p2i;
+						if (p1better) skip=true;
+					}
+				}
+				
+				/*if (((((((*curgene2)->lnk)->in_node)->node_id)==((((chosengene)->lnk)->in_node)->node_id))&&
+						(((((*curgene2)->lnk)->out_node)->node_id)==((((chosengene)->lnk)->out_node)->node_id))&&
+						((((*curgene2)->lnk)->is_recurrent)== (((chosengene)->lnk)->is_recurrent)))||
+						((((((*curgene2)->lnk)->out_node)->node_id)==((((chosengene)->lnk)->in_node)->node_id))&&
+						(((((*curgene2)->lnk)->in_node)->node_id)==((((chosengene)->lnk)->out_node)->node_id))&&
+						(!((((*curgene2)->lnk)->is_recurrent)))&&
+						(!((((chosengene)->lnk)->is_recurrent)))     ))
+					{ 
+						skip=true;
+
+					}
+					++curgene2;
+				}*/
+				
+				int curgene2i = 0;
+				if (!(curgene2i == newgenes.size()) &&
+					(((newgenes.get(curgene2i).lnk.in_node.node_id)==(chosengene.lnk.in_node.node_id)))&&
+					(newgenes.get(curgene2i).lnk.out_node.node_id)==(chosengene.lnk.out_node.node_id)&&((newgenes.get(curgene2i).lnk.is_recurrent)== chosengene.lnk.is_recurrent)&&
+					(((newgenes.get(curgene2i).lnk.in_node.node_id)== chosengene.lnk.out_node.node_id))&&
+					((newgenes.get(curgene2i).lnk.out_node.node_id)== chosengene.lnk.in_node.node_id)&&
+					(!newgenes.get(curgene2i).lnk.is_recurrent)&&
+					(!(newgenes.get(curgene2i).lnk.is_recurrent)))
+				{	
+					skip = true	;
+					++curgene2i;	
+				}
+		
+		
+/*		p1gene=genes.begin();
+		p2gene=(g->genes).begin();
+		while(!((p1gene==genes.end())&&
+			(p2gene==(g->genes).end()))) {
+
+				avgene->enable=true;  //Default to enabled
+
+				skip=false;
+
+				if (p1gene==genes.end()) {
+					chosengene=*p2gene;
+					++p2gene;
+
+					if (p1better) skip=true;
+
+				}
+				else if (p2gene==(g->genes).end()) {
+					chosengene=*p1gene;
+					++p1gene;
+
+					if (!p1better) skip=true;
+				}
+				else {
+					//Extract current innovation numbers
+					p1innov=(*p1gene)->innovation_num;
+					p2innov=(*p2gene)->innovation_num;
+
+					if (p1innov==p2innov) {
+						//Average them into the avgene
+						if (randfloat()>0.5) (avgene->lnk)->linktrait=((*p1gene)->lnk)->linktrait;
+						else (avgene->lnk)->linktrait=((*p2gene)->lnk)->linktrait;
+
+						//WEIGHTS AVERAGED HERE
+						(avgene->lnk)->weight=(((*p1gene)->lnk)->weight+((*p2gene)->lnk)->weight)/2.0;
+
+					
+
+						////BLX-alpha method (Eschelman et al 1993)
+						////Not used in this implementation, but the commented code works
+						////with alpha=0.5, this will produce babies evenly in exploitation and exploration space
+						////and uniformly distributed throughout
+						//blx_alpha=-0.4;
+						//w1=(((*p1gene)->lnk)->weight);
+						//w2=(((*p2gene)->lnk)->weight);
+						//if (w1>w2) {
+						//blx_max=w1; blx_min=w2;
+						//}
+						//else {
+						//blx_max=w2; blx_min=w1;
+						//}
+						//blx_range=blx_max-blx_min;
+						//blx_explore=blx_alpha*blx_range;
+						////Now extend the range into the exploraton space
+						//blx_min-=blx_explore;
+						//blx_max+=blx_explore;
+						//blx_range=blx_max-blx_min;
+						////Set the weight in the new range
+						//(avgene->lnk)->weight=blx_min+blx_pos*blx_range;
+						//
+
+						if (randfloat()>0.5) (avgene->lnk)->in_node=((*p1gene)->lnk)->in_node;
+						else (avgene->lnk)->in_node=((*p2gene)->lnk)->in_node;
+
+						if (randfloat()>0.5) (avgene->lnk)->out_node=((*p1gene)->lnk)->out_node;
+						else (avgene->lnk)->out_node=((*p2gene)->lnk)->out_node;
+
+						if (randfloat()>0.5) (avgene->lnk)->is_recurrent=((*p1gene)->lnk)->is_recurrent;
+						else (avgene->lnk)->is_recurrent=((*p2gene)->lnk)->is_recurrent;
+
+						avgene->innovation_num=(*p1gene)->innovation_num;
+						avgene->mutation_num=((*p1gene)->mutation_num+(*p2gene)->mutation_num)/2.0;
+
+						if ((((*p1gene)->enable)==false)||
+							(((*p2gene)->enable)==false)) 
+							if (randfloat()<0.75) avgene->enable=false;
+
+						chosengene=avgene;
+						++p1gene;
+						++p2gene;
+					}
+					else if (p1innov<p2innov) {
+						chosengene=*p1gene;
+						++p1gene;
+
+						if (!p1better) skip=true;
+					}
+					else if (p2innov<p1innov) {
+						chosengene=*p2gene;
+						++p2gene;
+
+						if (p1better) skip=true;
+					}
+				}*/
+
+				/*
+				//THIS LINE MUST BE DELETED TO SLOW GROWTH
+				skip=false;
+
+				//For interspecies mating, allow all genes through:
+				if (interspec_flag)
+					skip=false;
+				
+
+				//Check to see if the chosengene conflicts with an already chosen gene
+				//i.e. do they represent the same link    
+				curgene2=newgenes.begin();
+				while ((curgene2!=newgenes.end()))
+
+				{
+
+					if (((((((*curgene2)->lnk)->in_node)->node_id)==((((chosengene)->lnk)->in_node)->node_id))&&
+						(((((*curgene2)->lnk)->out_node)->node_id)==((((chosengene)->lnk)->out_node)->node_id))&&
+						((((*curgene2)->lnk)->is_recurrent)== (((chosengene)->lnk)->is_recurrent)))||
+						((((((*curgene2)->lnk)->out_node)->node_id)==((((chosengene)->lnk)->in_node)->node_id))&&
+						(((((*curgene2)->lnk)->in_node)->node_id)==((((chosengene)->lnk)->out_node)->node_id))&&
+						(!((((*curgene2)->lnk)->is_recurrent)))&&
+						(!((((chosengene)->lnk)->is_recurrent)))     ))
+					{ 
+						skip=true;
+
+					}
+					++curgene2;
+				}
+
+				if (!skip) {
+
+					//Now add the chosengene to the baby
+
+					//First, get the trait pointer
+					if ((((chosengene->lnk)->linktrait))==0) traitnum=(*(traits.begin()))->trait_id - 1;
+					else
+						traitnum=(((chosengene->lnk)->linktrait)->trait_id)-(*(traits.begin()))->trait_id;  //The subtracted number normalizes depending on whether traits start counting at 1 or 0
+
+					//Next check for the nodes, add them if not in the baby Genome already
+					inode=(chosengene->lnk)->in_node;
+					onode=(chosengene->lnk)->out_node;
+
+					//Check for inode in the newnodes list
+					if (inode->node_id<onode->node_id) {
+
+						//Checking for inode's existence
+						curnode=newnodes.begin();
+						while((curnode!=newnodes.end())&&
+							((*curnode)->node_id!=inode->node_id)) 
+							++curnode;
+
+						if (curnode==newnodes.end()) {
+							//Here we know the node doesn't exist so we have to add it
+							//normalized trait number for new NNode
+
+							if (!(inode->nodetrait)) nodetraitnum=0;
+							else
+								nodetraitnum=((inode->nodetrait)->trait_id)-((*(traits.begin()))->trait_id);			       
+
+							new_inode=new NNode(inode,newtraits[nodetraitnum]);
+
+							node_insert(newnodes,new_inode);
+						}
+						else {
+							new_inode=(*curnode);
+
+						}
+
+						//Checking for onode's existence
+						curnode=newnodes.begin();
+						while((curnode!=newnodes.end())&&
+							((*curnode)->node_id!=onode->node_id)) 
+							++curnode;
+						if (curnode==newnodes.end()) {
+							//Here we know the node doesn't exist so we have to add it
+							//normalized trait number for new NNode
+
+							if (!(onode->nodetrait)) nodetraitnum=0;
+							else
+								nodetraitnum=((onode->nodetrait)->trait_id)-(*(traits.begin()))->trait_id;			
+							new_onode=new NNode(onode,newtraits[nodetraitnum]);
+
+							node_insert(newnodes,new_onode);
+						}
+						else {
+							new_onode=(*curnode);
+						}
+					}
+					//If the onode has a higher id than the inode we want to add it first
+					else {
+						//Checking for onode's existence
+						curnode=newnodes.begin();
+						while((curnode!=newnodes.end())&&
+							((*curnode)->node_id!=onode->node_id)) 
+							++curnode;
+						if (curnode==newnodes.end()) {
+							//Here we know the node doesn't exist so we have to add it
+							//normalized trait number for new NNode
+							if (!(onode->nodetrait)) nodetraitnum=0;
+							else
+								nodetraitnum=((onode->nodetrait)->trait_id)-(*(traits.begin()))->trait_id;			       
+
+							new_onode=new NNode(onode,newtraits[nodetraitnum]);
+
+							node_insert(newnodes,new_onode);
+						}
+						else {
+							new_onode=(*curnode);
+						}
+
+						//Checking for inode's existence
+						curnode=newnodes.begin();
+						while((curnode!=newnodes.end())&&
+							((*curnode)->node_id!=inode->node_id)) 
+							++curnode;
+						if (curnode==newnodes.end()) {
+							//Here we know the node doesn't exist so we have to add it
+							//normalized trait number for new NNode
+							if (!(inode->nodetrait)) nodetraitnum=0;
+							else
+								nodetraitnum=((inode->nodetrait)->trait_id)-(*(traits.begin()))->trait_id;			       
+
+							new_inode=new NNode(inode,newtraits[nodetraitnum]);
+
+							node_insert(newnodes,new_inode);
+						}
+						else {
+							new_inode=(*curnode);
+
+						}
+
+					} //End NNode checking section- NNodes are now in new Genome
+
+					//Add the Gene
+					newgene=new Gene(chosengene,newtraits[traitnum],new_inode,new_onode);
+
+					newgenes.push_back(newgene);
+
+				}  //End if which checked for link duplicationb
+
+			}
+
+			//delete avgene;  //Clean up used object
+
+			//Return the baby Genome
+			return (new Genome(genomeid,newtraits,newnodes,newgenes));*/
+				
+				if (!skip) {
+
+					//Now add the chosengene to the baby
+
+					//First, get the trait pointer
+					if ((newgenes.get(curgene2i).lnk.linktrait == null)) traitnum = traits.get(0).trait_id - 1; 
+					else
+						traitnum = chosengene.lnk.linktrait.trait_id - traits.get(0).trait_id;  //The subtracted number normalizes depending on whether traits start counting at 1 or 0
+
+					//Next check for the nodes, add them if not in the baby Genome already
+					inode = chosengene.lnk.in_node;
+					onode = chosengene.lnk.out_node;
+
+					//Check for inode in the newnodes list
+					if (inode.node_id < onode.node_id) {
+						//inode before onode
+
+						//Checking for inode's existence
+						//curnode = newnodes.get(0);
+						curnodei = 0;
+						while(!(curnodei == newnodes.size())&&
+							(newnodes.get(curnodei).node_id != inode.node_id)) 
+							++curnodei;
+
+						if (curnodei == newnodes.size()) {
+							//Here we know the node doesn't exist so we have to add it
+							//(normalized trait number for new NNode)
+
+							//old buggy version:
+							// if (!(onode->nodetrait)) nodetraitnum=((*(traits.begin()))->trait_id);
+							if (inode.nodetrait == null) nodetraitnum = 0;
+							else
+								nodetraitnum = (inode.nodetrait.trait_id)-(traits.get(curnodei).trait_id);			       
+
+							new_inode = new Nnode(inode, newtraits.get(nodetraitnum));
+							node_insert(newnodes, new_inode);
+
+						}
+						else {
+							new_inode = newnodes.get(curnodei);
+
+						}
+
+						//Checking for onode's existence
+						curnodei = 0; //newnodes.begin();
+						while(!(curnodei == newnodes.size())&&
+							(newnodes.get(curnodei).node_id != onode.node_id)) 
+							++curnodei;
+						if (curnodei == newnodes.size()) {
+							//Here we know the node doesn't exist so we have to add it
+							//normalized trait number for new NNode
+
+							if (onode.nodetrait == null) nodetraitnum = 0;
+							else
+								nodetraitnum = (onode.nodetrait.trait_id)-(traits.get(curnodei).trait_id);			       
+
+							new_onode = new Nnode(onode, newtraits.get(nodetraitnum));
+
+							node_insert(newnodes, new_onode);
+
+						}
+						else {
+							new_onode = newnodes.get(curnodei);
+						}
+
+					}
+					//If the onode has a higher id than the inode we want to add it first
+					else {
+						//Checking for onode's existence
+						curnodei = 0; //newnodes.begin();
+						while((curnodei != newnodes.size())&&
+							(newnodes.get(curnodei).node_id != onode.node_id)) 
+							++curnodei;
+						if (curnodei == newnodes.size()) {
+							//Here we know the node doesn't exist so we have to add it
+							//normalized trait number for new NNode
+							if (onode.nodetrait.trait_id == 0) nodetraitnum=0;
+							else
+								nodetraitnum=(onode.nodetrait.trait_id)-(traits.get(0).trait_id);			       
+
+							new_onode = new Nnode(onode, newtraits.get(nodetraitnum));
+							//newnodes.push_back(new_onode);
+							node_insert(newnodes, new_onode);
+
+						}
+						else {
+							new_onode=newnodes.get(curnodei);
+
+						}
+						//Checking for inode's existence
+						/*curnode=newnodes.begin();
+						while((curnode!=newnodes.end())&&
+							((*curnode)->node_id!=inode->node_id)) 
+							++curnode;
+						if (curnode==newnodes.end()) {
+							//Here we know the node doesn't exist so we have to add it
+							//normalized trait number for new NNode
+							if (!(inode->nodetrait)) nodetraitnum=0;
+							else
+								nodetraitnum=((inode->nodetrait)->trait_id)-(*(traits.begin()))->trait_id;			       
+
+							new_inode=new NNode(inode,newtraits[nodetraitnum]);
+
+							node_insert(newnodes,new_inode);
+						}
+						else {
+							new_inode=(*curnode);
+
+						}*/
+						//Checking for inode's existence
+						curnodei = 0; //newnodes.begin();
+						while(curnodei != newnodes.size()&&
+							(newnodes.get(curnodei).node_id != inode.node_id)) 
+							++curnodei;
+						if (curnodei == newnodes.size()) {
+							//Here we know the node doesn't exist so we have to add it
+							//normalized trait number for new NNode
+							if (!(inode.nodetrait == null)) nodetraitnum=0;
+							else
+								nodetraitnum=(inode.nodetrait.trait_id)-(traits.get(0).trait_id);			    
+
+							new_inode = new Nnode(inode, newtraits.get(nodetraitnum));
+
+							node_insert(newnodes, new_inode);
+
+						}
+						else {
+							new_inode=newnodes.get(curnodei);
+
+						}
+
+					} //End NNode checking section- NNodes are now in new Genome
+
+					//Add the Gene
+					newgene = new Gene(chosengene, newtraits.get(traitnum), new_inode, new_onode);
+
+					newgenes.add(newgene);
+				}		
+			}
+			return (new Genome(genomeid, newtraits, newnodes, newgenes));
+		}
+
+	public Genome mate_singlepoint(Genome g, int genomeid) {
+		//The baby Genome will contain these new Traits, NNodes, and Genes
+		//std::vector<Trait*> newtraits; 
+		//std::vector<NNode*> newnodes;   
+		//std::vector<Gene*> newgenes;
+		Vector<Trait> newtraits = new Vector<Trait>();
+		Vector<Nnode> newnodes = new Vector<Nnode>();
+		Vector<Gene> newgenes = new Vector<Gene>();
+
+		//iterators for moving through the two parents' traits
+		//std::vector<Trait*>::iterator p1trait;
+		//std::vector<Trait*>::iterator p2trait;
+		Trait newtrait;
+		
+		//iterators for moving through the two parents' traits
+		//std::vector<Trait*>::iterator p1trait;
+		//std::vector<Trait*>::iterator p2trait;
+		Vector<Trait> p1trait = new Vector<Trait>();
+		Vector<Trait> p2trait = new Vector<Trait>();
+
+		//std::vector<Gene*>::iterator curgene2;  //Checks for link duplication
+		Vector<Gene> curgene2 = new Vector<Gene>();
+
+		//iterators for moving through the two parents' genes
+		//std::vector<Gene*>::iterator p1gene;
+		//std::vector<Gene*>::iterator p2gene;
+		Gene p1gene; // = new Vector<Gene>();
+		Gene p2gene; // = new Vector<Gene>();
+		Gene stopper; // = new Vector<Gene>();
+		Gene p1stop; // = new Vector<Gene>();
+		Gene p2stop; // = new Vector<Gene>();
+		double p1innov;  //Innovation numbers for genes inside parents' Genomes
+		double p2innov;
+		Gene chosengene = null;  //Gene chosen for baby to inherit
+		int traitnum;  //Number of trait new gene points to
+		Nnode inode;  //NNodes connected to the chosen Gene
+		Nnode onode;
+		Nnode new_inode;
+		Nnode new_onode;
+		
+		Gene avgene;	//This Gene is used to hold the average of the two genes to be averaged
+		Gene newgene; 		
+
+		//std::vector<NNode*>::iterator curnode;  //For checking if NNodes exist already 
+		Vector<Nnode> curnode = new Vector<Nnode>();
+		int nodetraitnum;  //Trait number for a NNode
+		
+/*		std::vector<Gene*>::iterator curgene2;  //Check for link duplication
+
+		//iterators for moving through the two parents' genes
+		std::vector<Gene*>::iterator p1gene;
+		std::vector<Gene*>::iterator p2gene;
+		std::vector<Gene*>::iterator stopper;  //To tell when finished
+		std::vector<Gene*>::iterator p2stop;
+		std::vector<Gene*>::iterator p1stop;
+		double p1innov;  //Innovation numbers for genes inside parents' Genomes
+		double p2innov;
+		Gene *chosengene;  //Gene chosen for baby to inherit
+		int traitnum;  //Number of trait new gene points to
+		NNode *inode;  //NNodes connected to the chosen Gene
+		NNode *onode;
+		NNode *new_inode;
+		NNode *new_onode;
+		std::vector<NNode*>::iterator curnode;  //For checking if NNodes exist already 
+		int nodetraitnum;  //Trait number for a NNode
+*/
+
+		int crosspoint; //The point in the Genome to cross at
+		int genecounter; //Counts up to the crosspoint
+		boolean skip; //Used for skipping unwanted genes
+		
+		int p1i = 0;
+		int p2i = 0;
+
+		//First, average the Traits from the 2 parents to form the baby's Traits
+		//It is assumed that trait lists are the same length
+/*		p2trait=(g->traits).begin();
+		for(p1trait=traits.begin();p1trait!=traits.end();++p1trait) {
+			newtrait=new Trait(*p1trait,*p2trait);  //Construct by averaging
+			newtraits.push_back(newtrait);
+			++p2trait;
+		}
+
+		//Set up the avgene
+		avgene=new Gene(0,0,0,0,0,0,0);*/
+		
+		int p2traiti = 0;
+		int p1traiti = 0;
+		for(p1traiti = 0; p1traiti != traits.size(); p1traiti++) {
+			newtrait = new Trait(p1trait.get(p1traiti), p2trait.get(p2traiti));  //Construct by averaging
+			newtraits.add(newtrait);
+			++p2traiti;
+		}
+
+		//Set up the avgene
+		avgene = new Gene(0,null,null,false,0,0);
+
+		//Decide where to cross  (p1gene will always be in smaller Genome)
+		if (genes.size() < g.genes.size()) {
+			crosspoint = (int) Math.random() * genes.size(); // (0,(genes.size())-1);
+			p1gene = genes.get(p1i); //genes.begin();
+			p2gene = g.genes.get(p2i);
+			stopper = g.genes.lastElement();
+			p1stop = genes.lastElement();
+			p2stop = g.genes.lastElement();
+		}
+		else {
+			crosspoint = (int) Math.random() * genes.size(); //randint(0,((g->genes).size())-1);
+			p2gene = genes.get(p2i); //genes.begin();
+			p1gene = g.genes.get(p1i);
+			stopper = genes.lastElement();
+			p1stop = g.genes.lastElement();
+			p2stop = genes.lastElement();
+		}
+
+		genecounter = 0;  //Ready to count to crosspoint
+
+		skip = false;  //Default to not skip a Gene
+		//Note that we skip when we are on the wrong Genome before
+		//crossing
+
+		//Now move through the Genes of each parent until both genomes end
+		while(!(p2i == genes.size())) {
+
+			avgene.enable = true;  //Default to true
+
+			if (p1i == genes.size()) {
+				chosengene = g.genes.get(p2i);
+				p2i++;
+			}
+			else if (p2i == g.genes.size()) {
+				chosengene = genes.get(p1i);
+				p1i++;
+			}
+			else {
+					p1innov = genes.get(p1i).innovation_num;
+					p2innov = g.genes.get(p2i).innovation_num;
+					
+					if (p1innov == p2innov) {
+						if (Math.random() > 0.5) avgene.lnk.linktrait = genes.get(p1i).lnk.linktrait; //((*p1gene)->lnk)->linktrait;
+						else avgene.lnk.linktrait = g.genes.get(p2i).lnk.linktrait; //((*p2gene)->lnk)->linktrait;
+						
+						//WEIGHTS AVERAGED HERE
+						avgene.lnk.weight = (genes.get(p1i).lnk.weight + g.genes.get(p2i).lnk.weight) / 2.0; //(((*p1gene)->lnk)->weight+((*p2gene)->lnk)->weight)/2.0;
+
+						if (Math.random()>0.5) avgene.lnk.in_node = genes.get(p1i).lnk.in_node; //((*p1gene)->lnk)->in_node;
+						else avgene.lnk.in_node = g.genes.get(p2i).lnk.in_node; //((*p2gene)->lnk)->in_node;
+
+						if (Math.random()>0.5) avgene.lnk.out_node = genes.get(p1i).lnk.out_node;
+						else avgene.lnk.out_node = g.genes.get(p2i).lnk.out_node;
+
+						if (Math.random()>0.5) avgene.lnk.is_recurrent = genes.get(p1i).lnk.is_recurrent;
+						else avgene.lnk.is_recurrent = g.genes.get(p2i).lnk.is_recurrent;
+
+						avgene.innovation_num = genes.get(p1i).innovation_num; //(*p1gene)->innovation_num;
+						avgene.mutation_num = genes.get(p1i).mutation_num/2.0; //((*p1gene)->mutation_num+(*p2gene)->mutation_num)/2.0;
+
+						//If one is disabled, the corresponding gene in the offspring
+						//will likely be disabled
+						if (((genes.get(p1i).enable)==false)||
+							((g.genes.get(p2i).enable)==false)) 
+							if (Math.random()<0.75) avgene.enable=false;
+
+						++p1i;
+						++p2i;
+					}
+					
+					else if (p1innov<p2innov) {
+						if (genecounter < crosspoint) {
+							chosengene=genes.get(p1i);
+							++p1i;
+							++genecounter;
+						}
+						else{
+							chosengene=g.genes.get(p2i);
+							++p2i;
+						}
+					}
+					else if (p2innov<p1innov) {
+						++p2i;
+						skip = true; //Special case: we need to skip to the next iteration
+						//becase this Gene is before the crosspoint on the wrong Genome
+					}
+				}
+				
+				//Extract current innovation numbers
+
+				//if (p1gene==g->genes.end()) cout<<"WARNING p1"<<std::endl;
+				//if (p2gene==g->genes.end()) cout<<"WARNING p2"<<std::endl;
+
+/*				p1innov = p1gene.innovation_num;
+				p2innov = p2gene.innovation_num;
+
+				if (p1innov == p2innov) {
+
+					//Pick the chosengene depending on whether we've crossed yet
+					if (genecounter < crosspoint) {
+						chosengene = genes.get(p1i);
+					}
+					else if (genecounter > crosspoint) {
+						chosengene = g.genes.get(p2i);
+					}
+					//We are at the crosspoint here
+					else {
+
+						//Average them into the avgene
+						if (Math.random() > 0.5) avgene.lnk.linktrait = p1gene.lnk.linktrait;
+						else avgene.lnk.linktrait = p2gene.lnk.linktrait;
+
+						//WEIGHTS AVERAGED HERE
+						(avgene->lnk)->weight=(((*p1gene)->lnk)->weight+((*p2gene)->lnk)->weight)/2.0;
+
+
+						if (randfloat()>0.5) (avgene->lnk)->in_node=((*p1gene)->lnk)->in_node;
+						else (avgene->lnk)->in_node=((*p2gene)->lnk)->in_node;
+
+						if (randfloat()>0.5) (avgene->lnk)->out_node=((*p1gene)->lnk)->out_node;
+						else (avgene->lnk)->out_node=((*p2gene)->lnk)->out_node;
+
+						if (randfloat()>0.5) (avgene->lnk)->is_recurrent=((*p1gene)->lnk)->is_recurrent;
+						else (avgene->lnk)->is_recurrent=((*p2gene)->lnk)->is_recurrent;
+
+						avgene->innovation_num=(*p1gene)->innovation_num;
+						avgene->mutation_num=((*p1gene)->mutation_num+(*p2gene)->mutation_num)/2.0;
+
+						if ((((*p1gene)->enable)==false)||
+							(((*p2gene)->enable)==false)) 
+							avgene->enable=false;
+
+						chosengene=avgene;
+					}
+
+					++p1gene;
+					++p2gene;
+					++genecounter;
+				}
+				else if (p1innov<p2innov) {
+					if (genecounter<crosspoint) {
+						chosengene=*p1gene;
+						++p1gene;
+						++genecounter;
+					}
+					else {
+						chosengene=*p2gene;
+						++p2gene;
+					}
+				}
+				else if (p2innov<p1innov) {
+					++p2gene;
+					skip=true;  //Special case: we need to skip to the next iteration
+					//becase this Gene is before the crosspoint on the wrong Genome
+				}
+			}*/
+
+			//Check to see if the chosengene conflicts with an already chosen gene
+			//i.e. do they represent the same link    
+			//curgene2 = newgenes.begin();
+
+			/*while ((curgene2!=newgenes.end())&&
+				(!((((((*curgene2)->lnk)->in_node)->node_id)==((((chosengene)->lnk)->in_node)->node_id))&&
+				(((((*curgene2)->lnk)->out_node)->node_id)==((((chosengene)->lnk)->out_node)->node_id))&&((((*curgene2)->lnk)->is_recurrent)== (((chosengene)->lnk)->is_recurrent)) ))&&
+				(!((((((*curgene2)->lnk)->in_node)->node_id)==((((chosengene)->lnk)->out_node)->node_id))&&
+				(((((*curgene2)->lnk)->out_node)->node_id)==((((chosengene)->lnk)->in_node)->node_id))&&
+				(!((((*curgene2)->lnk)->is_recurrent)))&&
+				(!((((chosengene)->lnk)->is_recurrent))) )))
+			{
+
+				++curgene2;
+			}*/
+			
+			int curgene2i = 0;
+			if (!(curgene2i == newgenes.size()) &&
+				(!((newgenes.get(curgene2i).lnk.in_node.node_id)==(chosengene.lnk.in_node.node_id)))&&
+				(newgenes.get(curgene2i).lnk.out_node.node_id)==(chosengene.lnk.out_node.node_id)&&((newgenes.get(curgene2i).lnk.is_recurrent)== chosengene.lnk.is_recurrent)&&
+				(!((newgenes.get(curgene2i).lnk.in_node.node_id)== chosengene.lnk.out_node.node_id))&&
+				((newgenes.get(curgene2i).lnk.out_node.node_id)== chosengene.lnk.in_node.node_id)&&
+				(!newgenes.get(curgene2i).lnk.is_recurrent)&&
+				(!(newgenes.get(curgene2i).lnk.is_recurrent)))
+			{	
+				skip = true	;
+				++curgene2i;	
+			}
+
+
+			if (curgene2i != newgenes.size()) skip = true;  //Link is a duplicate
+			
+			if (!skip) {
+
+				//Now add the chosengene to the baby
+
+				//First, get the trait pointer
+				if ((newgenes.get(curgene2i).lnk.linktrait == null)) traitnum = traits.get(0).trait_id - 1; 
+				else
+					traitnum = chosengene.lnk.linktrait.trait_id - traits.get(0).trait_id;  //The subtracted number normalizes depending on whether traits start counting at 1 or 0
+
+				//Next check for the nodes, add them if not in the baby Genome already
+				inode = chosengene.lnk.in_node;
+				onode = chosengene.lnk.out_node;
+
+				//Check for inode in the newnodes list
+				if (inode.node_id < onode.node_id) {
+					//inode before onode
+
+					//Checking for inode's existence
+					//curnode = newnodes.get(0);
+					int curnodei = 0;
+					while(!(curnodei == newnodes.size())&&
+						(newnodes.get(curnodei).node_id != inode.node_id)) 
+						++curnodei;
+
+					if (curnodei == newnodes.size()) {
+						//Here we know the node doesn't exist so we have to add it
+						//(normalized trait number for new NNode)
+
+						//old buggy version:
+						// if (!(onode->nodetrait)) nodetraitnum=((*(traits.begin()))->trait_id);
+						if (inode.nodetrait == null) nodetraitnum = 0;
+						else
+							nodetraitnum = (inode.nodetrait.trait_id)-(traits.get(curnodei).trait_id);			       
+
+						new_inode = new Nnode(inode, newtraits.get(nodetraitnum));
+						node_insert(newnodes, new_inode);
+
+					}
+					else {
+						new_inode = newnodes.get(curnodei);
+
+					}
+
+					//Checking for onode's existence
+					curnodei = 0; //newnodes.begin();
+					while(!(curnodei == newnodes.size())&&
+						(newnodes.get(curnodei).node_id != onode.node_id)) 
+						++curnodei;
+					if (curnodei == newnodes.size()) {
+						//Here we know the node doesn't exist so we have to add it
+						//normalized trait number for new NNode
+
+						if (onode.nodetrait == null) nodetraitnum = 0;
+						else
+							nodetraitnum = (onode.nodetrait.trait_id)-(traits.get(curnodei).trait_id);			       
+
+						new_onode = new Nnode(onode, newtraits.get(nodetraitnum));
+
+						node_insert(newnodes, new_onode);
+
+					}
+					else {
+						new_onode = newnodes.get(curnodei);
+					}
+
+				}
+				//If the onode has a higher id than the inode we want to add it first
+				else {
+					//Checking for onode's existence
+					int curnodei = 0; //newnodes.begin();
+					while((curnodei != newnodes.size())&&
+						(newnodes.get(curnodei).node_id != onode.node_id)) 
+						++curnodei;
+					if (curnodei == newnodes.size()) {
+						//Here we know the node doesn't exist so we have to add it
+						//normalized trait number for new NNode
+						if (onode.nodetrait.trait_id == 0) nodetraitnum=0;
+						else
+							nodetraitnum=(onode.nodetrait.trait_id)-(traits.get(0).trait_id);			       
+
+						new_onode = new Nnode(onode, newtraits.get(nodetraitnum));
+						//newnodes.push_back(new_onode);
+						node_insert(newnodes, new_onode);
+
+					}
+					else {
+						new_onode=newnodes.get(curnodei);
+
+					}
+					//Checking for inode's existence
+					/*curnode=newnodes.begin();
+					while((curnode!=newnodes.end())&&
+						((*curnode)->node_id!=inode->node_id)) 
+						++curnode;
+					if (curnode==newnodes.end()) {
+						//Here we know the node doesn't exist so we have to add it
+						//normalized trait number for new NNode
+						if (!(inode->nodetrait)) nodetraitnum=0;
+						else
+							nodetraitnum=((inode->nodetrait)->trait_id)-(*(traits.begin()))->trait_id;			       
+
+						new_inode=new NNode(inode,newtraits[nodetraitnum]);
+
+						node_insert(newnodes,new_inode);
+					}
+					else {
+						new_inode=(*curnode);
+
+					}*/
+					//Checking for inode's existence
+					curnodei = 0; //newnodes.begin();
+					while(curnodei != newnodes.size()&&
+						(newnodes.get(curnodei).node_id != inode.node_id)) 
+						++curnodei;
+					if (curnodei == newnodes.size()) {
+						//Here we know the node doesn't exist so we have to add it
+						//normalized trait number for new NNode
+						if (!(inode.nodetrait == null)) nodetraitnum=0;
+						else
+							nodetraitnum=(inode.nodetrait.trait_id)-(traits.get(0).trait_id);			    
+
+						new_inode = new Nnode(inode, newtraits.get(nodetraitnum));
+
+						node_insert(newnodes, new_inode);
+
+					}
+					else {
+						new_inode=newnodes.get(curnodei);
+
+					}
+
+				} //End NNode checking section- NNodes are now in new Genome
+
+				//Add the Gene
+				newgene = new Gene(chosengene, newtraits.get(traitnum), new_inode, new_onode);
+
+				newgenes.add(newgene);
+			}	
+			skip = false;
+		}
+		return (new Genome(genomeid, newtraits, newnodes, newgenes));
+
+/*			if (!skip) {
+				//Now add the chosengene to the baby
+
+				//First, get the trait pointer
+				if ((((chosengene->lnk)->linktrait))==0) traitnum=(*(traits.begin()))->trait_id - 1;
+				else
+					traitnum=(((chosengene->lnk)->linktrait)->trait_id)-(*(traits.begin()))->trait_id;  //The subtracted number normalizes depending on whether traits start counting at 1 or 0
+
+				//Next check for the nodes, add them if not in the baby Genome already
+				inode=(chosengene->lnk)->in_node;
+				onode=(chosengene->lnk)->out_node;
+
+				//Check for inode in the newnodes list
+				if (inode->node_id<onode->node_id) {
+					//cout<<"inode before onode"<<std::endl;
+					//Checking for inode's existence
+					curnode=newnodes.begin();
+					while((curnode!=newnodes.end())&&
+						((*curnode)->node_id!=inode->node_id)) 
+						++curnode;
+
+					if (curnode==newnodes.end()) {
+						//Here we know the node doesn't exist so we have to add it
+						//normalized trait number for new NNode
+
+						if (!(inode->nodetrait)) nodetraitnum=0;
+						else
+							nodetraitnum=((inode->nodetrait)->trait_id)-((*(traits.begin()))->trait_id);			       
+
+						new_inode=new NNode(inode,newtraits[nodetraitnum]);
+
+						node_insert(newnodes,new_inode);
+					}
+					else {
+						new_inode=(*curnode);
+					}
+
+					//Checking for onode's existence
+					curnode=newnodes.begin();
+					while((curnode!=newnodes.end())&&
+						((*curnode)->node_id!=onode->node_id)) 
+						++curnode;
+					if (curnode==newnodes.end()) {
+						//Here we know the node doesn't exist so we have to add it
+						//normalized trait number for new NNode
+
+						if (!(onode->nodetrait)) nodetraitnum=0;
+						else
+							nodetraitnum=((onode->nodetrait)->trait_id)-(*(traits.begin()))->trait_id;			     
+
+						new_onode=new NNode(onode,newtraits[nodetraitnum]);
+						node_insert(newnodes,new_onode);
+
+					}
+					else {
+						new_onode=(*curnode);
+					}
+				}
+				//If the onode has a higher id than the inode we want to add it first
+				else {
+					//Checking for onode's existence
+					curnode=newnodes.begin();
+					while((curnode!=newnodes.end())&&
+						((*curnode)->node_id!=onode->node_id)) 
+						++curnode;
+					if (curnode==newnodes.end()) {
+						//Here we know the node doesn't exist so we have to add it
+						//normalized trait number for new NNode
+						if (!(onode->nodetrait)) nodetraitnum=0;
+						else
+							nodetraitnum=((onode->nodetrait)->trait_id)-(*(traits.begin()))->trait_id;			       
+
+						new_onode=new NNode(onode,newtraits[nodetraitnum]);
+						node_insert(newnodes,new_onode);
+					}
+					else {
+						new_onode=(*curnode);
+					}
+
+					//Checking for inode's existence
+					curnode=newnodes.begin();
+
+					while((curnode!=newnodes.end())&&
+						((*curnode)->node_id!=inode->node_id)) 
+						++curnode;
+					if (curnode==newnodes.end()) {
+						//Here we know the node doesn't exist so we have to add it
+						//normalized trait number for new NNode
+						if (!(inode->nodetrait)) nodetraitnum=0;
+						else
+							nodetraitnum=((inode->nodetrait)->trait_id)-(*(traits.begin()))->trait_id;			       
+
+						new_inode=new NNode(inode,newtraits[nodetraitnum]);
+						//newnodes.push_back(new_inode);
+						node_insert(newnodes,new_inode);
+					}
+					else {
+						new_inode=(*curnode);
+					}
+
+				} //End NNode checking section- NNodes are now in new Genome
+
+				//Add the Gene
+				newgenes.push_back(new Gene(chosengene,newtraits[traitnum],new_inode,new_onode));
+
+			}  //End of if (!skip)
+
+			skip=false;
+		}
+
+		//delete avgene;  //Clean up used object
+
+		//Return the baby Genome
+		return (new Genome(genomeid,newtraits,newnodes,newgenes));*/
+	}
+	
+	void node_insert(Vector<Nnode> nlist, Nnode n) {
+		//std::vector<NNode*>::iterator curnode;
+		int curnodei = 0;
+
+		int id = n.node_id;
+		
+		/*while ((curnode!=nlist.end())&&
+			(((*curnode)->node_id)<id)) 
+			++curnode;*/
+		
+		for(curnodei = 0; curnodei < nlist.size() && nlist.get(curnodei).node_id < id; curnodei++){
+			//curnode = nlist.get(curnodei);
+		}
+
+		nlist.add(curnodei, n);
+
 	}
 	
 	

@@ -155,6 +155,7 @@ public class Nnode{
 		frozen=false;
 		trait_id=1;
 		override=false;
+		nodetrait = null;
 	}
 //
 //		NNode(nodetype ntype,int nodeid, nodeplace placement);
@@ -175,6 +176,7 @@ public class Nnode{
 		frozen=false;
 		trait_id=1;
 		override=false;
+		nodetrait = null;
 	}
 //
 //		// Construct a NNode off another NNode for genome purposes
@@ -198,6 +200,7 @@ public class Nnode{
 			trait_id=t.trait_id;
 		else trait_id=1;
 		override=false;
+		nodetrait = null;
 	}
 //
 //		// Construct the node out of a file specification using given list of traits
