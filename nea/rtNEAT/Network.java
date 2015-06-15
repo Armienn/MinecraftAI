@@ -40,7 +40,7 @@ public class Network{
 	public int numlinks;
 //
 //		std::vector<NNode*> all_nodes;  // A list of all the nodes
-	public Vector<Nnode> all_nodes;
+	public Vector<Nnode> all_nodes = new Vector<Nnode>();
 //
 //		std::vector<NNode*>::iterator input_iter;  // For GUILE network inputting 
 //
@@ -120,9 +120,9 @@ public class Network{
 //		char *name; // Every Network or subNetwork can have a name
 	public String name;
 //		std::vector<NNode*> inputs;  // NNodes that input into the network
-	public Vector<Nnode> inputs;
+	public Vector<Nnode> inputs = new Vector<Nnode>();  //changed here
 //		std::vector<NNode*> outputs; // Values output by the network
-	public Vector<Nnode> outputs;
+	public Vector<Nnode> outputs = new Vector<Nnode>();
 //
 //		int net_id; // Allow for a network id
 	public int net_id;

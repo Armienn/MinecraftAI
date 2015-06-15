@@ -99,7 +99,12 @@ class Trait{
 		}
 
 	}
-//
+public Trait(Trait t1, Trait t2) {
+	for(int count=0;count<Neat.NUM_TRAIT_PARAMS;count++)
+		params[count]=(((t1.params)[count])+((t2.params)[count]))/2.0;
+	trait_id = t1.trait_id;
+	}
+	//
 //		// Special Constructor creates a new Trait which is the average of 2 existing traits passed in
 //		Trait(Trait *t1,Trait *t2);
 //
